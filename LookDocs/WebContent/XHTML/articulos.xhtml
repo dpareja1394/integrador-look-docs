@@ -1,0 +1,68 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	
+	<h:head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	</h:head>		
+	
+	<h:body>
+		<ui:composition template="/WEB-INF/facelets/template.xhtml">	
+		<ui:define name="body">	
+		<f:view>
+			<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>               
+			<p:dialog modal="true" widgetVar="statusDialog" header="Loading"  draggable="false" closable="false">  
+   				<p:graphicImage value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />   
+			</p:dialog>
+			<h:form id="formDialog">
+				<p:messages id="msg" />
+				<p:growl id="men"/>
+					<p:panel id="panelArticulos" header="Articulos">							
+						<h:panelGrid columns="2" id="panelGrid" >
+												 	<h:outputText id="msgCodigoArti" value="CodigoArti"/>
+						 	<p:inputText id="txtCodigoArti" binding="#{articulosView.txtCodigoArti}">
+						 		<p:ajax update="panelArticulos,msg,panelBotones" listener="#{articulosView.listener_txtId}"/>
+						 	</p:inputText>	
+																		
+													<h:outputText id="msgAutor" value=" Autor"/>
+							<p:inputText id="txtAutor" disabled="true" binding="#{articulosView.txtAutor}"/>
+													<h:outputText id="msgDescripcion" value=" Descripcion"/>
+							<p:inputText id="txtDescripcion" disabled="true" binding="#{articulosView.txtDescripcion}"/>
+													<h:outputText id="msgEstadoRegistro" value=" EstadoRegistro"/>
+							<p:inputText id="txtEstadoRegistro" disabled="true" binding="#{articulosView.txtEstadoRegistro}"/>
+													<h:outputText id="msgNombre" value=" Nombre"/>
+							<p:inputText id="txtNombre" disabled="true" binding="#{articulosView.txtNombre}"/>
+													<h:outputText id="msgUsuCrea" value=" UsuCrea"/>
+							<p:inputText id="txtUsuCrea" disabled="true" binding="#{articulosView.txtUsuCrea}"/>
+													<h:outputText id="msgUsuModifica" value=" UsuModifica"/>
+							<p:inputText id="txtUsuModifica" disabled="true" binding="#{articulosView.txtUsuModifica}"/>
+													<h:outputText id="msgCodigoUsua_Usuarios" value=" CodigoUsua_Usuarios"/>
+							<p:inputText id="txtCodigoUsua_Usuarios" disabled="true" binding="#{articulosView.txtCodigoUsua_Usuarios}"/>
+												
+																				<h:outputText id="msgFechaCreacion" value=" FechaCreacion"/>
+														<p:calendar showOn="button" navigator="true" locale="en" 
+							binding="#{articulosView.txtFechaCreacion}" >
+								<p:ajax event="dateSelect" listener="#{articulosView.listener_txtFechaCreacion}"  />
+							</p:calendar>
+														<h:outputText id="msgFechaModifcacion" value=" FechaModifcacion"/>
+														<p:calendar showOn="button" navigator="true" locale="en" 
+							binding="#{articulosView.txtFechaModifcacion}" >
+								<p:ajax event="dateSelect" listener="#{articulosView.listener_txtFechaModifcacion}"  />
+							</p:calendar>
+																	   </h:panelGrid>
+				</p:panel>
+	   			<p:panel id="panelBotones">
+					<div align="center">					
+						<p:commandButton id="btnSave" binding="#{articulosView.btnSave}" disabled="true" value="Save" action="#{articulosView.action_save()}" update="panelArticulos,msg,panelBotones" />
+						<p:commandButton id="btnDelete" binding="#{articulosView.btnDelete}" disabled="true" value="Delete" action="#{articulosView.action_delete_master()}" onclick="if(!confirm('Do you really want to delete this Entry?')){return false;}" update="panelArticulos,msg,panelBotones" />
+						<p:commandButton id="btnClear" value="Clear" action="#{articulosView.action_clear()}" update="panelArticulos,msg,panelBotones" />
+					</div>
+				</p:panel>			
+			</h:form>
+		</f:view>
+			</ui:define>		
+		</ui:composition>	
+	</h:body>	
+</html>	

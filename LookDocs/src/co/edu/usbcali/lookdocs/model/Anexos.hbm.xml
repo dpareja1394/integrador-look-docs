@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 27-feb-2015 15:10:55 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.edu.usbcali.lookdocs.model.Anexos" table="anexos" schema="public">
+        <id name="codigoAnexo" type="java.lang.Long">
+            <column name="codigo_anexo" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="articulos" class="co.edu.usbcali.lookdocs.model.Articulos" fetch="select">
+            <column name="articulos_codigo_arti" not-null="true" />
+        </many-to-one>
+        <property name="nombre" type="java.lang.String">
+            <column name="nombre" length="500" not-null="true" />
+        </property>
+        <property name="url" type="java.lang.String">
+            <column name="url" length="500" />
+        </property>
+        <property name="formato" type="java.lang.String">
+            <column name="formato" length="20" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>
