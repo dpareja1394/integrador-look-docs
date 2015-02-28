@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:head>
+	<f:facet name="first">
+		<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
+		<title>Bievenido a LookDoocs</title>
+	</f:facet>
+</h:head>
+<h:body>
+	<ui:composition template="/FeedPrincipalAdministrador.xhtml">
+		<ui:define name="body">
+			<f:view contentType="text/html">
+				<p:messages showDetail="true" />
+				<h:form>
+					<p:panel id="panelEditarCuenta" header="Edición de la Cuenta"
+						style="font-size: 12px;position: absolute; top: 20%;left: 35%;width: auto">
+						<p:growl id="mensajesEditarCuentas" />
+
+						<h:panelGrid columns="2">
+							<p:outputLabel value="Correo (e-mail): " />
+							<p:inputText id="txtemailUsuarios" disabled="true" />
+					    </h:panelGrid>
+					    <h:panelGrid columns="3">
+							<p:outputLabel value="Nombre: " />
+							<p:inputText id="txtNombreUsuarios" disabled="true" />
+							<p:commandButton id="btnEditarNombre" icon="ui-icon-pencil"
+								value="Editar" onclick="PF('dlg2').show();" />
+							<p:outputLabel value="Contraseña: " />
+							<p:password id="txtPasswordUsuarios" disabled="true" />
+							<p:commandButton id="btnEditarPass" icon="ui-icon-pencil"
+								value="Editar" onclick="PF('dlg3').show();" />
+						</h:panelGrid>			
+				
+						<p:dialog header="Nombre" widgetVar="dlg2"
+							height="40">
+							<p:outputLabel value="Nombre: " />
+							<p:inputText id="txtNombreUsuariosEdit"/>
+							<p:commandButton id="btnEditarNombreEdit" icon="ui-icon-check"
+								value="Guardar" />
+						</p:dialog>
+						<p:dialog header="Contraseña" widgetVar="dlg3"
+							height="150">
+							<h:panelGrid columns="2">
+							<p:outputLabel value="Contraseña Actual: " />
+							<p:password id="txtPasswordUsuariosEdit1" />
+							<p:outputLabel value="Contraseña Nueva: " />
+							<p:password id="txtPasswordUsuariosEdit2" />
+							<p:outputLabel value="Verificar Contraseña: " />
+							<p:password id="txtPasswordUsuariosEdit3" />
+							</h:panelGrid>
+							<p:separator/>
+							<p:commandButton id="btnEditarPassEdit" icon="ui-icon-check"
+								value="Guardar" />
+						</p:dialog>
+					</p:panel>
+					
+
+
+				</h:form>
+			</f:view>
+		
+		</ui:define>
+	</ui:composition>
+	
+</h:body>
+</html>

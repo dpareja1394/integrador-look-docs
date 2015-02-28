@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<f:facet name="first">
+		<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
+		<title>Bievenido a LookDoocs</title>
+	</f:facet>
+</h:head>
+
+
+
+<h:body>
+	<ui:composition template="/FeedPrincipalAdministrador.xhtml">
+		<ui:define name="body">
+			<f:view contentType="text/html">
+				<h:form>
+				<p:messages showDetail="true" />
+					<p:panel id="panelDescripcion">
+						<h:panelGrid columns="5">
+							<p:outputLabel value="Nombre" />
+							<p:spacer width="20" height="20" />
+							<p:inputText id="txtemailUsuarios" disabled="true" />
+							<p:spacer width="20" height="20" />
+							<p:commandButton value="Editar" type="button"
+								onclick="PF('dlg9').show();" />
+							<p:outputLabel value="Descripcion" />
+							<p:spacer width="20" height="20" />
+							<p:inputTextarea rows="3" cols="30"
+								completeMethod="#{inputTextAreaView.completeArea}"
+								queryDelay="750" minQueryLength="4" disabled="true" />
+							<p:spacer width="20" height="20" />
+							<p:commandButton value="Editar" type="button"
+								onclick="PF('cdc').show();" />
+						</h:panelGrid>
+						<h:panelGrid columns="5">
+							<p:outputLabel value="Tipo: " />
+							<p:spacer width="20" height="20" />
+							<p:outputLabel value=" Publica " />
+							<p:spacer width="20" height="20" />
+							<p:commandButton value="Cambiar" type="button"
+								onclick="PF('dlg8').show();" />
+						</h:panelGrid>
+					</p:panel>
+					<p:panel id="panelArticulos" header="Articulos Guardados">
+						<p:panelGrid columns="4">
+							<h:outputText value="Titulo" />
+							<h:outputText value="Resumen" />
+
+							<h:outputText value="Estado" />
+							<h:outputText value="Opciones" />
+
+							<h:outputText value="Premier League" />
+							<h:outputText value="El equipo del manchester..." />
+
+							<h:outputText value="No Leido" />
+							<p:splitButton value="Ver" icon="ui-icon-disk">
+								<p:menuitem value="Cambiar de Categoria"
+									icon="ui-icon-arrowrefresh-1-w" onclick="PF('dlg11').show();" />
+								<p:menuitem value="Quitar" icon="ui-icon-close" />
+							</p:splitButton>
+						</p:panelGrid>
+					</p:panel>
+					<p:panel id="panelCategorias" header="Opciones De La Categoria">
+						<p:panelGrid columns="3">
+							<p:commandButton value="Cambiar Nombre " type="button"
+								onclick="PF('dlg1').show();" />
+							<p:commandButton value="Añadir RSS " type="button"
+								onclick="PF('dlg2').show();" />
+							<p:commandButton value="Eliminar Categoria " type="button"
+								onclick="PF('dlg3').show();">
+								<p:confirm header="Confirmacion"
+									message="Esta Seguro Que Desea Eliminar La Categoria?"
+									icon="ui-icon-alert" />
+							</p:commandButton>
+
+						</p:panelGrid>
+					</p:panel>
+
+						<p:dialog header="Cambiar Nombre" widgetVar="dlg1">
+							<p:panelGrid columns="2">
+								<p:outputLabel value="Nuevo Nombre" />
+								<p:inputText id="nuevoNombre" />
+								<p:commandButton value="Aceptar" />
+							</p:panelGrid>
+						</p:dialog>
+
+						<p:dialog header="Añadir RSS" widgetVar="dlg2">
+							<p:panelGrid columns="2">
+								<p:outputLabel value="URL" />
+								<p:inputText id="urlArticullo" />
+								<p:commandButton value="Añadir" />
+							</p:panelGrid>
+						</p:dialog>
+
+						<p:confirmDialog global="true" showEffect="fade"
+							hideEffect="explode">
+							<p:commandButton value="Si" type="button"
+								styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+							<p:commandButton value="No" type="button"
+								styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+						</p:confirmDialog>
+						<p:dialog header="Cambiar categoría" widgetVar="dlg11"
+							minHeight="40">
+							<h:outputText value="Seleccione la Categoria: " />
+							<br />
+							<h:selectOneMenu id="txt3" required="true" label="Text 3">
+								<f:selectItem itemLabel="Categorias" itemValue=""
+									noSelectionOption="true" />
+								<f:selectItem itemLabel="Option 1" itemValue="1" />
+								<f:selectItem itemLabel="Option 2" itemValue="2" />
+								<f:selectItem itemLabel="Option 3" itemValue="3" />
+							</h:selectOneMenu>
+							<p:separator />
+							<p:commandButton id="btnCambiar" value="Cambiar" />
+						</p:dialog>
+						<p:dialog header="Cambiar tipo" widgetVar="dlg8" minHeight="40">
+							<h:outputText value="Seleccione el tipo de Categoria: " />
+							<br />
+							<h:selectOneMenu id="txt5" required="true" label="Text 3">
+								<f:selectItem itemLabel="Tipo" itemValue=""
+									noSelectionOption="true" />
+								<f:selectItem itemLabel="Publica" itemValue="1" />
+								<f:selectItem itemLabel="Privada" itemValue="2" />
+							</h:selectOneMenu>
+							<p:separator />
+							<p:commandButton id="btnCambiarTipo" value="Cambiar" />
+						</p:dialog>
+						<p:dialog header="Nombre Categoria" widgetVar="dlg9">
+							<p:panelGrid columns="2">
+								<p:outputLabel value="Nombre" />
+								<p:inputText id="nombreCat" />
+								<p:commandButton value="Cambiar" />
+							</p:panelGrid>
+						</p:dialog>
+						<p:dialog header="Descripcion Categoria" widgetVar="cdc"
+							>
+							<p:panelGrid columns="2">
+								<p:outputLabel value="Descipcion" />
+								<p:inputTextarea rows="3" cols="30"
+									completeMethod="#{inputTextAreaView.completeArea}"
+									queryDelay="750" minQueryLength="4" />
+
+								<p:commandButton value="Cambiar" />
+							</p:panelGrid>
+						</p:dialog>
+					
+				</h:form>
+
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+
+
+</html>

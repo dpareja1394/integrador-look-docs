@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<f:view contentType="text/html">
+	<h:head>
+		<f:facet name="first">
+			<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
+			<title>LookDocs</title>
+		</f:facet>
+	</h:head>
+
+	<h:body>
+
+		<p:messages showDetail="true" />
+		<h:form>
+			<p:growl id="messages" showDetail="false" />
+			<pe:layout maskPanesEarly="true">
+				<pe:layoutPane position="center" maskContents="true">
+				<div id="container">
+				<ui:insert name="header">
+				</ui:insert>
+			
+					<ui:insert name="body"/>
+			
+				<ui:insert name="footer">
+				</ui:insert>
+				</div>
+					
+				</pe:layoutPane>
+				<pe:layoutPane position="west" size="250"
+					resizeWhileDragging="false" maxSize="500" minSize="100"
+					resizable="false" closable="true">
+					<p:menu toggleable="true">
+					<p:menuitem value="Principal" update="messages"
+								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/PrincipalAdministrador.xhtml" />
+						<p:submenu label="Categorias">
+						<p:menuitem value="Borrador" update="messages"
+								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/Borrador.xhtml"  />
+							<p:menuitem value="Tecnologia" update="messages"
+								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/CategoriasAdmin.xhtml"  />
+							<p:menuitem value="Deportes" update="messages"
+								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/CategoriasAdmin.xhtml" />
+							<p:menuitem value="Religion" update="messages"
+								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/CategoriasAdmin.xhtml"/>
+							<p:menuitem value="Noticias" update="messages"
+								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/CategoriasAdmin.xhtml"/>
+							<p:menuitem value="Animales" update="messages"
+								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/CategoriasAdmin.xhtml"/>
+							<p:menuitem value="Plantas" update="messages"
+							 icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/CategoriasAdmin.xhtml"/>
+							<p:menuitem value="Repuestos" update="messages"
+								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/CategoriasAdmin.xhtml"/>
+							<p:menuitem value="LookDocs" update="messages"
+								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/CategoriasAdmin.xhtml"/>
+							<p:menuitem value="IDE" update="messages"
+							 icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/CategoriasAdmin.xhtml"/>
+							<p:menuitem value="Frameworks" update="messages"
+								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/CategoriasAdmin.xhtml"/>
+						</p:submenu>
+						<p:submenu label="Cuenta">
+							<p:menuitem value="Editar" update="messages" ajax="false"
+								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/EditarCuentasAdmin.xhtml" />
+						</p:submenu>
+						<p:submenu label="Sesion">
+							<p:menuitem value="Cerrar Sesion" icon="ui-icon-home" />
+						</p:submenu>
+					</p:menu>
+				</pe:layoutPane>
+			</pe:layout>
+		</h:form>
+	</h:body>
+
+</f:view>
+</html>
