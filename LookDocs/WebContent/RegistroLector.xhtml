@@ -13,30 +13,36 @@
 	</f:facet>
 </h:head>
 <h:body>
-	
+
 	<f:view contentType="text/html">
 
 		<p:messages showDetail="true" />
 		<h:form>
-			<p:panel id="panelLoginUsuarios" header="Registro"
+			<p:panel id="panelRegistroLector" header="Registro"
 				style="font-size: 12px;position: absolute; top: 20%;left: 35%;width: auto">
-				<p:growl id="mensajesLoginUsuarios" />
+				<p:growl id="mensajesRegistroLector" />
 
 				<h:panelGrid columns="2">
 					<p:outputLabel value="Correo (e-mail): *" />
-					<p:inputText id="txtemailUsuarios" />
+					<p:inputText id="txtEmail" binding="#{usuariosView.txtEmail}" />
 					<p:outputLabel value="Nombre: *" />
-					<p:inputText id="txtNombreUsuarios" />
+					<p:inputText id="txtNombre" binding="#{usuariosView.txtNombre}" />
 					<p:outputLabel value="Contraseña: *" />
-					<p:password id="txtPasswordUsuarios" />
-					<p:outputLabel value="Contraseña: *" />
-					<p:password id="txtPasswordConfirmacion" />
+					<p:password id="pswClave" binding="#{usuariosView.pswClave}" />
+					<p:outputLabel value="Confirmar Contraseña: *" />
+					<p:password id="pswClaveConfirmacion"
+						binding="#{usuariosView.pswClaveConfirmacion}"/>
 				</h:panelGrid>
-				<p:captcha label="Captcha" />
-				<p:commandButton id="btnRegistroUsuarios"
-					actionListener="#{captchaView.submit}" ajax="false"
-					icon="ui-icon-check" value="Registrarse"
-					update="panelLoginUsuarios, mensajesLoginUsuarios" />
+				<h:panelGrid columns="2">
+					<p:commandButton id="btnSave" value="Regisgrar"
+						binding="#{usuariosView.btnSave}"
+						action="#{usuariosView.registrarLectorAction}"
+						update="panelRegistroLector, mensajesRegistroLector" />
+					<p:commandButton id="btnClear" value="Limpiar"
+						binding="#{usuariosView.btnClear}"
+						action="#{usuariosView.clearAction}"
+						update="panelRegistroLector, mensajesRegistroLector" />
+				</h:panelGrid>
 				<f:facet name="footer">
 					<h:outputText value="Los campos con (*) son obligatorios" />
 				</f:facet>
@@ -48,6 +54,6 @@
 
 
 	</f:view>
-	
+
 </h:body>
 </html>

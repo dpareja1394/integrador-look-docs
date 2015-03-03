@@ -46,13 +46,10 @@ import co.edu.usbcali.lookdocs.model.dto.RssDTO;
 import co.edu.usbcali.lookdocs.model.dto.UsuariosDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.context.annotation.Scope;
-
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -322,4 +319,14 @@ public interface IBusinessDelegatorView {
     public Long findTotalNumberUsuarios() throws Exception;
 
     public List<UsuariosDTO> getDataUsuarios() throws Exception;
+
+    public boolean validateEmailAddress(String sEmail) throws Exception;
+
+    public String iniciarSesionLector(String email, String password) throws Exception;
+    
+    public String iniciarSesionAdministrador(String email, String password) throws Exception;
+    
+    public void registrarUsuarioLector(Usuarios usuarios) throws Exception;
+
+    public Usuarios obtenerPorMail(String email)throws Exception;
 }

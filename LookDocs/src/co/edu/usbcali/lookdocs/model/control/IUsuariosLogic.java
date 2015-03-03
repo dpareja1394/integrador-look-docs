@@ -4,11 +4,7 @@ import co.edu.usbcali.lookdocs.model.Usuarios;
 import co.edu.usbcali.lookdocs.model.dto.UsuariosDTO;
 
 import java.math.BigDecimal;
-
 import java.util.*;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -53,4 +49,18 @@ public interface IUsuariosLogic {
     public Long findTotalNumberUsuarios() throws Exception;
 
     public List<UsuariosDTO> getDataUsuarios() throws Exception;
+
+    public boolean validateEmailAddress(String sEmail) throws Exception;
+
+    public String iniciarSesionLector(String email, String password) throws Exception;
+    
+    public String iniciarSesionAdministrador(String email, String password) throws Exception;
+    
+    public void registrarUsuarioLector(Usuarios usuarios) throws Exception;
+    
+    public Long getConsecutivo(String sqlName) throws Exception;
+    
+    public void enviarMensaje(Usuarios usuarios)throws Exception;
+
+    public Usuarios obtenerPorMail(String email)throws Exception;
 }

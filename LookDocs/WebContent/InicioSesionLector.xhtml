@@ -19,33 +19,37 @@
 
 		<p:messages showDetail="true" />
 		<h:form>
-			<p:panel id="panelLoginUsuarios" header="Bienvenido a LookDocs"
+			<p:panel id="panelLoginLector" header="Bienvenido a LookDocs"
 				style="font-size: 12px;position: absolute; top: 20%;left: 35%;width: auto">
-				<p:growl id="mensajesLoginUsuarios" />
+				<p:growl id="mensajesLoginLector" />
 
 				<h:panelGrid columns="2">
 					<p:outputLabel value="Correo (e-mail): *" />
-					<p:inputText id="txtemailUsuarios" />
+					<p:inputText id="txtemailUsuarios"
+						binding="#{usuariosView.txtEmail}" />
 					<p:outputLabel value="Contraseña: *" />
-					<p:password id="txtPasswordUsuarios" />
+					<p:password id="txtPasswordUsuarios"
+						binding="#{usuariosView.pswClave}" />
 				</h:panelGrid>
-				<p:commandButton id="btnLoginUsuarios"
-					ajax="false"
-					icon="ui-icon-check" value="Registrarse"
-					update="panelLoginUsuarios, mensajesLoginUsuarios" />
+				<p:commandButton id="btnLoginUsuarios" icon="ui-icon-check"
+					value="Iniciar Sesión" binding="#{usuariosView.btnLoginLector}"
+					action="#{usuariosView.iniciarLectorAction}"
+					update="panelLoginLector, mensajesLoginLector" />
 				<f:facet name="footer">
 					<h:outputText value="Los campos con (*) son obligatorios" />
-					<br/>
+					<br />
 					<p:commandButton id="btnRecover" icon="ui-icon-locked"
-								value="¿ Olvido la contraseña ?" onclick="PF('dlg3').show();" />
+						value="¿ Olvido la contraseña ?" onclick="PF('dlg3').show();" />
 				</f:facet>
-				<p:dialog header="Recuperacion de Contraseña" widgetVar="dlg3" modal="true" height="100">
-					<p:outputLabel value="Se enviará un e-mail con el procedimiento para recuperar su contraseña." />
-					<p:separator/>
-					<br/>
+				<p:dialog header="Recuperacion de Contraseña" widgetVar="dlg3"
+					modal="true" height="100">
+					<p:outputLabel
+						value="Se enviará un e-mail con el procedimiento para recuperar su contraseña." />
+					<p:separator />
+					<br />
 					<p:outputLabel value="Correo (e-mail): " />
 					<p:inputText id="txtrecuperarContraseña" />
-					<br/>
+					<br />
 					<p:commandButton id="btnRecuperarContraseña" icon="ui-icon-check"
 						value="Enviar" />
 				</p:dialog>

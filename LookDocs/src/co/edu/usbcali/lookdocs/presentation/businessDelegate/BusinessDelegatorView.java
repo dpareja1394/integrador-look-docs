@@ -47,15 +47,11 @@ import co.edu.usbcali.lookdocs.model.dto.UsuariosDTO;
 import co.edu.usbcali.lookdocs.presentation.businessDelegate.IBusinessDelegatorView;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.context.annotation.Scope;
-
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-
 import java.sql.*;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -694,4 +690,30 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
     public List<UsuariosDTO> getDataUsuarios() throws Exception {
         return usuariosLogic.getDataUsuarios();
     }
+
+	@Override
+	public boolean validateEmailAddress(String sEmail) throws Exception {
+		return usuariosLogic.validateEmailAddress(sEmail);
+	}
+
+	@Override
+	public String iniciarSesionLector(String email, String password) throws Exception {
+		return usuariosLogic.iniciarSesionLector(email, password);
+	}
+
+	@Override
+	public String iniciarSesionAdministrador(String email, String password)
+			throws Exception {
+		return usuariosLogic.iniciarSesionAdministrador(email, password);
+	}
+
+	@Override
+	public void registrarUsuarioLector(Usuarios usuarios) throws Exception {
+		usuariosLogic.registrarUsuarioLector(usuarios);
+	}
+
+	@Override
+	public Usuarios obtenerPorMail(String email) throws Exception {
+		return usuariosLogic.obtenerPorMail(email);
+	}
 }

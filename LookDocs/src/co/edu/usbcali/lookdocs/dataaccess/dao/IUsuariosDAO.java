@@ -9,4 +9,9 @@ import co.edu.usbcali.lookdocs.model.Usuarios;
 *
 */
 public interface IUsuariosDAO extends Dao<Usuarios, Long> {
+	public Usuarios obtenerPorMail(String email);
+
+	public void registrarUsuarioLector(Usuarios usuarios);
+	
+	public Long getConsecutivo(String sqlName);
 }
