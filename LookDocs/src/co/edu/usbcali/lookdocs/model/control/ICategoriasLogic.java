@@ -4,11 +4,9 @@ import co.edu.usbcali.lookdocs.model.Categorias;
 import co.edu.usbcali.lookdocs.model.dto.CategoriasDTO;
 
 import java.math.BigDecimal;
-
 import java.util.*;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+
+import org.primefaces.model.TreeNode;
 
 
 /**
@@ -53,4 +51,6 @@ public interface ICategoriasLogic {
     public Long findTotalNumberCategorias() throws Exception;
 
     public List<CategoriasDTO> getDataCategorias() throws Exception;
+    
+    public void deleteCategoriasbyNode(TreeNode selectedNode) throws Exception;
 }

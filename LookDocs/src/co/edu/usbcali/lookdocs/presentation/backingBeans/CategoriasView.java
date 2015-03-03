@@ -9,16 +9,14 @@ import co.edu.usbcali.lookdocs.utilities.*;
 import org.primefaces.component.calendar.*;
 import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.component.inputtext.InputText;
-
 import org.primefaces.event.RowEditEvent;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
 
 import java.io.Serializable;
-
 import java.sql.*;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +29,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.swing.tree.DefaultTreeModel;
 
 
 /**
@@ -44,6 +43,7 @@ public class CategoriasView implements Serializable {
     private static final long serialVersionUID = 1L;
     private InputText txtEstadoRegistro;
     private InputText txtNombre;
+    private InputText txtNombreModify;
     private InputText txtUsuCrea;
     private InputText txtUsuModifica;
     private InputText txtCodigoCate;
@@ -59,9 +59,35 @@ public class CategoriasView implements Serializable {
     private boolean showDialog;
     @ManagedProperty(value = "#{BusinessDelegatorView}")
     private IBusinessDelegatorView businessDelegatorView;
+    private TreeNode raiz;
+    private TreeNode selectedNode;
+    private String message = "";
+    List<Categorias> categoriasRaices;
+    private String estadoRegistro;
+    
 
-    public CategoriasView() {
+	
+
+	public CategoriasView() {
         super();
+    }
+    
+    public void consultarArbol(){
+    	try {
+    		categoriasRaices = getListaNodos();
+			this.raiz = new DefaultTreeNode("Raiz",null);
+			
+			adicionarNodos(categoriasRaices, this.raiz);
+			
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
+    }
+    
+    private void adicionarNodos(List<Categorias> categorias, TreeNode padre){
+    	for (Categorias categoria : categorias) {
+			TreeNode no = new DefaultTreeNode(categoria, padre);
+		}
     }
 
     public void rowEventListener(RowEditEvent e) {
@@ -275,19 +301,19 @@ public class CategoriasView implements Serializable {
     public String action_create() {
         try {
             entity = new Categorias();
-
-            Long codigoCate = FacesUtils.checkLong(txtCodigoCate);
-
-            entity.setCodigoCate(codigoCate);
-            entity.setEstadoRegistro(FacesUtils.checkString(txtEstadoRegistro));
-            entity.setFechaCreacion(FacesUtils.checkDate(txtFechaCreacion));
-            entity.setFechaModifcacion(FacesUtils.checkDate(txtFechaModifcacion));
+            entity.setEstadoRegistro(
+            		(estadoRegistro.equals("1")) ? "a" : 
+            			(estadoRegistro.equals("2") ? "i" : null) );
+            entity.setUsuCrea("Admin");
             entity.setNombre(FacesUtils.checkString(txtNombre));
-            entity.setUsuCrea(FacesUtils.checkString(txtUsuCrea));
-            entity.setUsuModifica(FacesUtils.checkString(txtUsuModifica));
+            //entity.setUsuCrea(FacesUtils.getfromSession(name));
             businessDelegatorView.saveCategorias(entity);
+            txtNombre.setValue("");
+            categoriasRaices=null;
+            consultarArbol();
             FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYSAVED);
-            action_clear();
+            
+            //action_clear();
         } catch (Exception e) {
             entity = null;
             FacesUtils.addErrorMessage(e.getMessage());
@@ -298,21 +324,22 @@ public class CategoriasView implements Serializable {
 
     public String action_modify() {
         try {
-            if (entity == null) {
-                Long codigoCate = new Long(selectedCategorias.getCodigoCate());
-                entity = businessDelegatorView.getCategorias(codigoCate);
-            }
-
-            entity.setEstadoRegistro(FacesUtils.checkString(txtEstadoRegistro));
-            entity.setFechaCreacion(FacesUtils.checkDate(txtFechaCreacion));
-            entity.setFechaModifcacion(FacesUtils.checkDate(txtFechaModifcacion));
-            entity.setNombre(FacesUtils.checkString(txtNombre));
-            entity.setUsuCrea(FacesUtils.checkString(txtUsuCrea));
-            entity.setUsuModifica(FacesUtils.checkString(txtUsuModifica));
+        	Categorias entity = (Categorias) selectedNode.getData();
+            entity.setEstadoRegistro(
+            		(estadoRegistro.equals("1")) ? "a" : 
+            			(estadoRegistro.equals("2") ? "i" : null) );
+            entity.setUsuModifica("Admin");
+            entity.setNombre(txtNombreModify.getValue().toString());
+            //entity.setUsuCrea(FacesUtils.getfromSession(name));
             businessDelegatorView.updateCategorias(entity);
-            FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYMODIFIED);
+            txtNombreModify.setValue("");
+            categoriasRaices=null;
+            consultarArbol();
+            FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYSAVED);
+            
+            //action_clear();
         } catch (Exception e) {
-            data = null;
+            entity = null;
             FacesUtils.addErrorMessage(e.getMessage());
         }
 
@@ -346,15 +373,24 @@ public class CategoriasView implements Serializable {
 
         return "";
     }
+    
+    public void deleteMessage(){
+    	Categorias selected = (Categorias) selectedNode.getData();
+    	setMessage("Esta seguro de eliminar la categoria: "+selected.getNombre());
+    }
 
     public void action_delete() throws Exception {
         try {
-            businessDelegatorView.deleteCategorias(entity);
+
+        	
+            businessDelegatorView.deleteCategoriasbyNode(selectedNode);
             FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYDELETED);
-            action_clear();
+            categoriasRaices = null;
+            consultarArbol();
+            //action_clear();
             data = null;
         } catch (Exception e) {
-            throw e;
+        	FacesUtils.addErrorMessage(e.getMessage());
         }
     }
 
@@ -537,4 +573,79 @@ public class CategoriasView implements Serializable {
     public void setShowDialog(boolean showDialog) {
         this.showDialog = showDialog;
     }
+    
+    public TreeNode getRaiz() {
+		return raiz;
+	}
+
+	/**
+	 * @return the selectedNode
+	 */
+	public TreeNode getSelectedNode() {
+		return selectedNode;
+	}
+	
+	public List<Categorias> getListaNodos(){
+		
+		if(categoriasRaices == null){
+			try {
+				
+				return businessDelegatorView.getCategorias();
+			} catch (Exception e) {
+			}
+		}
+		
+		return categoriasRaices;
+	}
+
+	/**
+	 * @param selectedNode the selectedNode to set
+	 */
+	public void setSelectedNode(TreeNode selectedNode) {
+		this.selectedNode = selectedNode;
+	}
+
+	/**
+	 * @return the message
+	 */
+	public String getMessage() {
+		return message;
+	}
+
+	/**
+	 * @param message the message to set
+	 */
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	/**
+	 * @return the estadoRegistro
+	 */
+	public String getEstadoRegistro() {
+		return estadoRegistro;
+	}
+
+	/**
+	 * @param estadoRegistro the estadoRegistro to set
+	 */
+	public void setEstadoRegistro(String estadoRegistro) {
+		this.estadoRegistro = estadoRegistro;
+	}
+
+	/**
+	 * @return the txtNombreModify
+	 */
+	public InputText getTxtNombreModify() {
+		return txtNombreModify;
+	}
+
+	/**
+	 * @param txtNombreModify the txtNombreModify to set
+	 */
+	public void setTxtNombreModify(InputText txtNombreModify) {
+		this.txtNombreModify = txtNombreModify;
+	}
+
+	
 }

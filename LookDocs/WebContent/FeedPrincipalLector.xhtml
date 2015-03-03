@@ -46,42 +46,30 @@
 				<pe:layoutPane position="west" size="250"
 					resizeWhileDragging="false" maxSize="500" minSize="100"
 					resizable="flase" closable="true">
-					<p:commandButton value="Crear categoria" type="button"
-						onclick="PF('dlg2').show();" />					
+
 					<p:menu toggleable="true">
-					<p:menuitem value="Buscar Artículo" update="messages"
-						icon="ui-icon-disk"
-						url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/Buscar.xhtml" />
-						<p:submenu label="Categorias">
-							<p:menuitem value="Tecnologia" update="messages"
-								icon="ui-icon-disk"
-								url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/Categorias.xhtml" />
-							<p:menuitem value="Deportes" update="messages"
-								icon="ui-icon-disk"
-								url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/Categorias.xhtml" />
-							<p:menuitem value="Religion" update="messages"
-								icon="ui-icon-disk"
-								url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/Categorias.xhtml" />
-							<p:menuitem value="Noticias" update="messages"
-								icon="ui-icon-disk"
-								url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/Categorias.xhtml" />
-							<p:menuitem value="Animales" update="messages"
-								icon="ui-icon-disk"
-								url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/Categorias.xhtml" />
-							<p:menuitem value="Plantas" update="messages" icon="ui-icon-disk"
-								url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/Categorias.xhtml" />
-							<p:menuitem value="Repuestos" update="messages"
-								icon="ui-icon-disk"
-								url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/Categorias.xhtml" />
-							<p:menuitem value="LookDocs" update="messages"
-								icon="ui-icon-disk"
-								url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/Categorias.xhtml" />
-							<p:menuitem value="IDE" update="messages" icon="ui-icon-disk"
-								url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/Categorias.xhtml" />
-							<p:menuitem value="Frameworks" update="messages"
-								icon="ui-icon-disk"
-								url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/Categorias.xhtml" />
-						</p:submenu>
+						<p:menuitem value="Buscar Artículo" update="messages"
+							icon="ui-icon-disk"
+							url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/Buscar.xhtml" />
+					</p:menu>
+					<p:separator />
+					<f:metadata>
+						<f:viewAction id="metadata"
+							action="#{categoriasView.consultarArbol()}" />
+					</f:metadata>
+					<p:separator />
+					<p:panel header="Categorias">
+						<p:tree value="#{categoriasView.raiz}" var="categorias"
+							selectionMode="single" style="width:209px"
+							selection="#{categoriasView.selectedNode}" dynamic="true">
+							<p:treeNode expandedIcon="ui-icon-folder-open"
+								collapsedIcon="ui-icon-folder-collapsed">
+								<h:outputText value="#{categorias.nombre}" />
+							</p:treeNode>
+						</p:tree>
+					</p:panel>
+					<p:separator />
+					<p:menu toggleable="true">
 						<p:submenu label="Cuenta">
 							<p:menuitem value="Editar" update="messages" ajax="false"
 								icon="ui-icon-disk"
@@ -91,7 +79,6 @@
 							<p:menuitem value="Cerrar Sesion" icon="ui-icon-home" />
 						</p:submenu>
 					</p:menu>
-
 
 				</pe:layoutPane>
 			</pe:layout>

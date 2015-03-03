@@ -8,7 +8,13 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
+<f:metadata>
+	<f:viewAction id="metadata" action="#{categoriasView.consultarArbol()}" />
+</f:metadata>
+
 <f:view contentType="text/html">
+
+
 	<h:head>
 		<f:facet name="first">
 			<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
@@ -17,63 +23,130 @@
 	</h:head>
 
 	<h:body>
-
-		<p:messages showDetail="true" />
+		
 		<h:form>
-			<p:growl id="messages" showDetail="false" />
+			
 			<pe:layout maskPanesEarly="true">
 				<pe:layoutPane position="center" maskContents="true">
-				<div id="container">
-				<ui:insert name="header">
-				</ui:insert>
-			
-					<ui:insert name="body"/>
-			
-				<ui:insert name="footer">
-				</ui:insert>
-				</div>
-					
+				<p:growl id="messages" showDetail="false" />
+					<div id="container">
+						<ui:insert name="header">
+						</ui:insert>
+
+						<ui:insert name="body" />
+
+						<ui:insert name="footer">
+						</ui:insert>
+					</div>
+	
 				</pe:layoutPane>
 				<pe:layoutPane position="west" size="250"
 					resizeWhileDragging="false" maxSize="500" minSize="100"
 					resizable="false" closable="true">
-					<p:menu toggleable="true">
-					<p:menuitem value="Principal" update="messages"
-								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/PrincipalAdministrador.xhtml" />
-						<p:submenu label="Categorias">
-						<p:menuitem value="Borrador" update="messages"
-								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/Borrador.xhtml"  />
-							<p:menuitem value="Tecnologia" update="messages"
-								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/CategoriasAdmin.xhtml"  />
-							<p:menuitem value="Deportes" update="messages"
-								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/CategoriasAdmin.xhtml" />
-							<p:menuitem value="Religion" update="messages"
-								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/CategoriasAdmin.xhtml"/>
-							<p:menuitem value="Noticias" update="messages"
-								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/CategoriasAdmin.xhtml"/>
-							<p:menuitem value="Animales" update="messages"
-								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/CategoriasAdmin.xhtml"/>
-							<p:menuitem value="Plantas" update="messages"
-							 icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/CategoriasAdmin.xhtml"/>
-							<p:menuitem value="Repuestos" update="messages"
-								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/CategoriasAdmin.xhtml"/>
-							<p:menuitem value="LookDocs" update="messages"
-								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/CategoriasAdmin.xhtml"/>
-							<p:menuitem value="IDE" update="messages"
-							 icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/CategoriasAdmin.xhtml"/>
-							<p:menuitem value="Frameworks" update="messages"
-								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/CategoriasAdmin.xhtml"/>
-						</p:submenu>
-						<p:submenu label="Cuenta">
-							<p:menuitem value="Editar" update="messages" ajax="false"
-								icon="ui-icon-disk" url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/EditarCuentasAdmin.xhtml" />
-						</p:submenu>
-						<p:submenu label="Sesion">
-							<p:menuitem value="Cerrar Sesion" icon="ui-icon-home" />
-						</p:submenu>
-					</p:menu>
+					<p:layout
+						style="min-width:90px; min-height:630px;height:auto; background-color:#E8E8E8 ; font-size: 0.9em; line-height: 150%;">
+						<p:layoutUnit position="north" size="90"
+							style="background-color: #E8E8E8">
+							<p:menu toggleable="true">
+								<p:menuitem value="Principal" update="messages"
+									icon="ui-icon-disk"
+									url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/PrincipalAdministrador.xhtml" />
+							</p:menu>
+						</p:layoutUnit>
+						<p:layoutUnit position="south" size="200"
+							style="background-color:#E8E8E8;">
+							<p:menu toggleable="true">
+								<p:submenu label="Cuenta">
+									<p:menuitem value="Editar" update="messages" ajax="false"
+										icon="ui-icon-disk"
+										url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/EditarCuentasAdmin.xhtml" />
+								</p:submenu>
+								<p:submenu label="Sesion">
+									<p:menuitem value="Cerrar Sesion" icon="ui-icon-home" />
+								</p:submenu>
+							</p:menu>
+						</p:layoutUnit>
+						<p:layoutUnit position="center"
+							style="width:90px;height:500;overflow">
+
+							<p:splitButton value="Crear Categoria"
+								onclick="PF('dlgCrear').show();" update="messages"
+								icon="ui-icon-disk"
+								>
+								<p:menuitem value="Actualizar Categoria"
+									update="messages" onclick="PF('dlgModificar').show();"
+									icon="ui-icon-arrowrefresh-1-w"
+									style="font-size: 0.9em" />
+								<p:menuitem value="Eliminar Categoria"
+									icon="ui-icon-close" action="#{categoriasView.action_delete()}"
+									style=";font-size: 0.9em" ajax="false"  />
+
+							</p:splitButton>
+							<p:separator />
+							<!-- ARBOL CARGADO DINAMICAMENTE -->
+							<p:panel header="Categorias">
+							<p:tree value="#{categoriasView.raiz}" var="categorias"
+								selectionMode="single" style="width:199px"
+								selection="#{categoriasView.selectedNode}" dynamic="true">
+								<p:treeNode expandedIcon="ui-icon-folder-open"
+									collapsedIcon="ui-icon-folder-collapsed">
+									<h:outputText value="#{categorias.nombre}" />
+								</p:treeNode>
+							</p:tree></p:panel><!-- FIN ARBOL CARGADO DINAMICAMENTE -->
+							<p:separator />
+						</p:layoutUnit>
+					</p:layout>
+
+
+
+
+
+
+
 				</pe:layoutPane>
 			</pe:layout>
+			<p:dialog header="Crear Categoria" widgetVar="dlgCrear" style="font-size: 0.9em;height: 225px;width: 317px;"
+
+				resizable="true">
+				<h:panelGrid columns="2" cellpadding="10">
+					<p:outputLabel value="Nombre" />
+					<p:inputText id="txtNombreCate"
+						binding="#{categoriasView.txtNombre}" />
+					<h:outputText value="Estado: " />
+					<h:selectOneMenu id="txt5" label="Text 3" value="#{categoriasView.estadoRegistro}">
+						<f:selectItem itemLabel="Tipo" itemValue=""
+							noSelectionOption="true" />
+						<f:selectItem itemLabel="Activa" itemValue="1" />
+						<f:selectItem itemLabel="Inactiva" itemValue="2" />
+					</h:selectOneMenu>
+					<p:commandButton id="btnCrearCat" value="Crear"
+						binding="#{categoriasView.btnSave}" ajax="false"
+						action="#{categoriasView.action_create()}"
+						update="prueba,metadata" />
+
+				</h:panelGrid>
+			</p:dialog>
+			<p:dialog header="Modifcar Categoria" widgetVar="dlgModificar" style="font-size: 0.9em;height: 225px;width: 317px;"
+
+				resizable="true">
+				<h:panelGrid columns="2" cellpadding="10">
+					<p:outputLabel value="Nombre" />
+					<p:inputText id="txtNombreModify"
+						binding="#{categoriasView.txtNombreModify}" />
+					<h:outputText value="Estado: " />
+					<h:selectOneMenu id="txt5Modifi" label="Text 3" value="#{categoriasView.estadoRegistro}">
+						<f:selectItem itemLabel="Tipo" itemValue=""
+							noSelectionOption="true" />
+						<f:selectItem itemLabel="Activa" itemValue="1" />
+						<f:selectItem itemLabel="Inactiva" itemValue="2" />
+					</h:selectOneMenu>
+					<p:commandButton id="btnCategModifi" value="Modificar"
+						binding="#{categoriasView.btnModify}" ajax="false"
+						action="#{categoriasView.action_modify()}"
+						update="prueba,metadata" />
+
+				</h:panelGrid>
+			</p:dialog>
 		</h:form>
 	</h:body>
 

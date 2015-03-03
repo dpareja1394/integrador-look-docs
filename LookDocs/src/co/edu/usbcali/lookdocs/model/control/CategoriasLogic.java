@@ -4,453 +4,523 @@ import co.edu.usbcali.lookdocs.dataaccess.dao.*;
 import co.edu.usbcali.lookdocs.exceptions.*;
 import co.edu.usbcali.lookdocs.model.*;
 import co.edu.usbcali.lookdocs.model.dto.CategoriasDTO;
+import co.edu.usbcali.lookdocs.utilities.FacesUtils;
 import co.edu.usbcali.lookdocs.utilities.Utilities;
 
+import org.primefaces.model.TreeNode;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.context.annotation.Scope;
-
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-
 /**
-* @author Zathura Code Generator http://code.google.com/p/zathura
-* www.zathuracode.org
-*
-*/
+ * @author Zathura Code Generator http://code.google.com/p/zathura
+ *         www.zathuracode.org
+ *
+ */
 @Scope("singleton")
 @Service("CategoriasLogic")
 public class CategoriasLogic implements ICategoriasLogic {
-    /**
-     * DAO injected by Spring that manages Categorias entities
-     *
-     */
-    @Autowired
-    private ICategoriasDAO categoriasDAO;
+	/**
+	 * DAO injected by Spring that manages Categorias entities
+	 *
+	 */
+	@Autowired
+	private ICategoriasDAO categoriasDAO;
 
-    /**
-    * DAO injected by Spring that manages CategoriasArticulos entities
-    *
-    */
-    @Autowired
-    private ICategoriasArticulosDAO categoriasArticulosDAO;
+	/**
+	 * DAO injected by Spring that manages CategoriasArticulos entities
+	 *
+	 */
+	@Autowired
+	private ICategoriasArticulosDAO categoriasArticulosDAO;
 
-    @Transactional(readOnly = true)
-    public List<Categorias> getCategorias() throws Exception {
-        List<Categorias> list = new ArrayList<Categorias>();
+	@Transactional(readOnly = true)
+	public List<Categorias> getCategorias() throws Exception {
+		List<Categorias> list = new ArrayList<Categorias>();
 
-        try {
-            list = categoriasDAO.findAll();
-        } catch (Exception e) {
-            throw new ZMessManager().new GettingException(ZMessManager.ALL +
-                "Categorias");
-        } finally {
-        }
+		try {
+			list = categoriasDAO.findAll();
+		} catch (Exception e) {
+			throw new ZMessManager().new GettingException(ZMessManager.ALL
+					+ "Categorias");
+		} finally {
+		}
 
-        return list;
-    }
+		return list;
+	}
 
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public void saveCategorias(Categorias entity) throws Exception {
-        try {
-            if (entity.getCodigoCate() == null) {
-                throw new ZMessManager().new EmptyFieldException("codigoCate");
-            }
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public void saveCategorias(Categorias entity) throws Exception {
+		try {
+			Categorias entityCompare = categoriasDAO.findEntityByProperty(
+					"nombre", entity.getNombre());
 
-            if (entity.getEstadoRegistro() == null) {
-                throw new ZMessManager().new EmptyFieldException(
-                    "estadoRegistro");
-            }
+			if (entityCompare != null) {
+				throw new Exception("Ya existe una categoría con ese nombre");
+			}
 
-            if ((entity.getEstadoRegistro() != null) &&
-                    (Utilities.checkWordAndCheckWithlength(
-                        entity.getEstadoRegistro(), 1) == false)) {
-                throw new ZMessManager().new NotValidFormatException(
-                    "estadoRegistro");
-            }
+			entity.setCodigoCate(categoriasDAO
+					.getConsecutivo("CATEGORIAS_CODIGO_CATE_SEQ"));
+			entity.setFechaCreacion(new Date());
 
-            if (entity.getFechaCreacion() == null) {
-                throw new ZMessManager().new EmptyFieldException(
-                    "fechaCreacion");
-            }
+			if (entity.getCodigoCate() == null) {
+				throw new ZMessManager().new EmptyFieldException("codigoCate");
+			}
 
-            if (entity.getNombre() == null) {
-                throw new ZMessManager().new EmptyFieldException("nombre");
-            }
+			if (entity.getEstadoRegistro() == null) {
+				throw new ZMessManager().new EmptyFieldException(
+						"estadoRegistro");
+			}
 
-            if ((entity.getNombre() != null) &&
-                    (Utilities.checkWordAndCheckWithlength(entity.getNombre(),
-                        150) == false)) {
-                throw new ZMessManager().new NotValidFormatException("nombre");
-            }
+			if ((entity.getEstadoRegistro() != null)
+					&& (Utilities.checkWordAndCheckWithlength(
+							entity.getEstadoRegistro(), 1) == false)) {
+				throw new ZMessManager().new NotValidFormatException(
+						"estadoRegistro");
+			}
 
-            if (entity.getUsuCrea() == null) {
-                throw new ZMessManager().new EmptyFieldException("usuCrea");
-            }
+			if (entity.getFechaCreacion() == null) {
+				throw new ZMessManager().new EmptyFieldException(
+						"fechaCreacion");
+			}
 
-            if ((entity.getUsuCrea() != null) &&
-                    (Utilities.checkWordAndCheckWithlength(
-                        entity.getUsuCrea(), 150) == false)) {
-                throw new ZMessManager().new NotValidFormatException("usuCrea");
-            }
+			if (entity.getNombre() == null) {
+				throw new ZMessManager().new EmptyFieldException("nombre");
+			}
 
-            if ((entity.getUsuModifica() != null) &&
-                    (Utilities.checkWordAndCheckWithlength(
-                        entity.getUsuModifica(), 150) == false)) {
-                throw new ZMessManager().new NotValidFormatException(
-                    "usuModifica");
-            }
+			if ((entity.getNombre() != null)
+					&& (Utilities.checkWordAndCheckWithlength(
+							entity.getNombre(), 150) == false)) {
+				throw new ZMessManager().new NotValidFormatException("nombre");
+			}
 
-            if (getCategorias(entity.getCodigoCate()) != null) {
-                throw new ZMessManager(ZMessManager.ENTITY_WITHSAMEKEY);
-            }
+			if (entity.getUsuCrea() == null) {
+				throw new ZMessManager().new EmptyFieldException("usuCrea");
+			}
 
-            categoriasDAO.save(entity);
-        } catch (Exception e) {
-            throw e;
-        } finally {
-        }
-    }
+			if ((entity.getUsuCrea() != null)
+					&& (Utilities.checkWordAndCheckWithlength(
+							entity.getUsuCrea(), 150) == false)) {
+				throw new ZMessManager().new NotValidFormatException("usuCrea");
+			}
 
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public void deleteCategorias(Categorias entity) throws Exception {
-        if (entity == null) {
-            throw new ZMessManager().new NullEntityExcepcion("Categorias");
-        }
+			if ((entity.getUsuModifica() != null)
+					&& (Utilities.checkWordAndCheckWithlength(
+							entity.getUsuModifica(), 150) == false)) {
+				throw new ZMessManager().new NotValidFormatException(
+						"usuModifica");
+			}
 
-        if (entity.getCodigoCate() == null) {
-            throw new ZMessManager().new EmptyFieldException("codigoCate");
-        }
+			if (getCategorias(entity.getCodigoCate()) != null) {
+				throw new ZMessManager(ZMessManager.ENTITY_WITHSAMEKEY);
+			}
 
-        List<CategoriasArticulos> categoriasArticuloses = null;
+			categoriasDAO.save(entity);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+		}
+	}
 
-        try {
-            categoriasArticuloses = categoriasArticulosDAO.findByProperty("categorias.codigoCate",
-                    entity.getCodigoCate());
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public void deleteCategorias(Categorias entity) throws Exception {
 
-            if (Utilities.validationsList(categoriasArticuloses) == true) {
-                throw new ZMessManager().new DeletingException(
-                    "categoriasArticuloses");
-            }
+		if (entity == null) {
+			throw new ZMessManager().new NullEntityExcepcion("Categorias");
+		}
 
-            categoriasDAO.delete(entity);
-        } catch (Exception e) {
-            throw e;
-        } finally {
-        }
-    }
+		Categorias entityByName = categoriasDAO.findEntityByProperty("nombre",
+				entity.getNombre());
 
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public void updateCategorias(Categorias entity) throws Exception {
-        try {
-            if (entity == null) {
-                throw new ZMessManager().new NullEntityExcepcion("Categorias");
-            }
+		if (entityByName == null) {
+			throw new Exception("La categoria no existe");
+		}
 
-            if (entity.getCodigoCate() == null) {
-                throw new ZMessManager().new EmptyFieldException("codigoCate");
-            }
+		if (entityByName.getCodigoCate() == 1) {
+			throw new Exception("Esta categoria no se puede eliminar");
+		}
 
-            if (entity.getEstadoRegistro() == null) {
-                throw new ZMessManager().new EmptyFieldException(
-                    "estadoRegistro");
-            }
+		categoriasDAO.deleteById(entityByName.getCodigoCate());
+		/*
+		 * List<CategoriasArticulos> categoriasArticuloses = null; //PENDIENTE
+		 * POR PROBAR/////////////////////////////////////////////////////////
+		 * 
+		 * try { categoriasArticuloses = categoriasArticulosDAO.findByProperty(
+		 * "categorias.codigoCate", entity.getCodigoCate());
+		 * 
+		 * if (Utilities.validationsList(categoriasArticuloses) == true) { for
+		 * (CategoriasArticulos categoriasArticulos : categoriasArticuloses) {
+		 * categoriasArticulos.setCategorias(categoriasDAO.findById(1L));
+		 * categoriasArticulosDAO.update(categoriasArticulos); } }
+		 * 
+		 * categoriasDAO.delete(entity); /
+		 * //////////////////////////////////////
+		 * /////////////////////////////////////////
+		 * 
+		 * } catch (Exception e) { throw e; } finally {
+		 * 
+		 * }
+		 */
+	}
 
-            if ((entity.getEstadoRegistro() != null) &&
-                    (Utilities.checkWordAndCheckWithlength(
-                        entity.getEstadoRegistro(), 1) == false)) {
-                throw new ZMessManager().new NotValidFormatException(
-                    "estadoRegistro");
-            }
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public void deleteCategoriasbyNode(TreeNode selectedNode) throws Exception {
 
-            if (entity.getFechaCreacion() == null) {
-                throw new ZMessManager().new EmptyFieldException(
-                    "fechaCreacion");
-            }
+		if (selectedNode == null) {
+			throw new Exception(
+					"No ha seleccionado ninguna carpeta del menú para borrar.");
+		}
 
-            if (entity.getNombre() == null) {
-                throw new ZMessManager().new EmptyFieldException("nombre");
-            }
+		Categorias entity = (Categorias) selectedNode.getData();
 
-            if ((entity.getNombre() != null) &&
-                    (Utilities.checkWordAndCheckWithlength(entity.getNombre(),
-                        150) == false)) {
-                throw new ZMessManager().new NotValidFormatException("nombre");
-            }
+		if (entity == null) {
+			throw new ZMessManager().new NullEntityExcepcion("Categorias");
+		}
 
-            if (entity.getUsuCrea() == null) {
-                throw new ZMessManager().new EmptyFieldException("usuCrea");
-            }
+		Categorias entityByName = categoriasDAO.findEntityByProperty("nombre",
+				entity.getNombre());
 
-            if ((entity.getUsuCrea() != null) &&
-                    (Utilities.checkWordAndCheckWithlength(
-                        entity.getUsuCrea(), 150) == false)) {
-                throw new ZMessManager().new NotValidFormatException("usuCrea");
-            }
+		if (entityByName == null) {
+			throw new Exception("La categoria no existe");
+		}
 
-            if ((entity.getUsuModifica() != null) &&
-                    (Utilities.checkWordAndCheckWithlength(
-                        entity.getUsuModifica(), 150) == false)) {
-                throw new ZMessManager().new NotValidFormatException(
-                    "usuModifica");
-            }
+		if (entityByName.getCodigoCate() == 1) {
+			throw new Exception("Esta categoria no se puede eliminar");
+		}
 
-            categoriasDAO.update(entity);
-        } catch (Exception e) {
-            throw e;
-        } finally {
-        }
-    }
+		categoriasDAO.deleteById(entityByName.getCodigoCate());
+		/*
+		 * List<CategoriasArticulos> categoriasArticuloses = null; //PENDIENTE
+		 * POR PROBAR/////////////////////////////////////////////////////////
+		 * 
+		 * try { categoriasArticuloses = categoriasArticulosDAO.findByProperty(
+		 * "categorias.codigoCate", entity.getCodigoCate());
+		 * 
+		 * if (Utilities.validationsList(categoriasArticuloses) == true) { for
+		 * (CategoriasArticulos categoriasArticulos : categoriasArticuloses) {
+		 * categoriasArticulos.setCategorias(categoriasDAO.findById(1L));
+		 * categoriasArticulosDAO.update(categoriasArticulos); } }
+		 * 
+		 * categoriasDAO.delete(entity); /
+		 * //////////////////////////////////////
+		 * /////////////////////////////////////////
+		 * 
+		 * } catch (Exception e) { throw e; } finally {
+		 * 
+		 * }
+		 */
+	}
 
-    @Transactional(readOnly = true)
-    public List<CategoriasDTO> getDataCategorias() throws Exception {
-        try {
-            List<Categorias> categorias = categoriasDAO.findAll();
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public void updateCategorias(Categorias entity) throws Exception {
+		try {
 
-            List<CategoriasDTO> categoriasDTO = new ArrayList<CategoriasDTO>();
+			if (entity == null) {
+				throw new ZMessManager().new NullEntityExcepcion("Categorias");
+			}
+			
+			Categorias entityByName = categoriasDAO.findById(entity.getCodigoCate());
 
-            for (Categorias categoriasTmp : categorias) {
-                CategoriasDTO categoriasDTO2 = new CategoriasDTO();
+			if (entity.getCodigoCate() == 1) {
+				throw new Exception("Esta categoría no se puede modificar");
+			}
 
-                categoriasDTO2.setCodigoCate(categoriasTmp.getCodigoCate());
-                categoriasDTO2.setEstadoRegistro((categoriasTmp.getEstadoRegistro() != null)
-                    ? categoriasTmp.getEstadoRegistro() : null);
-                categoriasDTO2.setFechaCreacion(categoriasTmp.getFechaCreacion());
-                categoriasDTO2.setFechaModifcacion(categoriasTmp.getFechaModifcacion());
-                categoriasDTO2.setNombre((categoriasTmp.getNombre() != null)
-                    ? categoriasTmp.getNombre() : null);
-                categoriasDTO2.setUsuCrea((categoriasTmp.getUsuCrea() != null)
-                    ? categoriasTmp.getUsuCrea() : null);
-                categoriasDTO2.setUsuModifica((categoriasTmp.getUsuModifica() != null)
-                    ? categoriasTmp.getUsuModifica() : null);
-                categoriasDTO.add(categoriasDTO2);
-            }
+			if (entity.getEstadoRegistro() == null) {
+				//throw new ZMessManager().new EmptyFieldException("estadoRegistro");
+				entity.setEstadoRegistro(entityByName.getEstadoRegistro());
+			}
 
-            return categoriasDTO;
-        } catch (Exception e) {
-            throw e;
-        }
-    }
+			if ((entity.getEstadoRegistro() != null)
+					&& (Utilities.checkWordAndCheckWithlength(
+							entity.getEstadoRegistro(), 1) == false)) {
+				throw new ZMessManager().new NotValidFormatException(
+						"estadoRegistro");
+			}
+			
+			if (entity.getNombre() == null) {
+				//throw new ZMessManager().new EmptyFieldException("estadoRegistro");
+				entity.setNombre(entityByName.getNombre());
+			}
 
-    @Transactional(readOnly = true)
-    public Categorias getCategorias(Long codigoCate) throws Exception {
-        Categorias entity = null;
+			if ((entity.getNombre() != null)
+					&& (Utilities.checkWordAndCheckWithlength(
+							entity.getNombre(), 150) == false)) {
+				throw new ZMessManager().new NotValidFormatException("nombre");
+			}
 
-        try {
-            entity = categoriasDAO.findById(codigoCate);
-        } catch (Exception e) {
-            throw new ZMessManager().new FindingException("Categorias");
-        } finally {
-        }
+			if ((entity.getUsuModifica() != null)
+					&& (Utilities.checkWordAndCheckWithlength(
+							entity.getUsuModifica(), 150) == false)) {
+				throw new ZMessManager().new NotValidFormatException(
+						"usuModifica");
+			}
 
-        return entity;
-    }
+			entity.setFechaModifcacion(new Date());
+			categoriasDAO.delete(entityByName);
+			categoriasDAO.save(entity);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+		}
+	}
 
-    @Transactional(readOnly = true)
-    public List<Categorias> findPageCategorias(String sortColumnName,
-        boolean sortAscending, int startRow, int maxResults)
-        throws Exception {
-        List<Categorias> entity = null;
+	@Transactional(readOnly = true)
+	public List<CategoriasDTO> getDataCategorias() throws Exception {
+		try {
+			List<Categorias> categorias = categoriasDAO.findAll();
 
-        try {
-            entity = categoriasDAO.findPage(sortColumnName, sortAscending,
-                    startRow, maxResults);
-        } catch (Exception e) {
-            throw new ZMessManager().new FindingException("Categorias Count");
-        } finally {
-        }
+			List<CategoriasDTO> categoriasDTO = new ArrayList<CategoriasDTO>();
 
-        return entity;
-    }
+			for (Categorias categoriasTmp : categorias) {
+				CategoriasDTO categoriasDTO2 = new CategoriasDTO();
 
-    @Transactional(readOnly = true)
-    public Long findTotalNumberCategorias() throws Exception {
-        Long entity = null;
+				categoriasDTO2.setCodigoCate(categoriasTmp.getCodigoCate());
+				categoriasDTO2.setEstadoRegistro((categoriasTmp
+						.getEstadoRegistro() != null) ? categoriasTmp
+						.getEstadoRegistro() : null);
+				categoriasDTO2.setFechaCreacion(categoriasTmp
+						.getFechaCreacion());
+				categoriasDTO2.setFechaModifcacion(categoriasTmp
+						.getFechaModifcacion());
+				categoriasDTO2
+						.setNombre((categoriasTmp.getNombre() != null) ? categoriasTmp
+								.getNombre() : null);
+				categoriasDTO2
+						.setUsuCrea((categoriasTmp.getUsuCrea() != null) ? categoriasTmp
+								.getUsuCrea() : null);
+				categoriasDTO2
+						.setUsuModifica((categoriasTmp.getUsuModifica() != null) ? categoriasTmp
+								.getUsuModifica() : null);
+				categoriasDTO.add(categoriasDTO2);
+			}
 
-        try {
-            entity = categoriasDAO.count();
-        } catch (Exception e) {
-            throw new ZMessManager().new FindingException("Categorias Count");
-        } finally {
-        }
+			return categoriasDTO;
+		} catch (Exception e) {
+			throw e;
+		}
+	}
 
-        return entity;
-    }
+	@Transactional(readOnly = true)
+	public Categorias getCategorias(Long codigoCate) throws Exception {
+		Categorias entity = null;
 
-    /**
-    *
-    * @param varibles
-    *            este arreglo debera tener:
-    *
-    * [0] = String variable = (String) varibles[i]; representa como se llama la
-    * variable en el pojo
-    *
-    * [1] = Boolean booVariable = (Boolean) varibles[i + 1]; representa si el
-    * valor necesita o no ''(comillas simples)usado para campos de tipo string
-    *
-    * [2] = Object value = varibles[i + 2]; representa el valor que se va a
-    * buscar en la BD
-    *
-    * [3] = String comparator = (String) varibles[i + 3]; representa que tipo
-    * de busqueda voy a hacer.., ejemplo: where nombre=william o where nombre<>william,
-        * en este campo iria el tipo de comparador que quiero si es = o <>
-            *
-            * Se itera de 4 en 4..., entonces 4 registros del arreglo representan 1
-            * busqueda en un campo, si se ponen mas pues el continuara buscando en lo
-            * que se le ingresen en los otros 4
-            *
-            *
-            * @param variablesBetween
-            *
-            * la diferencia son estas dos posiciones
-            *
-            * [0] = String variable = (String) varibles[j]; la variable ne la BD que va
-            * a ser buscada en un rango
-            *
-            * [1] = Object value = varibles[j + 1]; valor 1 para buscar en un rango
-            *
-            * [2] = Object value2 = varibles[j + 2]; valor 2 para buscar en un rango
-            * ejempolo: a > 1 and a < 5 --> 1 seria value y 5 seria value2
-                *
-                * [3] = String comparator1 = (String) varibles[j + 3]; comparador 1
-                * ejemplo: a comparator1 1 and a < 5
-                    *
-                    * [4] = String comparator2 = (String) varibles[j + 4]; comparador 2
-                    * ejemplo: a comparador1>1  and a comparador2<5  (el original: a > 1 and a <
-                            * 5) *
-                            * @param variablesBetweenDates(en
-                            *            este caso solo para mysql)
-                            *  [0] = String variable = (String) varibles[k]; el nombre de la variable que hace referencia a
-                            *            una fecha
-                            *
-                            * [1] = Object object1 = varibles[k + 2]; fecha 1 a comparar(deben ser
-                            * dates)
-                            *
-                            * [2] = Object object2 = varibles[k + 3]; fecha 2 a comparar(deben ser
-                            * dates)
-                            *
-                            * esto hace un between entre las dos fechas.
-                            *
-                            * @return lista con los objetos que se necesiten
-                            * @throws Exception
-                            */
-    @Transactional(readOnly = true)
-    public List<Categorias> findByCriteria(Object[] variables,
-        Object[] variablesBetween, Object[] variablesBetweenDates)
-        throws Exception {
-        List<Categorias> list = new ArrayList<Categorias>();
-        String where = new String();
-        String tempWhere = new String();
+		try {
+			entity = categoriasDAO.findById(codigoCate);
+		} catch (Exception e) {
+			throw new ZMessManager().new FindingException("Categorias");
+		} finally {
+		}
 
-        if (variables != null) {
-            for (int i = 0; i < variables.length; i++) {
-                if ((variables[i] != null) && (variables[i + 1] != null) &&
-                        (variables[i + 2] != null) &&
-                        (variables[i + 3] != null)) {
-                    String variable = (String) variables[i];
-                    Boolean booVariable = (Boolean) variables[i + 1];
-                    Object value = variables[i + 2];
-                    String comparator = (String) variables[i + 3];
+		return entity;
+	}
 
-                    if (booVariable.booleanValue()) {
-                        tempWhere = (tempWhere.length() == 0)
-                            ? ("(model." + variable + " " + comparator + " \'" +
-                            value + "\' )")
-                            : (tempWhere + " AND (model." + variable + " " +
-                            comparator + " \'" + value + "\' )");
-                    } else {
-                        tempWhere = (tempWhere.length() == 0)
-                            ? ("(model." + variable + " " + comparator + " " +
-                            value + " )")
-                            : (tempWhere + " AND (model." + variable + " " +
-                            comparator + " " + value + " )");
-                    }
-                }
+	@Transactional(readOnly = true)
+	public List<Categorias> findPageCategorias(String sortColumnName,
+			boolean sortAscending, int startRow, int maxResults)
+			throws Exception {
+		List<Categorias> entity = null;
 
-                i = i + 3;
-            }
-        }
+		try {
+			entity = categoriasDAO.findPage(sortColumnName, sortAscending,
+					startRow, maxResults);
+		} catch (Exception e) {
+			throw new ZMessManager().new FindingException("Categorias Count");
+		} finally {
+		}
 
-        if (variablesBetween != null) {
-            for (int j = 0; j < variablesBetween.length; j++) {
-                if ((variablesBetween[j] != null) &&
-                        (variablesBetween[j + 1] != null) &&
-                        (variablesBetween[j + 2] != null) &&
-                        (variablesBetween[j + 3] != null) &&
-                        (variablesBetween[j + 4] != null)) {
-                    String variable = (String) variablesBetween[j];
-                    Object value = variablesBetween[j + 1];
-                    Object value2 = variablesBetween[j + 2];
-                    String comparator1 = (String) variablesBetween[j + 3];
-                    String comparator2 = (String) variablesBetween[j + 4];
-                    tempWhere = (tempWhere.length() == 0)
-                        ? ("(" + value + " " + comparator1 + " " + variable +
-                        " and " + variable + " " + comparator2 + " " + value2 +
-                        " )")
-                        : (tempWhere + " AND (" + value + " " + comparator1 +
-                        " " + variable + " and " + variable + " " +
-                        comparator2 + " " + value2 + " )");
-                }
+		return entity;
+	}
 
-                j = j + 4;
-            }
-        }
+	@Transactional(readOnly = true)
+	public Long findTotalNumberCategorias() throws Exception {
+		Long entity = null;
 
-        if (variablesBetweenDates != null) {
-            for (int k = 0; k < variablesBetweenDates.length; k++) {
-                if ((variablesBetweenDates[k] != null) &&
-                        (variablesBetweenDates[k + 1] != null) &&
-                        (variablesBetweenDates[k + 2] != null)) {
-                    String variable = (String) variablesBetweenDates[k];
-                    Object object1 = variablesBetweenDates[k + 1];
-                    Object object2 = variablesBetweenDates[k + 2];
-                    String value = null;
-                    String value2 = null;
+		try {
+			entity = categoriasDAO.count();
+		} catch (Exception e) {
+			throw new ZMessManager().new FindingException("Categorias Count");
+		} finally {
+		}
 
-                    try {
-                        Date date1 = (Date) object1;
-                        Date date2 = (Date) object2;
-                        value = Utilities.formatDateWithoutTimeInAStringForBetweenWhere(date1);
-                        value2 = Utilities.formatDateWithoutTimeInAStringForBetweenWhere(date2);
-                    } catch (Exception e) {
-                        list = null;
-                        throw e;
-                    }
+		return entity;
+	}
 
-                    tempWhere = (tempWhere.length() == 0)
-                        ? ("(model." + variable + " between \'" + value +
-                        "\' and \'" + value2 + "\')")
-                        : (tempWhere + " AND (model." + variable +
-                        " between \'" + value + "\' and \'" + value2 + "\')");
-                }
+	/**
+	 *
+	 * @param varibles
+	 *            este arreglo debera tener:
+	 *
+	 *            [0] = String variable = (String) varibles[i]; representa como
+	 *            se llama la variable en el pojo
+	 *
+	 *            [1] = Boolean booVariable = (Boolean) varibles[i + 1];
+	 *            representa si el valor necesita o no ''(comillas simples)usado
+	 *            para campos de tipo string
+	 *
+	 *            [2] = Object value = varibles[i + 2]; representa el valor que
+	 *            se va a buscar en la BD
+	 *
+	 *            [3] = String comparator = (String) varibles[i + 3]; representa
+	 *            que tipo de busqueda voy a hacer.., ejemplo: where
+	 *            nombre=william o where nombre<>william, en este campo iria el
+	 *            tipo de comparador que quiero si es = o <>
+	 *
+	 *            Se itera de 4 en 4..., entonces 4 registros del arreglo
+	 *            representan 1 busqueda en un campo, si se ponen mas pues el
+	 *            continuara buscando en lo que se le ingresen en los otros 4
+	 *
+	 *
+	 * @param variablesBetween
+	 *
+	 *            la diferencia son estas dos posiciones
+	 *
+	 *            [0] = String variable = (String) varibles[j]; la variable ne
+	 *            la BD que va a ser buscada en un rango
+	 *
+	 *            [1] = Object value = varibles[j + 1]; valor 1 para buscar en
+	 *            un rango
+	 *
+	 *            [2] = Object value2 = varibles[j + 2]; valor 2 para buscar en
+	 *            un rango ejempolo: a > 1 and a < 5 --> 1 seria value y 5 seria
+	 *            value2
+	 *
+	 *            [3] = String comparator1 = (String) varibles[j + 3];
+	 *            comparador 1 ejemplo: a comparator1 1 and a < 5
+	 *
+	 *            [4] = String comparator2 = (String) varibles[j + 4];
+	 *            comparador 2 ejemplo: a comparador1>1 and a comparador2<5 (el
+	 *            original: a > 1 and a < 5) *
+	 * @param variablesBetweenDates
+	 *            (en este caso solo para mysql) [0] = String variable =
+	 *            (String) varibles[k]; el nombre de la variable que hace
+	 *            referencia a una fecha
+	 *
+	 *            [1] = Object object1 = varibles[k + 2]; fecha 1 a
+	 *            comparar(deben ser dates)
+	 *
+	 *            [2] = Object object2 = varibles[k + 3]; fecha 2 a
+	 *            comparar(deben ser dates)
+	 *
+	 *            esto hace un between entre las dos fechas.
+	 *
+	 * @return lista con los objetos que se necesiten
+	 * @throws Exception
+	 */
+	@Transactional(readOnly = true)
+	public List<Categorias> findByCriteria(Object[] variables,
+			Object[] variablesBetween, Object[] variablesBetweenDates)
+			throws Exception {
+		List<Categorias> list = new ArrayList<Categorias>();
+		String where = new String();
+		String tempWhere = new String();
 
-                k = k + 2;
-            }
-        }
+		if (variables != null) {
+			for (int i = 0; i < variables.length; i++) {
+				if ((variables[i] != null) && (variables[i + 1] != null)
+						&& (variables[i + 2] != null)
+						&& (variables[i + 3] != null)) {
+					String variable = (String) variables[i];
+					Boolean booVariable = (Boolean) variables[i + 1];
+					Object value = variables[i + 2];
+					String comparator = (String) variables[i + 3];
 
-        if (tempWhere.length() == 0) {
-            where = null;
-        } else {
-            where = "(" + tempWhere + ")";
-        }
+					if (booVariable.booleanValue()) {
+						tempWhere = (tempWhere.length() == 0) ? ("(model."
+								+ variable + " " + comparator + " \'" + value + "\' )")
+								: (tempWhere + " AND (model." + variable + " "
+										+ comparator + " \'" + value + "\' )");
+					} else {
+						tempWhere = (tempWhere.length() == 0) ? ("(model."
+								+ variable + " " + comparator + " " + value + " )")
+								: (tempWhere + " AND (model." + variable + " "
+										+ comparator + " " + value + " )");
+					}
+				}
 
-        try {
-            list = categoriasDAO.findByCriteria(where);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        } finally {
-        }
+				i = i + 3;
+			}
+		}
 
-        return list;
-    }
+		if (variablesBetween != null) {
+			for (int j = 0; j < variablesBetween.length; j++) {
+				if ((variablesBetween[j] != null)
+						&& (variablesBetween[j + 1] != null)
+						&& (variablesBetween[j + 2] != null)
+						&& (variablesBetween[j + 3] != null)
+						&& (variablesBetween[j + 4] != null)) {
+					String variable = (String) variablesBetween[j];
+					Object value = variablesBetween[j + 1];
+					Object value2 = variablesBetween[j + 2];
+					String comparator1 = (String) variablesBetween[j + 3];
+					String comparator2 = (String) variablesBetween[j + 4];
+					tempWhere = (tempWhere.length() == 0) ? ("(" + value + " "
+							+ comparator1 + " " + variable + " and " + variable
+							+ " " + comparator2 + " " + value2 + " )")
+							: (tempWhere + " AND (" + value + " " + comparator1
+									+ " " + variable + " and " + variable + " "
+									+ comparator2 + " " + value2 + " )");
+				}
+
+				j = j + 4;
+			}
+		}
+
+		if (variablesBetweenDates != null) {
+			for (int k = 0; k < variablesBetweenDates.length; k++) {
+				if ((variablesBetweenDates[k] != null)
+						&& (variablesBetweenDates[k + 1] != null)
+						&& (variablesBetweenDates[k + 2] != null)) {
+					String variable = (String) variablesBetweenDates[k];
+					Object object1 = variablesBetweenDates[k + 1];
+					Object object2 = variablesBetweenDates[k + 2];
+					String value = null;
+					String value2 = null;
+
+					try {
+						Date date1 = (Date) object1;
+						Date date2 = (Date) object2;
+						value = Utilities
+								.formatDateWithoutTimeInAStringForBetweenWhere(date1);
+						value2 = Utilities
+								.formatDateWithoutTimeInAStringForBetweenWhere(date2);
+					} catch (Exception e) {
+						list = null;
+						throw e;
+					}
+
+					tempWhere = (tempWhere.length() == 0) ? ("(model."
+							+ variable + " between \'" + value + "\' and \'"
+							+ value2 + "\')") : (tempWhere + " AND (model."
+							+ variable + " between \'" + value + "\' and \'"
+							+ value2 + "\')");
+				}
+
+				k = k + 2;
+			}
+		}
+
+		if (tempWhere.length() == 0) {
+			where = null;
+		} else {
+			where = "(" + tempWhere + ")";
+		}
+
+		try {
+			list = categoriasDAO.findByCriteria(where);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		} finally {
+		}
+
+		return list;
+	}
 }
