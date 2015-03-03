@@ -21,4 +21,10 @@
             <one-to-many class="co.edu.usbcali.lookdocs.model.ColeccionesRss" />
         </set>
     </class>
+    <sql-query name="COLECCIONES_CODIGO_COLE_SEQ">
+		<return-scalar column="nextval" type="java.lang.Long" />
+	  <![CDATA[
+	    SELECT nextval('COLECCIONES_CODIGO_COLE_SEQ');
+	  ]]>
+    </sql-query>
 </hibernate-mapping>

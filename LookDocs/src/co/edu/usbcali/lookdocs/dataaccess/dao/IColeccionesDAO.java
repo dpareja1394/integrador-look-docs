@@ -9,4 +9,6 @@ import co.edu.usbcali.lookdocs.model.Colecciones;
 *
 */
 public interface IColeccionesDAO extends Dao<Colecciones, Long> {
+	
+	public Long getConsecutivo(String sqlNombre) throws Exception ;
 }

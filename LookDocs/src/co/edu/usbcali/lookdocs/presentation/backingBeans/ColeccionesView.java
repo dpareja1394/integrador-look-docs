@@ -9,16 +9,14 @@ import co.edu.usbcali.lookdocs.utilities.*;
 import org.primefaces.component.calendar.*;
 import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.component.inputtext.InputText;
-
 import org.primefaces.event.RowEditEvent;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
 
 import java.io.Serializable;
-
 import java.sql.*;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,6 +43,7 @@ public class ColeccionesView implements Serializable {
     private InputText txtNombre;
     private InputText txtCodigoUsua_Usuarios;
     private InputText txtCodigoCole;
+    private InputText txtModificarNombre;
     private CommandButton btnSave;
     private CommandButton btnModify;
     private CommandButton btnDelete;
@@ -53,6 +52,10 @@ public class ColeccionesView implements Serializable {
     private ColeccionesDTO selectedColecciones;
     private Colecciones entity;
     private boolean showDialog;
+    private TreeNode raizArbol;
+    private TreeNode seleccionarNodo;
+    List<Colecciones> coleccionRaices;
+    
     @ManagedProperty(value = "#{BusinessDelegatorView}")
     private IBusinessDelegatorView businessDelegatorView;
 
@@ -172,6 +175,29 @@ public class ColeccionesView implements Serializable {
 
         return "";
     }
+    
+    public void consultarArbol(){
+    	coleccionRaices = getListaNodos();
+    	this.raizArbol = new DefaultTreeNode("Raiz", null);
+    	agregarNodos(coleccionRaices, this.raizArbol);
+    }
+    
+    private void agregarNodos(List<Colecciones> colecciones, TreeNode padre){
+    	for(Colecciones coleccion : colecciones){
+    		TreeNode nodo = new DefaultTreeNode(coleccion, padre);
+    	}
+    }
+    
+    public List<Colecciones> getListaNodos(){
+    	if (coleccionRaices == null){
+    		try {
+				return businessDelegatorView.getColecciones();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+    	}
+    	return coleccionRaices;
+    }
 
     public String action_save() {
         try {
@@ -191,18 +217,35 @@ public class ColeccionesView implements Serializable {
 
     public String action_create() {
         try {
-            entity = new Colecciones();
+            Colecciones entity = new Colecciones();
 
-            Long codigoCole = FacesUtils.checkLong(txtCodigoCole);
-
-            entity.setCodigoCole(codigoCole);
-            entity.setNombre(FacesUtils.checkString(txtNombre));
-            entity.setUsuarios((FacesUtils.checkLong(txtCodigoUsua_Usuarios) != null)
+            //Long codigoCole = FacesUtils.checkLong(txtCodigoCole);
+            //entity.setCodigoCole(codigoCole);
+            
+            Usuarios usuarios = new Usuarios();
+            usuarios.setCodigoUsua(3L);
+            usuarios.setNombre("Benito Camelas");
+            usuarios.setClave("benito");
+            usuarios.setEmail("jaime@gmail.com");
+            usuarios.setFechaCreacion(new Date());
+            usuarios.setUsuCrea("Jaimito");
+            usuarios.setEstadoRegistro("A");
+            
+            //entity.setNombre(FacesUtils.checkString(txtNombre));
+            entity.setNombre(txtNombre.getValue().toString());
+            entity.setUsuarios(usuarios);
+            /*entity.setUsuarios((FacesUtils.checkLong(txtCodigoUsua_Usuarios) != null)
                 ? businessDelegatorView.getUsuarios(FacesUtils.checkLong(
-                        txtCodigoUsua_Usuarios)) : null);
+                        txtCodigoUsua_Usuarios)) : null);*/
+            
             businessDelegatorView.saveColecciones(entity);
+            coleccionRaices = null;
+            entity = null;
+            consultarArbol();
             FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYSAVED);
-            action_clear();
+            //action_clear();
+            txtNombre.setValue(null);
+            txtNombre.setValue("");
         } catch (Exception e) {
             entity = null;
             FacesUtils.addErrorMessage(e.getMessage());
@@ -213,17 +256,39 @@ public class ColeccionesView implements Serializable {
 
     public String action_modify() {
         try {
+        	Colecciones coleccionSeleccionada = (Colecciones) seleccionarNodo.getData();
+        	
             if (entity == null) {
-                Long codigoCole = new Long(selectedColecciones.getCodigoCole());
+            	Long codigoCole = coleccionSeleccionada.getCodigoCole();
+                //Long codigoCole = new Long(selectedColecciones.getCodigoCole());
                 entity = businessDelegatorView.getColecciones(codigoCole);
             }
+            
+            
+            
+            /*Usuarios usuarios = new Usuarios();
+            usuarios.setCodigoUsua(3L);
+            usuarios.setNombre("Benito Camelas");
+            usuarios.setClave("benito");
+            usuarios.setEmail("jaime@gmail.com");
+            usuarios.setFechaCreacion(new Date());
+            usuarios.setUsuCrea("Jaimito");
+            usuarios.setEstadoRegistro("A");*/
 
-            entity.setNombre(FacesUtils.checkString(txtNombre));
-            entity.setUsuarios((FacesUtils.checkLong(txtCodigoUsua_Usuarios) != null)
+            //entity.setNombre(txtModificarNombre.getValue().toString());
+            coleccionSeleccionada.setNombre(txtModificarNombre.getValue().toString());
+            //entity.setUsuarios(usuarios);
+            //entity.setNombre(FacesUtils.checkString(txtNombre));
+            /*entity.setUsuarios((FacesUtils.checkLong(txtCodigoUsua_Usuarios) != null)
                 ? businessDelegatorView.getUsuarios(FacesUtils.checkLong(
-                        txtCodigoUsua_Usuarios)) : null);
-            businessDelegatorView.updateColecciones(entity);
+                        txtCodigoUsua_Usuarios)) : null);*/
+            businessDelegatorView.updateColecciones(coleccionSeleccionada);
+            coleccionRaices = null;
+            entity = null;
+            consultarArbol();
             FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYMODIFIED);
+            txtModificarNombre.setValue(null);
+            txtModificarNombre.setValue("");
         } catch (Exception e) {
             data = null;
             FacesUtils.addErrorMessage(e.getMessage());
@@ -262,9 +327,13 @@ public class ColeccionesView implements Serializable {
 
     public void action_delete() throws Exception {
         try {
-            businessDelegatorView.deleteColecciones(entity);
+        	
+        	Colecciones coleccionSeleccionada = (Colecciones) seleccionarNodo.getData();
+            businessDelegatorView.deleteColecciones(coleccionSeleccionada);
             FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYDELETED);
-            action_clear();
+            //action_clear();
+            coleccionRaices=null;
+            consultarArbol();
             data = null;
         } catch (Exception e) {
             throw e;
@@ -412,4 +481,40 @@ public class ColeccionesView implements Serializable {
     public void setShowDialog(boolean showDialog) {
         this.showDialog = showDialog;
     }
+
+	public TreeNode getRaizArbol() {
+		return raizArbol;
+	}
+
+	public void setRaizArbol(TreeNode raizArbol) {
+		this.raizArbol = raizArbol;
+	}
+
+	public TreeNode getSeleccionarNodo() {
+		return seleccionarNodo;
+	}
+
+	public void setSeleccionarNodo(TreeNode seleccionarNodo) {
+		this.seleccionarNodo = seleccionarNodo;
+	}
+
+	public List<Colecciones> getColeccionRaices() {
+		return coleccionRaices;
+	}
+
+	public void setColeccionRaices(List<Colecciones> coleccionRaices) {
+		this.coleccionRaices = coleccionRaices;
+	}
+
+	public InputText getTxtModificarNombre() {
+		return txtModificarNombre;
+	}
+
+	public void setTxtModificarNombre(InputText txtModificarNombre) {
+		this.txtModificarNombre = txtModificarNombre;
+	}
+	
+	
+    
+    
 }

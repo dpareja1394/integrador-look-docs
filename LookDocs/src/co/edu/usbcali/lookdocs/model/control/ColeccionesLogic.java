@@ -70,6 +70,16 @@ public class ColeccionesLogic implements IColeccionesLogic {
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public void saveColecciones(Colecciones entity) throws Exception {
         try {
+        	
+        	long codigoColeccion = coleccionesDAO.getConsecutivo("COLECCIONES_CODIGO_COLE_SEQ");
+        	entity.setCodigoCole(codigoColeccion);
+
+        	Colecciones compararNombre = coleccionesDAO.findEntityByProperty("nombre", entity.getNombre());
+        	
+        	if (compararNombre != null){
+        		throw new Exception("Ya existe este nombre de categoria");
+        	}
+        	
             if (entity.getUsuarios() == null) {
                 throw new ZMessManager().new ForeignException("usuarios");
             }
