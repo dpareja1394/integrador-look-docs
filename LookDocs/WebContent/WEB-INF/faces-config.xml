@@ -536,6 +536,7 @@
 			<redirect />
 		</navigation-case>
 	</navigation-rule>
+
 	<navigation-rule>
 		<from-view-id>/InicioSesionLector.xhtml</from-view-id>
 		<navigation-case>
