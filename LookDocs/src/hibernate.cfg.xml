@@ -6,8 +6,8 @@
     <session-factory>
         <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.connection.password">postgres</property>
-        <!-- <property name="hibernate.connection.password">andres20021994</property> -->
+        <!-- <property name="hibernate.connection.password">postgres</property> -->
+        <property name="hibernate.connection.password">andres20021994</property>
         <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/LookDocs</property>
         <property name="hibernate.connection.username">postgres</property>
         <mapping resource="co/edu/usbcali/lookdocs/model/Articulos.hbm.xml" />

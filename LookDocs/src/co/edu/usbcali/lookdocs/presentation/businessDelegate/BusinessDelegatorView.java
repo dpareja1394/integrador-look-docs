@@ -45,7 +45,7 @@ import co.edu.usbcali.lookdocs.model.dto.RolesDTO;
 import co.edu.usbcali.lookdocs.model.dto.RssDTO;
 import co.edu.usbcali.lookdocs.model.dto.UsuariosDTO;
 import co.edu.usbcali.lookdocs.presentation.businessDelegate.IBusinessDelegatorView;
-
+import org.primefaces.model.TreeNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -150,6 +150,11 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
         }
 
         return anexos;
+    }
+    
+    public void deleteCategoriasbyNode(TreeNode selectedNode)
+    		throws Exception {
+    	categoriasLogic.deleteCategoriasbyNode(selectedNode);
     }
 
     public List<Anexos> findByCriteriaInAnexos(Object[] variables,

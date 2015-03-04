@@ -64,6 +64,7 @@ public class CategoriasView implements Serializable {
     private String message = "";
     List<Categorias> categoriasRaices;
     private String estadoRegistro;
+    private String estadoReg;
     
 
 	
@@ -302,8 +303,8 @@ public class CategoriasView implements Serializable {
         try {
             entity = new Categorias();
             entity.setEstadoRegistro(
-            		(estadoRegistro.equals("1")) ? "a" : 
-            			(estadoRegistro.equals("2") ? "i" : null) );
+            		(estadoReg.equals("1")) ? "a" : 
+            			(estadoReg.equals("2") ? "i" : null) );
             entity.setUsuCrea("Admin");
             entity.setNombre(FacesUtils.checkString(txtNombre));
             //entity.setUsuCrea(FacesUtils.getfromSession(name));
@@ -626,25 +627,32 @@ public class CategoriasView implements Serializable {
 		return estadoRegistro;
 	}
 
-	/**
-	 * @param estadoRegistro the estadoRegistro to set
-	 */
+	
 	public void setEstadoRegistro(String estadoRegistro) {
 		this.estadoRegistro = estadoRegistro;
 	}
 
-	/**
-	 * @return the txtNombreModify
-	 */
+	
 	public InputText getTxtNombreModify() {
 		return txtNombreModify;
 	}
 
-	/**
-	 * @param txtNombreModify the txtNombreModify to set
-	 */
 	public void setTxtNombreModify(InputText txtNombreModify) {
 		this.txtNombreModify = txtNombreModify;
+	}
+
+	/**
+	 * @return the estadoReg
+	 */
+	public String getEstadoReg() {
+		return estadoReg;
+	}
+
+	/**
+	 * @param estadoReg the estadoReg to set
+	 */
+	public void setEstadoReg(String estadoReg) {
+		this.estadoReg = estadoReg;
 	}
 
 	

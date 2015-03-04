@@ -44,6 +44,7 @@ import co.edu.usbcali.lookdocs.model.dto.EventosArticulosDTO;
 import co.edu.usbcali.lookdocs.model.dto.RolesDTO;
 import co.edu.usbcali.lookdocs.model.dto.RssDTO;
 import co.edu.usbcali.lookdocs.model.dto.UsuariosDTO;
+import org.primefaces.model.TreeNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -329,4 +330,7 @@ public interface IBusinessDelegatorView {
     public void registrarUsuarioLector(Usuarios usuarios) throws Exception;
 
     public Usuarios obtenerPorMail(String email)throws Exception;
+    
+    public void deleteCategoriasbyNode(TreeNode selectedNode) throws Exception;
+    
 }
