@@ -8,14 +8,14 @@ package co.edu.usbcali.lookdocs.exceptions;
 public class ZMessManager extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
-	public final static String ALL = "All ";
-	public final static String ENTCHILD = "related tables(childs)";
-	public final static String FOREIGNDATA = "foreign classes data: ";
-	public static String ENTITY_SUCCESFULLYSAVED = "Entity succesfully saved";
-	public static String ENTITY_SUCCESFULLYDELETED = "Entity succesfully deleted";
-	public static String ENTITY_SUCCESFULLYMODIFIED = "Entity succesfully modified";
-	public static String ENTITY_WITHSAMEKEY = "Another Entity with the same key was found";
-	public static String ENTITY_NOENTITYTOUPDATE = "No Entity was found, with the typed key ";
+	public final static String ALL = "TODO(S) ";
+	public final static String ENTCHILD = "Tablas relacionadas(menores)";
+	public final static String FOREIGNDATA = "Datos de clases externos: ";
+	public static String ENTITY_SUCCESFULLYSAVED = "Creado exitosamente";
+	public static String ENTITY_SUCCESFULLYDELETED = "Eliminado exitosamente";
+	public static String ENTITY_SUCCESFULLYMODIFIED = "Modificado exitosamente";
+	public static String ENTITY_WITHSAMEKEY = "Hay otra entidad con el mismo id";
+	public static String ENTITY_NOENTITYTOUPDATE = "Ninguna entidad se encontro con ese id";
 
 	public ZMessManager() {
 	}
@@ -28,7 +28,7 @@ public class ZMessManager extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 
 		public NotValidFieldException(String info) {
-			super("The value for the field: \"" + info + "\" is not valid");
+			super("El valor en el campo: \"" + info + "\" es incorrecto.");
 		}
 	}
 	
@@ -36,7 +36,7 @@ public class ZMessManager extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 
 		public NullEntityExcepcion(String info) {
-			super("The " + info + " Entity can not be null or empty");
+			super("La entidad " + info + " no puede estar vacia o nula");
 		}
 	}
 
@@ -44,8 +44,8 @@ public class ZMessManager extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 
 		public EmptyFieldException(String info) {
-			super("The value for the field: \"" + info
-					+ "\" can not be null or empty");
+			super("El valor para el campo: \"" + info
+					+ "\" no puede estar vacio o nulo");
 		}
 	}
 
@@ -53,8 +53,8 @@ public class ZMessManager extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 
 		public NotValidFormatException(String info) {
-			super("The Format or length for the field: \"" + info
-					+ "\" is not valid");
+			super("El formato o la longitud para el campo: \"" + info
+					+ "\" no es valido");
 		}
 	}
 
@@ -62,10 +62,10 @@ public class ZMessManager extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 
 		public DeletingException(String info) {
-			super("The Entity you are trying to delete "
-					+ "may have related information, "
-					+ "please before trying again, "
-					+ "check the data on the entity, \"" + info+"\"");
+			super("La entidad que intenta borrar "
+					+ "todavia tiene informacion relacionada, "
+					+ "porfavor antes de volver a intentarlo, "
+					+ "compruebe los datos de la entidad, \"" + info+"\"");
 		}
 	}
 	
@@ -73,7 +73,7 @@ public class ZMessManager extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 
 		public ForeignException(String info) {
-			super("There was no data related with the input \"" + info+ "\"");
+			super("No hay datos relacionados con \"" + info+ "\"");
 		}
 	}	
 
@@ -81,7 +81,7 @@ public class ZMessManager extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 
 		public GettingException(String info) {
-			super("There was an exception getting " + info);
+			super("UPS!. Hubo una excepcion trabajando con " + info);
 		}
 	}
 
@@ -89,7 +89,7 @@ public class ZMessManager extends RuntimeException {
 		private static final long serialVersionUID = 1L;
 
 		public FindingException(String info) {
-			super("There was an exception trying to find " + info);
+			super("UPS!. Hubo una excepcion tratando de encontrar :  " + info);
 		}
 	}
 
