@@ -29,6 +29,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.servlet.http.HttpSession;
 import javax.swing.tree.DefaultTreeModel;
 
 
@@ -300,14 +301,16 @@ public class CategoriasView implements Serializable {
     }
 
     public String action_create() {
+    	HttpSession httpSession = (HttpSession) FacesContext
+				.getCurrentInstance().getExternalContext().getSession(true);
+		Usuarios autor = (Usuarios) httpSession.getAttribute("usuarioAdministrador");
         try {
             entity = new Categorias();
             entity.setEstadoRegistro(
             		(estadoReg.equals("1")) ? "a" : 
             			(estadoReg.equals("2") ? "i" : null) );
-            entity.setUsuCrea("Admin");
             entity.setNombre(FacesUtils.checkString(txtNombre));
-            //entity.setUsuCrea(FacesUtils.getfromSession(name));
+            entity.setUsuCrea(autor.getNombre());
             businessDelegatorView.saveCategorias(entity);
             txtNombre.setValue("");
             categoriasRaices=null;
@@ -324,19 +327,22 @@ public class CategoriasView implements Serializable {
     }
 
     public String action_modify() {
+    	HttpSession httpSession = (HttpSession) FacesContext
+				.getCurrentInstance().getExternalContext().getSession(true);
+		Usuarios autor = (Usuarios) httpSession.getAttribute("usuarioAdministrador");
         try {
         	Categorias entity = (Categorias) selectedNode.getData();
             entity.setEstadoRegistro(
             		(estadoRegistro.equals("1")) ? "a" : 
             			(estadoRegistro.equals("2") ? "i" : null) );
-            entity.setUsuModifica("Admin");
+            entity.setUsuModifica(autor.getNombre());
             entity.setNombre(txtNombreModify.getValue().toString());
             //entity.setUsuCrea(FacesUtils.getfromSession(name));
             businessDelegatorView.updateCategorias(entity);
             txtNombreModify.setValue("");
             categoriasRaices=null;
             consultarArbol();
-            FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYSAVED);
+            FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYMODIFIED);
             
             //action_clear();
         } catch (Exception e) {
