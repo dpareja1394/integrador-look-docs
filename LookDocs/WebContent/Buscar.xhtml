@@ -15,41 +15,45 @@
 	</f:facet>
 </h:head>
 <f:metadata>
-	<f:viewAction id="metadata" action="#{categoriasView.consultarArbol()}" />
-</f:metadata>
+	<f:viewAction action="#{categoriasView.consultarArbol()}" />
+	<f:viewAction action="#{coleccionesView.consultarArbolColecciones()}" />
+</f:metadata>	
+
 <h:body>
 	<ui:composition template="/FeedPrincipalLector.xhtml">
 		<ui:define name="body">
 			<f:view contentType="text/html">
 				<p:messages showDetail="true" />
 				<h:form>
-					<p:fieldset legend="Buscar " style="margin-bottom:20px">
-						<p:separator />
-						<p:inplace id="ajax" editor="true">
-							<p:inputText value="Buscar Articulo" required="true" label="text" />
-						</p:inplace>
-						<p:separator />
-						<p:panel id="panelArticulos" header="Articulos Guardados">
-							<p:panelGrid columns="5">
-								<h:outputText value="Titulo" />
-								<h:outputText value="Resumen" />
-								<h:outputText value="Categoria" />
-								<h:outputText value="Estado" />
-								<h:outputText value="Opciones" />
-
-								<h:outputText value="Premier League" />
-								<h:outputText value="El equipo del manchester..." />
-								<h:outputText value="Deportes" />
-								<h:outputText value="No Leido" />
-								<p:splitButton value="Ver" icon="ui-icon-disk">
-									<p:menuitem value="Cambiar de Categoria"
-										icon="ui-icon-arrowrefresh-1-w" onclick="PF('dlg1a').show();" />
-								</p:splitButton>
-							</p:panelGrid>
-						</p:panel>
-
-
-
+					<p:fieldset legend="Buscar " style="margin-bottom:20px">					
+						
+							
+							<p:dataTable id="listaArticulosCate" value="#{articulosView.losArticulos}" var="articulos"  widgetVar="listaArtCate" emptyMessage="No Se Encontro El Articulo" filteredValue="#{articulosView.filtroArticulos}" >
+								
+								<f:facet name="header">
+									<p:outputPanel>
+										<h:outputText value="Buscar Articulo  " />										
+									</p:outputPanel>
+								</f:facet>
+								
+								<p:column headerText="Nombre" filterBy="#{articulos.nombre}" >
+									<p:outputLabel value="#{articulos.nombre}" />
+								</p:column>
+								
+								<p:column headerText="Descripcion" >
+									<p:outputLabel value="#{articulos.descripcion}" />
+								</p:column>							
+								
+								<p:column headerText="Autor" >
+									<p:outputLabel value="#{articulos.autor}" />
+								</p:column  >																
+							
+							</p:dataTable>
+							<p:contextMenu for="listaArticulosCate" >
+								<p:menuitem value="Cambiar De Categoria" />
+								<p:menuitem value="Marcar Como Leido" />
+							</p:contextMenu>
+							
 					</p:fieldset>
 					<p:dialog header="Cambiar categoría" widgetVar="dlg1a"
 						minHeight="40">

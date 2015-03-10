@@ -51,4 +51,20 @@ public class ArticulosDAO extends HibernateDaoImpl<Articulos, Long>
         ApplicationContext ctx) {
         return (IArticulosDAO) ctx.getBean("ArticulosDAO");
     }
+    /*
+    @Override
+    public List<Articulos> consultarTodosArticulos() throws Exception{
+    	String hql = "SELECT a.nombre, a.descripcion, c.nombre, a.autor, a.estadoRegistro "
+    			+ "FROM Articulos a, Categorias c, CategoriasArticulos ca "
+    			+ "WHERE a.codigoArti=ca.articulos.codigoArti AND c.codigoCate=ca.categorias.codigoCate";
+    	Query query = sessionFactory.getCurrentSession().createQuery(hql);
+    	List<Articulos> losArticulos = query.list();
+    	return losArticulos;
+    	
+    }*/
+    
+    @Override
+    public List<Articulos> consultarTodosArticulos() throws Exception {
+    	return sessionFactory.getCurrentSession().createCriteria(Articulos.class).list(); 
+    }
 }

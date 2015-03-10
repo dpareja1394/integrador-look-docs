@@ -4,11 +4,7 @@ import co.edu.usbcali.lookdocs.model.Articulos;
 import co.edu.usbcali.lookdocs.model.dto.ArticulosDTO;
 
 import java.math.BigDecimal;
-
 import java.util.*;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -53,4 +49,6 @@ public interface IArticulosLogic {
     public Long findTotalNumberArticulos() throws Exception;
 
     public List<ArticulosDTO> getDataArticulos() throws Exception;
+    
+    public List<Articulos> consultarTodosArticulos() throws Exception;
 }

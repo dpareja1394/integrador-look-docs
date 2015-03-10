@@ -2,6 +2,7 @@ package co.edu.usbcali.lookdocs.dataaccess.dao;
 
 import co.edu.usbcali.lookdocs.dataaccess.api.HibernateDaoImpl;
 import co.edu.usbcali.lookdocs.model.Colecciones;
+import co.edu.usbcali.lookdocs.model.Usuarios;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -65,4 +66,14 @@ public class ColeccionesDAO extends HibernateDaoImpl<Colecciones, Long>
         }
         return consecutivo;
     } 
+    
+    @Override
+    public List<Colecciones> consultarColeccionPorUsuario(Usuarios usuarios) throws Exception{
+    	
+    	String hql2 = "SELECT col FROM Colecciones col WHERE col.usuarios.codigoUsua = "+usuarios.getCodigoUsua();
+    	Query query = sessionFactory.getCurrentSession().createQuery(hql2);
+    	List<Colecciones> lasColecciones = query.list();
+    	return lasColecciones;
+    	
+    }
 }

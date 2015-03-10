@@ -23,12 +23,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -176,27 +178,41 @@ public class ColeccionesView implements Serializable {
         return "";
     }
     
-    public void consultarArbol(){
-    	coleccionRaices = getListaNodos();
-    	this.raizArbol = new DefaultTreeNode("Raiz", null);
-    	agregarNodos(coleccionRaices, this.raizArbol);
+    public void consultarArbolColecciones(){
+    	try {
+    		coleccionRaices =  getListaNodos();
+    		raizArbol = new DefaultTreeNode("Raiz", null);
+    		
+    		agregarNodos(coleccionRaices, raizArbol);
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
     }
     
     private void agregarNodos(List<Colecciones> colecciones, TreeNode padre){
-    	for(Colecciones coleccion : colecciones){
-    		TreeNode nodo = new DefaultTreeNode(coleccion, padre);
-    	}
+    	for (Colecciones coleccion : colecciones) {
+    		TreeNode no = new DefaultTreeNode(coleccion, padre);
+		}
     }
     
-    public List<Colecciones> getListaNodos(){
-    	if (coleccionRaices == null){
+    @PostConstruct
+    public Usuarios retornarUsuario(){
+    	HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+        return (Usuarios) httpSession.getAttribute("usuarioLector");
+    }
+    
+    public List<Colecciones> getListaNodos(){   	
+    	
+        
+    	if(coleccionRaices == null){
     		try {
-				return businessDelegatorView.getColecciones();
+				return businessDelegatorView.consultarColeccionPorUsuario(retornarUsuario());
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
     	}
     	return coleccionRaices;
+    	
     }
 
     public String action_save() {
@@ -222,14 +238,10 @@ public class ColeccionesView implements Serializable {
             //Long codigoCole = FacesUtils.checkLong(txtCodigoCole);
             //entity.setCodigoCole(codigoCole);
             
-            Usuarios usuarios = new Usuarios();
-            usuarios.setCodigoUsua(3L);
-            usuarios.setNombre("Benito Camelas");
-            usuarios.setClave("benito");
-            usuarios.setEmail("jaime@gmail.com");
-            usuarios.setFechaCreacion(new Date());
-            usuarios.setUsuCrea("Jaimito");
-            usuarios.setEstadoRegistro("A");
+            HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+            Usuarios usuarios = (Usuarios) httpSession.getAttribute("usuarioLector");
+            
+                    
             
             //entity.setNombre(FacesUtils.checkString(txtNombre));
             entity.setNombre(txtNombre.getValue().toString());
@@ -241,7 +253,7 @@ public class ColeccionesView implements Serializable {
             businessDelegatorView.saveColecciones(entity);
             coleccionRaices = null;
             entity = null;
-            consultarArbol();
+            consultarArbolColecciones();
             FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYSAVED);
             //action_clear();
             txtNombre.setValue(null);
@@ -257,6 +269,8 @@ public class ColeccionesView implements Serializable {
     public String action_modify() {
         try {
         	Colecciones coleccionSeleccionada = (Colecciones) seleccionarNodo.getData();
+        	//HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+            //Usuarios usuarios = (Usuarios) httpSession.getAttribute("usuarioLector");
         	
             if (entity == null) {
             	Long codigoCole = coleccionSeleccionada.getCodigoCole();
@@ -265,7 +279,7 @@ public class ColeccionesView implements Serializable {
             }
             
             
-            
+            //txtModificarNombre.setValue(coleccionSeleccionada.getNombre());
             /*Usuarios usuarios = new Usuarios();
             usuarios.setCodigoUsua(3L);
             usuarios.setNombre("Benito Camelas");
@@ -285,7 +299,7 @@ public class ColeccionesView implements Serializable {
             businessDelegatorView.updateColecciones(coleccionSeleccionada);
             coleccionRaices = null;
             entity = null;
-            consultarArbol();
+            consultarArbolColecciones();
             FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYMODIFIED);
             txtModificarNombre.setValue(null);
             txtModificarNombre.setValue("");
@@ -295,6 +309,11 @@ public class ColeccionesView implements Serializable {
         }
 
         return "";
+    }
+    
+    public void editarNombre(){
+    	Colecciones coleccionSeleccionada = (Colecciones) seleccionarNodo.getData();
+    	txtModificarNombre.setValue(coleccionSeleccionada.getNombre());
     }
 
     public String action_delete_datatable(ActionEvent evt) {
@@ -333,7 +352,7 @@ public class ColeccionesView implements Serializable {
             FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYDELETED);
             //action_clear();
             coleccionRaices=null;
-            consultarArbol();
+            consultarArbolColecciones();
             data = null;
         } catch (Exception e) {
             throw e;

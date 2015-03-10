@@ -7,16 +7,12 @@ import co.edu.usbcali.lookdocs.model.dto.ArticulosDTO;
 import co.edu.usbcali.lookdocs.utilities.Utilities;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.context.annotation.Scope;
-
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -339,6 +335,8 @@ public class ArticulosLogic implements IArticulosLogic {
                                                                   .getCodigoUsua() != null)
                     ? articulosTmp.getUsuarios().getCodigoUsua() : null);
                 articulosDTO.add(articulosDTO2);
+                
+                
             }
 
             return articulosDTO;
@@ -558,4 +556,11 @@ public class ArticulosLogic implements IArticulosLogic {
 
         return list;
     }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public List<Articulos> consultarTodosArticulos() throws Exception{
+    	return articulosDAO.consultarTodosArticulos();
+    }
+    
 }

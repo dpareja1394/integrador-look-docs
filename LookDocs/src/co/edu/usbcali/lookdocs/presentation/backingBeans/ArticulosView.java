@@ -56,10 +56,16 @@ public class ArticulosView implements Serializable {
     private CommandButton btnModify;
     private CommandButton btnDelete;
     private CommandButton btnClear;
+    
+    
     private List<ArticulosDTO> data;
     private ArticulosDTO selectedArticulos;
     private Articulos entity;
     private boolean showDialog;
+    private List<Articulos> losArticulos;
+    private List<Articulos> filtroArticulos;
+    
+    
     @ManagedProperty(value = "#{BusinessDelegatorView}")
     private IBusinessDelegatorView businessDelegatorView;
 
@@ -67,7 +73,15 @@ public class ArticulosView implements Serializable {
         super();
     }
 
-    public void rowEventListener(RowEditEvent e) {
+    public List<Articulos> getFiltroArticulos() {
+		return filtroArticulos;
+	}
+
+	public void setFiltroArticulos(List<Articulos> filtroArticulos) {
+		this.filtroArticulos = filtroArticulos;
+	}
+
+	public void rowEventListener(RowEditEvent e) {
         try {
             ArticulosDTO articulosDTO = (ArticulosDTO) e.getObject();
 
@@ -139,7 +153,27 @@ public class ArticulosView implements Serializable {
         }
     }
 
-    public String action_new() {
+    public List<Articulos> getLosArticulos() {
+		
+    	
+    	if(losArticulos == null){
+    		
+    		try {
+    			losArticulos = businessDelegatorView.consultarTodosArticulos();
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+    		
+    	}
+    	
+    	return losArticulos;
+	}
+
+	public void setLosArticulos(List<Articulos> losArticulos) {
+		this.losArticulos = losArticulos;
+	}
+
+	public String action_new() {
         action_clear();
         selectedArticulos = null;
         setShowDialog(true);

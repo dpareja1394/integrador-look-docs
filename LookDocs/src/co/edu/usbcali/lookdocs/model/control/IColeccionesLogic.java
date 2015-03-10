@@ -1,14 +1,11 @@
 package co.edu.usbcali.lookdocs.model.control;
 
 import co.edu.usbcali.lookdocs.model.Colecciones;
+import co.edu.usbcali.lookdocs.model.Usuarios;
 import co.edu.usbcali.lookdocs.model.dto.ColeccionesDTO;
 
 import java.math.BigDecimal;
-
 import java.util.*;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -54,4 +51,6 @@ public interface IColeccionesLogic {
     public Long findTotalNumberColecciones() throws Exception;
 
     public List<ColeccionesDTO> getDataColecciones() throws Exception;
+    
+    public List<Colecciones> consultarColeccionPorUsuario(Usuarios usuarios) throws Exception;
 }
