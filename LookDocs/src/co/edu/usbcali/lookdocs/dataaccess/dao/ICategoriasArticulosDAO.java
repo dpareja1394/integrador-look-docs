@@ -9,4 +9,6 @@ import co.edu.usbcali.lookdocs.model.CategoriasArticulos;
 *
 */
 public interface ICategoriasArticulosDAO extends Dao<CategoriasArticulos, Long> {
+	
+	public Long getConsecutivo(String sqlName) throws Exception;
 }
