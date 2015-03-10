@@ -9,4 +9,6 @@ import co.edu.usbcali.lookdocs.model.Anexos;
 *
 */
 public interface IAnexosDAO extends Dao<Anexos, Long> {
+	
+	public Long getConsecutivo(String sqlName) throws Exception;
 }
