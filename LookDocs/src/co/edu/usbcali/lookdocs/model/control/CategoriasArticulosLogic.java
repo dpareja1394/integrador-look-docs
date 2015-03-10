@@ -265,9 +265,9 @@ public class CategoriasArticulosLogic implements ICategoriasArticulosLogic {
         CategoriasArticulos entity = null;
 
         try {
-            entity = categoriasArticulosDAO.findById(codigoCateArti);
+            entity = categoriasArticulosDAO.findByProperty("articulos.codigoArti",codigoCateArti).get(0);
         } catch (Exception e) {
-            throw new ZMessManager().new FindingException("CategoriasArticulos");
+            throw new ZMessManager().new FindingException("Codigo Categoria-Arituclo en Categorias Articulos");
         } finally {
         }
 

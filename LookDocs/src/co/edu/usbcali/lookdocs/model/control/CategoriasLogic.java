@@ -73,44 +73,44 @@ public class CategoriasLogic implements ICategoriasLogic {
 			entity.setFechaCreacion(new Date());
 
 			if (entity.getCodigoCate() == null) {
-				throw new ZMessManager().new EmptyFieldException("codigoCate");
+				throw new ZMessManager().new EmptyFieldException("Codigo Categoria");
 			}
 
 			if (entity.getEstadoRegistro() == null) {
 				throw new ZMessManager().new EmptyFieldException(
-						"estadoRegistro");
+						"Tipo");
 			}
 
 			if ((entity.getEstadoRegistro() != null)
 					&& (Utilities.checkWordAndCheckWithlength(
 							entity.getEstadoRegistro(), 1) == false)) {
 				throw new ZMessManager().new NotValidFormatException(
-						"estadoRegistro");
+						"Tipo");
 			}
 
 			if (entity.getFechaCreacion() == null) {
 				throw new ZMessManager().new EmptyFieldException(
-						"fechaCreacion");
+						"Fecha de creacion");
 			}
 
 			if (entity.getNombre() == null) {
-				throw new ZMessManager().new EmptyFieldException("nombre");
+				throw new ZMessManager().new EmptyFieldException("Nombre");
 			}
 
 			if ((entity.getNombre() != null)
 					&& (Utilities.checkWordAndCheckWithlength(
 							entity.getNombre(), 150) == false)) {
-				throw new ZMessManager().new NotValidFormatException("nombre");
+				throw new ZMessManager().new NotValidFormatException("Nombre");
 			}
 
 			if (entity.getUsuCrea() == null) {
-				throw new ZMessManager().new EmptyFieldException("usuCrea");
+				throw new ZMessManager().new EmptyFieldException("Usuario");
 			}
 
 			if ((entity.getUsuCrea() != null)
 					&& (Utilities.checkWordAndCheckWithlength(
 							entity.getUsuCrea(), 150) == false)) {
-				throw new ZMessManager().new NotValidFormatException("usuCrea");
+				throw new ZMessManager().new NotValidFormatException("Usuario");
 			}
 
 			if ((entity.getUsuModifica() != null)
@@ -243,7 +243,7 @@ public class CategoriasLogic implements ICategoriasLogic {
 					&& (Utilities.checkWordAndCheckWithlength(
 							entity.getEstadoRegistro(), 1) == false)) {
 				throw new ZMessManager().new NotValidFormatException(
-						"estadoRegistro");
+						"Tipo");
 			}
 			
 			if (entity.getNombre() == null) {
@@ -254,14 +254,14 @@ public class CategoriasLogic implements ICategoriasLogic {
 			if ((entity.getNombre() != null)
 					&& (Utilities.checkWordAndCheckWithlength(
 							entity.getNombre(), 150) == false)) {
-				throw new ZMessManager().new NotValidFormatException("nombre");
+				throw new ZMessManager().new NotValidFormatException("Nombre");
 			}
 
 			if ((entity.getUsuModifica() != null)
 					&& (Utilities.checkWordAndCheckWithlength(
 							entity.getUsuModifica(), 150) == false)) {
 				throw new ZMessManager().new NotValidFormatException(
-						"usuModifica");
+						"Usuario");
 			}
 
 			entity.setFechaModifcacion(new Date());
