@@ -553,5 +553,28 @@
 			<redirect />
 		</navigation-case>
 	</navigation-rule>
-
+	<navigation-rule>
+		<from-view-id>/FeedPrincipalAdministrador.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>cerrarAdministrador</from-outcome>
+			<to-view-id>/InicioSesionAdmin.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/FeedPrincipalLector.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>cerrarLector</from-outcome>
+			<to-view-id>/InicioSesionLector.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/RegistroLector.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>registroLector</from-outcome>
+			<to-view-id>/InicioSesionLector.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
 </faces-config>

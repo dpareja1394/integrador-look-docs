@@ -38,20 +38,24 @@
 				<f:facet name="footer">
 					<h:outputText value="Los campos con (*) son obligatorios" />
 					<br />
-					<p:commandButton id="btnRecover" icon="ui-icon-locked"
-						value="¿ Olvido la contraseña ?" onclick="PF('dlg3').show();" />
+					<p:commandButton id="btnOlvidoClaveAdmin" icon="ui-icon-locked"
+						value="¿ Olvido la contraseña ?"
+						onclick="PF('dlgRecuperarClaveLector').show();" />
 				</f:facet>
-				<p:dialog header="Recuperacion de Contraseña" widgetVar="dlg3"
-					modal="true" height="100">
+				<p:dialog header="Recuperacion de Contraseña"
+					widgetVar="dlgRecuperarClaveLector" modal="true" height="100">
 					<p:outputLabel
 						value="Se enviará un e-mail con el procedimiento para recuperar su contraseña." />
 					<p:separator />
 					<br />
 					<p:outputLabel value="Correo (e-mail): " />
-					<p:inputText id="txtrecuperarContraseña" />
+					<p:inputText id="txtEmailClaveLector"
+						binding="#{usuariosView.txtEmailClaveLector}" />
 					<br />
-					<p:commandButton id="btnRecuperarContraseña" icon="ui-icon-check"
-						value="Enviar" />
+					<p:commandButton id="btnRecuperarClaveAdmin" icon="ui-icon-check"
+						value="Enviar" binding="#{usuariosView.btnRecuperarClaveLector}"
+						action="#{usuariosView.recuperarClaveLectorAction}"
+						update="panelLoginLector, mensajesLoginLector" />
 				</p:dialog>
 			</p:panel>
 		</h:form>

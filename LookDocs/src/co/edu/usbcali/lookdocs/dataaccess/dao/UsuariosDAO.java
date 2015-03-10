@@ -88,4 +88,10 @@ public class UsuariosDAO extends HibernateDaoImpl<Usuarios, Long> implements
         return consecutivo;
     }
 
+	@Override
+	public Usuarios consultarPorId(Long id) {
+		
+		return (Usuarios) sessionFactory.getCurrentSession().get(Usuarios.class, id);
+	}
+
 }

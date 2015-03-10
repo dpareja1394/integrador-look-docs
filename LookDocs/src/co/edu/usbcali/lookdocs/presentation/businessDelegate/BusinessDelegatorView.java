@@ -45,6 +45,7 @@ import co.edu.usbcali.lookdocs.model.dto.RolesDTO;
 import co.edu.usbcali.lookdocs.model.dto.RssDTO;
 import co.edu.usbcali.lookdocs.model.dto.UsuariosDTO;
 import co.edu.usbcali.lookdocs.presentation.businessDelegate.IBusinessDelegatorView;
+
 import org.primefaces.model.TreeNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -720,5 +721,25 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
 	@Override
 	public Usuarios obtenerPorMail(String email) throws Exception {
 		return usuariosLogic.obtenerPorMail(email);
+	}
+
+	@Override
+	public void modificarPasswordUsuarios(Usuarios usuarios,
+			String claveActual, String nuevaClave, String confirmaClave)
+			throws Exception {
+		usuariosLogic.modificarPasswordUsuarios(usuarios, claveActual, nuevaClave, confirmaClave);
+		
+	}
+
+	@Override
+	public void modificarNombreDeUsuario(Usuarios usuarios, String nombre) throws Exception{
+		usuariosLogic.modificarNombreDeUsuario(usuarios, nombre);
+		
+	}
+
+	@Override
+	public void recuperarClave(String email) throws Exception {
+		usuariosLogic.recuperarClave(email);
+		
 	}
 }

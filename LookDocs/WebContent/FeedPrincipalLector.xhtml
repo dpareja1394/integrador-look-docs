@@ -26,24 +26,67 @@
 		<h:form>
 			<p:growl id="messages" showDetail="false" />
 
-			<p:dialog header="Crear Coleccion" widgetVar="dlg2" modal="true" height="100" resizable="true">
+			<p:dialog header="Cambiar Contraseña" widgetVar="dlgEditPswLector"
+				style="font-size: 0.9em;height: 225px;width: 317px;"
+				resizable="true">
+				<h:panelGrid columns="2" cellpadding="10">
+					<p:outputLabel value="Contraseña Actual: *" />
+					<p:password id="pswClaveAdminActual"
+						binding="#{usuariosView.pswClaveAdmin}" />
+					<p:outputLabel value="Nueva Contraseña: *" />
+					<p:password id="pswClaveAdminNueva"
+						binding="#{usuariosView.pswClave}" />
+					<p:outputLabel value="Confirmar Nueva Contraseña: *" />
+					<p:password id="pswClaveAdminNuevaConfirmacion"
+						binding="#{usuariosView.pswClaveConfirmacion}" />
+					<p:commandButton id="btnCambiarClave" value="Cambiar Clave"
+						binding="#{usuariosView.btnCambiarClaveLector}" ajax="false"
+						action="#{usuariosView.cambiarClaveLector}" update="messages" />
+				</h:panelGrid>
+			</p:dialog>
+
+			<p:dialog header="Cambiar Nombre de Usuario"
+				widgetVar="dlgEditNombreUsuarioLector"
+				style="font-size: 0.9em;height: 225px;width: 317px;"
+				resizable="true">
+				<h:panelGrid columns="2" cellpadding="10">
+					<p:outputLabel value="Nuevo Nombre de Usuario: " />
+					<p:inputText id="txtNombreUsuario"
+						binding="#{usuariosView.txtNombre}" />
+					<p:commandButton id="btnCambiarNombreUsuario"
+						value="Cambiar Nombre de Usuario"
+						binding="#{usuariosView.btnCambiarNombreUsuarioLector}"
+						ajax="false" action="#{usuariosView.cambiarNombreDeUsuarioLector}"
+						update="messages" />
+				</h:panelGrid>
+			</p:dialog>
+
+
+			<p:dialog header="Crear Coleccion" widgetVar="dlg2" modal="true"
+				height="100" resizable="true">
 				<h:panelGrid columns="2" cellpadding="10">
 					<p:outputLabel value="Nombre" />
 					<p:inputText id="txtNombre" binding="#{coleccionesView.txtNombre}" />
 
-					<p:commandButton id="btnCrear" value="Aceptar" ajax="false"	binding="#{coleccionesView.btnSave}" action="#{coleccionesView.action_save()}" />
+					<p:commandButton id="btnCrear" value="Aceptar" ajax="false"
+						binding="#{coleccionesView.btnSave}"
+						action="#{coleccionesView.action_save()}" />
 				</h:panelGrid>
-			</p:dialog>		
-			
-			<p:dialog header="Modificar Coleecion" widgetVar="dlg4" modal="true" height="100" resizable="true" >
-				<h:panelGrid columns="2" >
-					<p:outputLabel value="Nuevo Nombre" />
-					<p:inputText id="txtModificarNombre" binding="#{coleccionesView.txtModificarNombre}" />
-					
-					<p:commandButton id="btnModificar" value="Modificar" ajax="false" binding="#{coleccionesView.btnModify}" action="#{coleccionesView.action_modify()}" />
-				</h:panelGrid>			
 			</p:dialog>
-			
+
+			<p:dialog header="Modificar Coleecion" widgetVar="dlg4" modal="true"
+				height="100" resizable="true">
+				<h:panelGrid columns="2">
+					<p:outputLabel value="Nuevo Nombre" />
+					<p:inputText id="txtModificarNombre"
+						binding="#{coleccionesView.txtModificarNombre}" />
+
+					<p:commandButton id="btnModificar" value="Modificar" ajax="false"
+						binding="#{coleccionesView.btnModify}"
+						action="#{coleccionesView.action_modify()}" />
+				</h:panelGrid>
+			</p:dialog>
+
 			<pe:layout maskPanesEarly="true">
 				<pe:layoutPane position="center" maskContents="true">
 					<div id="container">
@@ -67,20 +110,23 @@
 					</p:menu>
 					<p:separator />
 					<p:separator />
-							<!-- ARBOL CARGADO DINAMICAMENTE -->
-							<p:panel header="Categorias">
-							<p:tree value="#{categoriasView.raiz}" var="categorias"
-								selectionMode="single" style="width:199px"
-								selection="#{categoriasView.selectedNode}" dynamic="true">
-								<p:treeNode expandedIcon="ui-icon-folder-open"
-									collapsedIcon="ui-icon-folder-collapsed">
-									<h:outputText value="#{categorias.nombre}" />
-								</p:treeNode>
-							</p:tree></p:panel><!-- FIN ARBOL CARGADO DINAMICAMENTE -->
-							<p:separator />
+					<!-- ARBOL CARGADO DINAMICAMENTE -->
+					<p:panel header="Categorias">
+						<p:tree value="#{categoriasView.raiz}" var="categorias"
+							selectionMode="single" style="width:199px"
+							selection="#{categoriasView.selectedNode}" dynamic="true">
+							<p:treeNode expandedIcon="ui-icon-folder-open"
+								collapsedIcon="ui-icon-folder-collapsed">
+								<h:outputText value="#{categorias.nombre}" />
+							</p:treeNode>
+						</p:tree>
+					</p:panel>
+					<!-- FIN ARBOL CARGADO DINAMICAMENTE -->
+					<p:separator />
 					<p:accordionPanel>
 						<p:tab title="Colecciones">
-							<p:commandButton value="Crear Coleccion" type="button" onclick="PF('dlg2').show();"  />
+							<p:commandButton value="Crear Coleccion" type="button"
+								onclick="PF('dlg2').show();" />
 							<p:separator />
 							<f:metadata>
 								<f:viewAction id="metadata"
@@ -95,20 +141,26 @@
 								</p:treeNode>
 							</p:tree>
 							<p:contextMenu for="arbolColecciones">
-								<p:menuitem value="Modificar Nombre" icon="ui-icon-open" onclick="PF('dlg4').show();" />
-								<p:menuitem value="Eliminar" icon="ui-icon-close" action="#{coleccionesView.action_delete()}" ajax="false" />
+								<p:menuitem value="Modificar Nombre" icon="ui-icon-open"
+									onclick="PF('dlg4').show();" />
+								<p:menuitem value="Eliminar" icon="ui-icon-close"
+									action="#{coleccionesView.action_delete()}" ajax="false" />
 							</p:contextMenu>
 						</p:tab>
 					</p:accordionPanel>
 					<p:menu toggleable="true">
-					<p:submenu label="Cuenta">
-						<p:menuitem value="Editar" update="messages" ajax="false"
-							icon="ui-icon-disk"
-							url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/EditarCuentas.xhtml" />
-					</p:submenu>
-					<p:submenu label="Sesion">
-						<p:menuitem value="Cerrar Sesion" icon="ui-icon-home" />
-					</p:submenu>
+						<p:submenu label="Cuenta">
+							<p:menuitem value="Cambiar Contraseña" icon="ui-icon-disk"
+								onclick="PF('dlgEditPswLector').show();" update="messages" />
+							<p:menuitem value="Modificar Nombre de Usuario"
+										icon="ui-icon-disk"
+										onclick="PF('dlgEditNombreUsuarioLector').show();"
+										update="messages" />
+						</p:submenu>
+						<p:submenu label="Sesion">
+							<p:menuitem value="Cerrar Sesion" icon="ui-icon-home"
+								action="#{usuariosView.cerrarSesionLector}" />
+						</p:submenu>
 					</p:menu>
 
 				</pe:layoutPane>

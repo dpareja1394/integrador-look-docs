@@ -14,4 +14,6 @@ public interface IUsuariosDAO extends Dao<Usuarios, Long> {
 	public void registrarUsuarioLector(Usuarios usuarios);
 	
 	public Long getConsecutivo(String sqlName);
+
+	public Usuarios consultarPorId(Long id);
 }

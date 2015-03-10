@@ -49,6 +49,8 @@ public class UsuariosView implements Serializable {
 	private InputText txtUsuModifica;
 	private InputText txtCodigoRol_Roles;
 	private InputText txtCodigoUsua;
+	private InputText txtEmailClaveAdmin;
+	private InputText txtEmailClaveLector;
 	private Calendar txtFechaCreacion;
 	private Calendar txtFechaModifcacion;
 	private CommandButton btnSave;
@@ -57,6 +59,12 @@ public class UsuariosView implements Serializable {
 	private CommandButton btnClear;
 	private CommandButton btnLoginLector;
 	private CommandButton btnLoginAdministrador;
+	private CommandButton btnCambiarClaveAdministrador;
+	private CommandButton btnCambiarNombreUsuarioAdministrador;
+	private CommandButton btnCambiarClaveLector;
+	private CommandButton btnCambiarNombreUsuarioLector;
+	private CommandButton btnRecuperarClaveAdmin;
+	private CommandButton btnRecuperarClaveLector;
 	private List<UsuariosDTO> data;
 	private UsuariosDTO selectedUsuarios;
 	private Usuarios entity;
@@ -668,11 +676,79 @@ public class UsuariosView implements Serializable {
 		this.txtEmailAdmin = txtEmailAdmin;
 	}
 
+	public CommandButton getBtnCambiarClaveAdministrador() {
+		return btnCambiarClaveAdministrador;
+	}
+
+	public void setBtnCambiarClaveAdministrador(
+			CommandButton btnCambiarClaveAdministrador) {
+		this.btnCambiarClaveAdministrador = btnCambiarClaveAdministrador;
+	}
+
+	public CommandButton getBtnCambiarNombreUsuarioAdministrador() {
+		return btnCambiarNombreUsuarioAdministrador;
+	}
+
+	public void setBtnCambiarNombreUsuarioAdministrador(
+			CommandButton btnCambiarNombreUsuarioAdministrador) {
+		this.btnCambiarNombreUsuarioAdministrador = btnCambiarNombreUsuarioAdministrador;
+	}
+
+	public CommandButton getBtnCambiarNombreUsuarioLector() {
+		return btnCambiarNombreUsuarioLector;
+	}
+
+	public void setBtnCambiarNombreUsuarioLector(
+			CommandButton btnCambiarNombreUsuarioLector) {
+		this.btnCambiarNombreUsuarioLector = btnCambiarNombreUsuarioLector;
+	}
+
+	public CommandButton getBtnCambiarClaveLector() {
+		return btnCambiarClaveLector;
+	}
+
+	public void setBtnCambiarClaveLector(CommandButton btnCambiarClaveLector) {
+		this.btnCambiarClaveLector = btnCambiarClaveLector;
+	}
+
+	public InputText getTxtEmailClaveAdmin() {
+		return txtEmailClaveAdmin;
+	}
+
+	public void setTxtEmailClaveAdmin(InputText txtEmailClaveAdmin) {
+		this.txtEmailClaveAdmin = txtEmailClaveAdmin;
+	}
+
+	public InputText getTxtEmailClaveLector() {
+		return txtEmailClaveLector;
+	}
+
+	public void setTxtEmailClaveLector(InputText txtEmailClaveLector) {
+		this.txtEmailClaveLector = txtEmailClaveLector;
+	}
+
+	public CommandButton getBtnRecuperarClaveAdmin() {
+		return btnRecuperarClaveAdmin;
+	}
+
+	public void setBtnRecuperarClaveAdmin(CommandButton btnRecuperarClaveAdmin) {
+		this.btnRecuperarClaveAdmin = btnRecuperarClaveAdmin;
+	}
+
+	public CommandButton getBtnRecuperarClaveLector() {
+		return btnRecuperarClaveLector;
+	}
+
+	public void setBtnRecuperarClaveLector(CommandButton btnRecuperarClaveLector) {
+		this.btnRecuperarClaveLector = btnRecuperarClaveLector;
+	}
+
 	public void clearAction() {
 		txtEmail.setValue("");
 		txtNombre.setValue("");
 		pswClave.setValue("");
 		pswClaveConfirmacion.setValue("");
+		pswClaveAdmin.setValue("");
 	}
 
 	public String iniciarLectorAction() {
@@ -686,9 +762,13 @@ public class UsuariosView implements Serializable {
 				String password = pswClave.getValue().toString();
 				businessDelegatorView.iniciarSesionLector(email, password);
 				Usuarios usuarios = businessDelegatorView.obtenerPorMail(email);
-                HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-                httpSession.setAttribute("usuarioLector", usuarios);
-                return "iniciarLector";
+				HttpSession httpSession = (HttpSession) FacesContext
+						.getCurrentInstance().getExternalContext()
+						.getSession(true);
+				httpSession.setAttribute("usuarioLector", usuarios);
+				txtEmail.setValue("");
+				pswClave.setValue("");
+				return "iniciarLector";
 			}
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage(
@@ -711,9 +791,13 @@ public class UsuariosView implements Serializable {
 				businessDelegatorView.iniciarSesionAdministrador(email,
 						password);
 				Usuarios usuarios = businessDelegatorView.obtenerPorMail(email);
-                HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-                httpSession.setAttribute("usuarioAdministrador", usuarios);
-                return "iniciarAdministrador";
+				HttpSession httpSession = (HttpSession) FacesContext
+						.getCurrentInstance().getExternalContext()
+						.getSession(true);
+				httpSession.setAttribute("usuarioAdministrador", usuarios);
+				txtEmailAdmin.setValue("");
+				pswClaveAdmin.setValue("");
+				return "iniciarAdministrador";
 			}
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage(
@@ -724,23 +808,50 @@ public class UsuariosView implements Serializable {
 		return "";
 	}
 
-	public void registrarLectorAction() {
+	public String registrarLectorAction() {
 		try {
-			 
-			 String clave = pswClave.getValue().toString();
-			 String confirmaClave = pswClaveConfirmacion.getValue().toString();
-			 if(clave.equals(confirmaClave)){
-				 Usuarios usuarios = new Usuarios();
-				 usuarios.setClave(confirmaClave);
-				 usuarios.setEmail(txtEmail.getValue().toString());
-				 usuarios.setNombre(txtNombre.getValue().toString());
-				 businessDelegatorView.registrarUsuarioLector(usuarios);
-				 FacesContext.getCurrentInstance().addMessage("", new FacesMessage("Usuario Creado Satisfactoriamente"));
-				 txtEmail.setValue("");
-				 txtNombre.setValue("");
-			 }else{
-				 FacesContext.getCurrentInstance().addMessage("", new FacesMessage("Las contraseñas no coinciden"));
-			 }
+
+			String clave = pswClave.getValue().toString();
+			String confirmaClave = pswClaveConfirmacion.getValue().toString();
+			if (clave.equals(confirmaClave)) {
+				Usuarios usuarios = new Usuarios();
+				usuarios.setClave(confirmaClave);
+				usuarios.setEmail(txtEmail.getValue().toString());
+				usuarios.setNombre(txtNombre.getValue().toString());
+				businessDelegatorView.registrarUsuarioLector(usuarios);
+				FacesContext.getCurrentInstance().addMessage("",
+						new FacesMessage("Usuario Creado Satisfactoriamente"));
+				txtEmail.setValue("");
+				txtNombre.setValue("");
+				pswClave.setValue("");
+				pswClaveConfirmacion.setValue("");
+				return "registroLector";
+			} else {
+				FacesContext.getCurrentInstance().addMessage("",
+						new FacesMessage("Las contraseñas no coinciden"));
+				
+			}
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(
+					"",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e
+							.getMessage(), e.getMessage()));
+		}
+		return "";
+	}
+
+	public void pswClaveConfirmacionListener() {
+		try {
+			FacesContext.getCurrentInstance().addMessage("",
+					new FacesMessage(pswClave.getValue().toString()));
+			// String clave = pswClave.getValue().toString();
+			// String claveConfirma =
+			// pswClaveConfirmacion.getValue().toString();
+			/*
+			 * if(clave.equals(claveConfirma)==false){
+			 * FacesContext.getCurrentInstance().addMessage("", new
+			 * FacesMessage("Las contraseñas no coinciden")); }
+			 */
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage(
 					"",
@@ -748,15 +859,187 @@ public class UsuariosView implements Serializable {
 							.getMessage(), e.getMessage()));
 		}
 	}
-	
-	public void pswClaveConfirmacionListener(){
+
+	public String cerrarSesionAdministrador() {
+		HttpSession httpSession = (HttpSession) FacesContext
+				.getCurrentInstance().getExternalContext().getSession(true);
+		httpSession.removeAttribute("usuarioAdministrador");
+
+		return "cerrarAdministrador";
+
+	}
+
+	public String cerrarSesionLector() {
+		HttpSession httpSession = (HttpSession) FacesContext
+				.getCurrentInstance().getExternalContext().getSession(true);
+		httpSession.removeAttribute("usuarioLector");
+
+		return "cerrarLector";
+
+	}
+
+	public void cambiarClaveAdministrador() {
 		try {
-			FacesContext.getCurrentInstance().addMessage("", new FacesMessage(pswClave.getValue().toString()));
-//			String clave = pswClave.getValue().toString();
-	//		String claveConfirma = pswClaveConfirmacion.getValue().toString();
-			/*if(clave.equals(claveConfirma)==false){
-				 FacesContext.getCurrentInstance().addMessage("", new FacesMessage("Las contraseñas no coinciden"));
-			}*/
+			HttpSession httpSession = (HttpSession) FacesContext
+					.getCurrentInstance().getExternalContext().getSession(true);
+			Usuarios usuarios = (Usuarios) httpSession
+					.getAttribute("usuarioAdministrador");
+
+			if (pswClave.getValue().toString().trim().equals("") == true
+					|| pswClaveAdmin.getValue().toString().trim().equals("") == true
+					|| pswClaveConfirmacion.getValue().toString().trim()
+							.equals("") == true) {
+				FacesContext.getCurrentInstance().addMessage("",
+						new FacesMessage("Debe llenar todos los campos"));
+			} else {
+				String claveActual = pswClaveAdmin.getValue().toString();
+				String nuevaClave = pswClave.getValue().toString();
+				String confirmaClave = pswClaveConfirmacion.getValue()
+						.toString();
+				businessDelegatorView.modificarPasswordUsuarios(usuarios,
+						claveActual, nuevaClave, confirmaClave);
+				FacesContext.getCurrentInstance().addMessage("",
+						new FacesMessage("Su contraseña ha sido modificada"));
+			}
+
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(
+					"",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e
+							.getMessage(), e.getMessage()));
+		}
+
+	}
+
+	public void cambiarClaveLector() {
+		try {
+			HttpSession httpSession = (HttpSession) FacesContext
+					.getCurrentInstance().getExternalContext().getSession(true);
+			Usuarios usuarios = (Usuarios) httpSession
+					.getAttribute("usuarioLector");
+
+			if (pswClave.getValue().toString().trim().equals("") == true
+					|| pswClaveAdmin.getValue().toString().trim().equals("") == true
+					|| pswClaveConfirmacion.getValue().toString().trim()
+							.equals("") == true) {
+				FacesContext.getCurrentInstance().addMessage("",
+						new FacesMessage("Debe llenar todos los campos"));
+			} else {
+				String claveActual = pswClaveAdmin.getValue().toString();
+				String nuevaClave = pswClave.getValue().toString();
+				String confirmaClave = pswClaveConfirmacion.getValue()
+						.toString();
+				businessDelegatorView.modificarPasswordUsuarios(usuarios,
+						claveActual, nuevaClave, confirmaClave);
+				FacesContext.getCurrentInstance().addMessage("",
+						new FacesMessage("Su contraseña ha sido modificada"));
+			}
+
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(
+					"",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e
+							.getMessage(), e.getMessage()));
+		}
+
+	}
+
+	public void cambiarNombreDeUsuarioAdministrador() {
+		try {
+			HttpSession httpSession = (HttpSession) FacesContext
+					.getCurrentInstance().getExternalContext().getSession(true);
+			Usuarios usuarios = (Usuarios) httpSession
+					.getAttribute("usuarioAdministrador");
+
+			if (txtNombre.getValue().toString().trim().equals("") == true) {
+				FacesContext.getCurrentInstance().addMessage(
+						"",
+						new FacesMessage(
+								"Debe poner un nuevo nombre de usuario"));
+			} else {
+				String nombreDeUsuarioNuevo = txtNombre.getValue().toString();
+				businessDelegatorView.modificarNombreDeUsuario(usuarios,
+						nombreDeUsuarioNuevo);
+				FacesContext.getCurrentInstance().addMessage(
+						"",
+						new FacesMessage(
+								"Se ha modificado el nombre de usuario"));
+			}
+
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(
+					"",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e
+							.getMessage(), e.getMessage()));
+		}
+
+	}
+
+	public void cambiarNombreDeUsuarioLector() {
+		try {
+			HttpSession httpSession = (HttpSession) FacesContext
+					.getCurrentInstance().getExternalContext().getSession(true);
+			Usuarios usuarios = (Usuarios) httpSession
+					.getAttribute("usuarioLector");
+
+			if (txtNombre.getValue().toString().trim().equals("") == true) {
+				FacesContext.getCurrentInstance().addMessage(
+						"",
+						new FacesMessage(
+								"Debe poner un nuevo nombre de usuario"));
+			} else {
+				String nombreDeUsuarioNuevo = txtNombre.getValue().toString();
+				businessDelegatorView.modificarNombreDeUsuario(usuarios,
+						nombreDeUsuarioNuevo);
+				FacesContext.getCurrentInstance().addMessage(
+						"",
+						new FacesMessage(
+								"Se ha modificado el nombre de usuario"));
+			}
+
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(
+					"",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e
+							.getMessage(), e.getMessage()));
+		}
+
+	}
+
+	public void recuperarClaveAdminAction() {
+		try {
+
+			if (txtEmailClaveAdmin.getValue().toString().trim().equals("") == true) {
+				FacesContext.getCurrentInstance().addMessage("",
+						new FacesMessage("Debe ingresar un email"));
+			} else {
+				String email = txtEmailClaveAdmin.getValue().toString();
+				businessDelegatorView.recuperarClave(email);
+				FacesContext.getCurrentInstance().addMessage("",
+						new FacesMessage("Se ha enviado el correo"));
+				txtEmailClaveAdmin.setValue("");
+			}
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(
+					"",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e
+							.getMessage(), e.getMessage()));
+		}
+	}
+
+	public void recuperarClaveLectorAction() {
+		try {
+
+			if (txtEmailClaveLector.getValue().toString().trim().equals("") == true) {
+				FacesContext.getCurrentInstance().addMessage("",
+						new FacesMessage("Debe ingresar un email"));
+			} else {
+				String email = txtEmailClaveLector.getValue().toString();
+				businessDelegatorView.recuperarClave(email);
+				FacesContext.getCurrentInstance().addMessage("",
+						new FacesMessage("Se ha enviado el correo"));
+				txtEmailClaveLector.setValue("");
+			}
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage(
 					"",

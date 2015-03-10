@@ -332,5 +332,10 @@ public interface IBusinessDelegatorView {
     public Usuarios obtenerPorMail(String email)throws Exception;
     
     public void deleteCategoriasbyNode(TreeNode selectedNode) throws Exception;
-    
+ 
+    public void modificarPasswordUsuarios(Usuarios usuarios, String claveActual, String nuevaClave, String confirmaClave) throws Exception;
+   
+    public void modificarNombreDeUsuario(Usuarios usuarios, String nombre) throws Exception;
+
+    public void recuperarClave(String email) throws Exception;
 }

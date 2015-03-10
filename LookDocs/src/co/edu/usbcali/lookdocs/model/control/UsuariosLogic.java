@@ -656,11 +656,11 @@ public class UsuariosLogic implements IUsuariosLogic {
 		usuarios.setCodigoUsua(codigoUsuario);
 		usuarios.setRoles(roles);
 		usuarios.setFechaCreacion(new Date());
-		usuarios.setUsuCrea(usuarios.getNombre());
+		usuarios.setUsuCrea(usuarios.getEmail());
 		usuarios.setEstadoRegistro("A");
 
 		usuariosDAO.registrarUsuarioLector(usuarios);
-		enviarMensaje(usuarios);
+		enviarMensajeRegistro(usuarios);
 
 	}
 
@@ -674,13 +674,13 @@ public class UsuariosLogic implements IUsuariosLogic {
 	}
 
 	@Override
-	public void enviarMensaje(Usuarios usuarios) throws Exception {
+	public void enviarMensajeRegistro(Usuarios usuarios) throws Exception {
 		String mensajeAEnviar = "Hola "
 				+ usuarios.getNombre()
 				+ "\n"
 				+ "Bienvenido a Look Docs, tus datos para iniciar sesión son: \n"
 				+ "Nombre de Usuario: " + usuarios.getEmail() + " \n"
-				+ "Contraseña: " + usuarios.getClave() + " "
+				+ "Contraseña: " + usuarios.getClave() + " \n"
 				+ "Ya puedes disfrutar de los servicios de LookDocs.";
 
 		SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage);
@@ -699,6 +699,89 @@ public class UsuariosLogic implements IUsuariosLogic {
 	public Usuarios obtenerPorMail(String email) throws Exception {
 		// TODO Auto-generated method stub
 		return usuariosDAO.obtenerPorMail(email);
+	}
+
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public void modificarPasswordUsuarios(Usuarios usuarios,
+			String claveActual, String nuevaClave, String confirmaClave)
+			throws Exception {
+		if(usuarios==null){
+			throw new Exception("No ha iniciado Sesión");
+		}
+		if(usuarios.getClave().equals(claveActual)==false){
+			throw new Exception("Contraseña actual errónea");
+		}
+		if(nuevaClave.equals(confirmaClave)==false){
+			throw new Exception("Las contraseñas no coinciden");
+		}
+		Usuarios entidad = usuariosDAO.consultarPorId(usuarios.getCodigoUsua());
+		if(entidad == null){
+			throw new Exception("El usuario no existe");
+		}
+		entidad.setClave(nuevaClave);
+		entidad.setFechaModifcacion(new Date());
+		entidad.setUsuModifica(usuarios.getEmail());
+		usuariosDAO.update(entidad);
+	}
+
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public void modificarNombreDeUsuario(Usuarios usuarios, String nombre) throws Exception{
+		if(usuarios==null){
+			throw new Exception("No ha iniciado Sesión");
+		}
+		if(usuarios.getNombre().equals(nombre)==true){
+			throw new Exception("No ha puesto un nuevo nombre");
+		}
+		Usuarios entidad = usuariosDAO.consultarPorId(usuarios.getCodigoUsua());
+		if(entidad == null){
+			throw new Exception("El usuario no existe");
+		}
+		entidad.setNombre(nombre);
+		entidad.setFechaModifcacion(new Date());
+		entidad.setUsuModifica(usuarios.getEmail());
+		usuariosDAO.update(entidad);
+	}
+
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public void recuperarClave(String email) throws Exception {
+		boolean mailCorrecto = validateEmailAddress(email);
+		if (mailCorrecto == false) {
+			throw new Exception("Dirección de Email es incorrecta");
+		}
+		Usuarios usuarios = usuariosDAO.obtenerPorMail(email);
+		if(usuarios==null){
+			throw new Exception("El usuario no está registrado en la base de datos");
+		}
+		String nuevaClave = "lOoKdoCs"+usuarios.getNombre().trim()+""+usuarios.getCodigoUsua();
+		usuarios.setClave(nuevaClave);
+		usuarios.setUsuModifica("LookDocs");
+		usuarios.setFechaModifcacion(new Date());
+		usuariosDAO.update(usuarios);
+		enviarMensajeCambioClave(usuarios);
+	}
+
+	@Override
+	public void enviarMensajeCambioClave(Usuarios usuarios) throws Exception {
+		String mensajeAEnviar = "Hola "
+				+ usuarios.getNombre()
+				+ "\n"
+				+ "Has solicitado recuperar tu contraseña, tu nueva contraseña es: \n"
+				+ "Contraseña: " + usuarios.getClave() + " \n"
+				+ "Recuerda que puedes modificarla en el Feed de tu cuenta en LookDocs";
+
+		SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage);
+		msg.setTo(usuarios.getEmail());
+		msg.setSubject("Recuperar Contraseña");
+		msg.setText(mensajeAEnviar);
+
+		try {
+			this.mailSender.send(msg);
+		} catch (MailException ex) {
+			System.err.println(ex.getMessage());
+		}
 	}
 
 }

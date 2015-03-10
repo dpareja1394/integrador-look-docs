@@ -60,7 +60,15 @@ public interface IUsuariosLogic {
     
     public Long getConsecutivo(String sqlName) throws Exception;
     
-    public void enviarMensaje(Usuarios usuarios)throws Exception;
+    public void enviarMensajeRegistro(Usuarios usuarios)throws Exception;
 
     public Usuarios obtenerPorMail(String email)throws Exception;
+
+    public void modificarPasswordUsuarios(Usuarios usuarios, String claveActual, String nuevaClave, String confirmaClave) throws Exception;
+
+    public void modificarNombreDeUsuario(Usuarios usuarios, String nombre) throws Exception;
+    
+    public void recuperarClave(String email) throws Exception;
+
+    public void enviarMensajeCambioClave(Usuarios usuarios)throws Exception;
 }
