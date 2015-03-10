@@ -3,8 +3,11 @@ package co.edu.usbcali.lookdocs.model.control;
 import co.edu.usbcali.lookdocs.model.Articulos;
 import co.edu.usbcali.lookdocs.model.dto.ArticulosDTO;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.*;
+
+import org.primefaces.model.UploadedFile;
 
 
 /**
@@ -18,7 +21,7 @@ public interface IArticulosLogic {
     /**
          * Save an new Articulos entity
          */
-    public void saveArticulos(Articulos entity) throws Exception;
+    public void saveArticulos(Articulos entity, String categoriaSelected, String pdfUrl) throws Exception;
 
     /**
          * Delete an existing Articulos entity
@@ -49,6 +52,14 @@ public interface IArticulosLogic {
     public Long findTotalNumberArticulos() throws Exception;
 
     public List<ArticulosDTO> getDataArticulos() throws Exception;
+    
+    //public void TransferFile(String pdfUrl, InputStream is, UploadedFile file) throws Exception;
+    
+    public void TransferFile(String server, String user, String pass,
+    		UploadedFile file, String remotePath) throws Exception;
+    
+    public String downloadFileByFTP(String server, String user, String pass,
+			String fileName, String remotePath) throws Exception;
     
     public List<Articulos> consultarTodosArticulos() throws Exception;
 }
