@@ -24,7 +24,7 @@
 
 	<h:body>
 
-		<h:form>
+		<h:form enctype="multipart/form-data">
 
 			<pe:layout maskPanesEarly="true">
 				<pe:layoutPane position="center" maskContents="true">
@@ -48,9 +48,12 @@
 						<p:layoutUnit position="north" size="90"
 							style="background-color: #E8E8E8">
 							<p:menu toggleable="true">
-								<p:menuitem value="Principal" update="messages"
+								<p:menuitem value="Gestion de Documentos" update="messages"
 									icon="ui-icon-disk"
 									url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/PrincipalAdministrador.xhtml" />
+									<p:menuitem value="Inicio" update="messages"
+									icon="ui-icon-disk"
+									url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/FeedPrincipalAdministrador.xhtml" />
 							</p:menu>
 						</p:layoutUnit>
 						<p:layoutUnit position="south" size="200"
@@ -73,22 +76,22 @@
 						<p:layoutUnit position="center"
 							style="width:90px;height:500;overflow">
 
-							<p:splitButton value="Crear Categoria"
-								onclick="PF('dlgCrear').show();" update="messages"
-								icon="ui-icon-disk">
+							<p:contextMenu for="arbolCategorias">
+								<p:menuitem value="Crear Categoria"
+									onclick="PF('dlgCrear').show();" update="messages"
+									icon="ui-icon-disk" style="font-size: 0.9em" />
 								<p:menuitem value="Actualizar Categoria" update="messages"
 									onclick="PF('dlgModificar').show();"
 									icon="ui-icon-arrowrefresh-1-w" style="font-size: 0.9em" />
 								<p:menuitem value="Eliminar Categoria" icon="ui-icon-close"
 									action="#{categoriasView.action_delete()}"
 									style=";font-size: 0.9em" ajax="false" />
-
-							</p:splitButton>
+							</p:contextMenu>
 							<p:separator />
 							<!-- ARBOL CARGADO DINAMICAMENTE -->
 							<p:panel header="Categorias">
-								<p:tree value="#{categoriasView.raiz}" var="categorias"
-									selectionMode="single" style="width:199px"
+								<p:tree id="arbolCategorias" value="#{categoriasView.raiz}"
+									var="categorias" selectionMode="single" style="width:199px"
 									selection="#{categoriasView.selectedNode}" dynamic="true">
 									<p:treeNode expandedIcon="ui-icon-folder-open"
 										collapsedIcon="ui-icon-folder-collapsed">
@@ -100,9 +103,16 @@
 							<p:separator />
 						</p:layoutUnit>
 					</p:layout>
+
+
+
+
+
+
+
 				</pe:layoutPane>
 			</pe:layout>
-
+			
 			<p:dialog header="Cambiar Contraseña" widgetVar="dlgEditPswAdmin"
 				style="font-size: 0.9em;height: 225px;width: 317px;"
 				resizable="true">
@@ -136,8 +146,7 @@
 						update="messages" />
 				</h:panelGrid>
 			</p:dialog>
-
-
+			
 			<p:dialog header="Crear Categoria" widgetVar="dlgCrear"
 				style="font-size: 0.9em;height: 225px;width: 317px;"
 				resizable="true">
