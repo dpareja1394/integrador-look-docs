@@ -21,4 +21,10 @@
             <column name="formato" length="20" not-null="true" />
         </property>
     </class>
+    <sql-query name="ANEXOS_CODIGO_ANEXO_SEQ">
+        <return-scalar column="nextval" type="java.lang.Long" />
+	  <![CDATA[
+	    SELECT nextval('ANEXOS_CODIGO_ANEXO_SEQ');
+	  ]]>
+    </sql-query>
 </hibernate-mapping>

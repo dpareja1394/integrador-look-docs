@@ -54,4 +54,10 @@
             <one-to-many class="co.edu.usbcali.lookdocs.model.EventosArticulos" />
         </set>
     </class>
+    <sql-query name="ARTICULOS_CODIGO_ARTI_SEQ">
+        <return-scalar column="nextval" type="java.lang.Long" />
+	  <![CDATA[
+	    SELECT nextval('ARTICULOS_CODIGO_ARTI_SEQ');
+	  ]]>
+    </sql-query>
 </hibernate-mapping>

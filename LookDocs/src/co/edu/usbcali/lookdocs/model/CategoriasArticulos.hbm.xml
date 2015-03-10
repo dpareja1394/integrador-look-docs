@@ -30,4 +30,10 @@
             <column name="estado_registro" length="1" not-null="true" />
         </property>
     </class>
+    <sql-query name="CATEGORIAS_ARTICULOS_CODIGO_CATE_ARTI_SEQ">
+        <return-scalar column="nextval" type="java.lang.Long" />
+	  <![CDATA[
+	    SELECT nextval('CATEGORIAS_ARTICULOS_CODIGO_CATE_ARTI_SEQ');
+	  ]]>
+    </sql-query>
 </hibernate-mapping>
