@@ -10,6 +10,7 @@
 
 <f:metadata>
 	<f:viewAction action="#{categoriasView.consultarArbol()}" />
+	<f:viewAction action="#{coleccionesView.consultarArbolColecciones()}" />
 </f:metadata>
 
 <f:view contentType="text/html">
@@ -107,6 +108,9 @@
 						<p:menuitem value="Buscar Artículo" update="messages"
 							icon="ui-icon-disk"
 							url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/Buscar.xhtml" />
+						<p:menuitem value="Inicio" update="messages"
+									icon="ui-icon-disk"
+									url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/FeedPrincipalLector.xhtml" />							
 					</p:menu>
 					<p:separator />
 					<p:separator />
