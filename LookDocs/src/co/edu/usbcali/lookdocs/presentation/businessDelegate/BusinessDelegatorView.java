@@ -47,10 +47,12 @@ import co.edu.usbcali.lookdocs.model.dto.UsuariosDTO;
 import co.edu.usbcali.lookdocs.presentation.businessDelegate.IBusinessDelegatorView;
 
 import org.primefaces.model.TreeNode;
+import org.primefaces.model.UploadedFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.Date;
@@ -179,17 +181,31 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
     public List<AnexosDTO> getDataAnexos() throws Exception {
         return anexosLogic.getDataAnexos();
     }
+    
+//    public void TransferFile(String pdfUrl, InputStream is, UploadedFile file) throws Exception {
+//    	articulosLogic.TransferFile(pdfUrl, is, file);
+//    }
+    
+    public void TransferFile(String server, String user, String pass,
+    		UploadedFile file, String remotePath) throws Exception{
+    	articulosLogic.TransferFile(server, user, pass, file, remotePath);
+    }
 
     public List<Articulos> getArticulos() throws Exception {
         return articulosLogic.getArticulos();
     }
 
-    public void saveArticulos(Articulos entity) throws Exception {
-        articulosLogic.saveArticulos(entity);
+    public void saveArticulos(Articulos entity, String categoriaSelected, String pdfUrl) throws Exception {
+        articulosLogic.saveArticulos(entity, categoriaSelected, pdfUrl);
     }
 
     public void deleteArticulos(Articulos entity) throws Exception {
         articulosLogic.deleteArticulos(entity);
+    }
+    
+    public String downloadFileByFTP(String server, String user, String pass,
+			String fileName, String remotePath) throws Exception{
+    	return articulosLogic.downloadFileByFTP(server, user, pass, fileName, remotePath);
     }
 
     public void updateArticulos(Articulos entity) throws Exception {
@@ -717,12 +733,7 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
 	public void registrarUsuarioLector(Usuarios usuarios) throws Exception {
 		usuariosLogic.registrarUsuarioLector(usuarios);
 	}
-
-	@Override
-	public Usuarios obtenerPorMail(String email) throws Exception {
-		return usuariosLogic.obtenerPorMail(email);
-	}
-
+	
 	@Override
 	public void modificarPasswordUsuarios(Usuarios usuarios,
 			String claveActual, String nuevaClave, String confirmaClave)
@@ -741,5 +752,10 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
 	public void recuperarClave(String email) throws Exception {
 		usuariosLogic.recuperarClave(email);
 		
+	}
+
+	@Override
+	public Usuarios obtenerPorMail(String email) throws Exception {
+		return usuariosLogic.obtenerPorMail(email);
 	}
 }

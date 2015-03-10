@@ -44,12 +44,14 @@ import co.edu.usbcali.lookdocs.model.dto.EventosArticulosDTO;
 import co.edu.usbcali.lookdocs.model.dto.RolesDTO;
 import co.edu.usbcali.lookdocs.model.dto.RssDTO;
 import co.edu.usbcali.lookdocs.model.dto.UsuariosDTO;
-import org.primefaces.model.TreeNode;
 
+import org.primefaces.model.TreeNode;
+import org.primefaces.model.UploadedFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -86,7 +88,7 @@ public interface IBusinessDelegatorView {
 
     public List<Articulos> getArticulos() throws Exception;
 
-    public void saveArticulos(Articulos entity) throws Exception;
+    public void saveArticulos(Articulos entity, String categoriaSelected, String pdfUrl) throws Exception;
 
     public void deleteArticulos(Articulos entity) throws Exception;
 
@@ -130,6 +132,15 @@ public interface IBusinessDelegatorView {
 
     public List<CategoriasArticulos> getCategoriasArticulos()
         throws Exception;
+    
+//    public void TransferFile(String pdfUrl, InputStream is, UploadedFile file)
+//    		throws Exception;
+    
+    public void TransferFile(String server, String user, String pass,
+    		UploadedFile file, String remotePath) throws Exception;
+    
+    public String downloadFileByFTP(String server, String user, String pass,
+			String fileName, String remotePath) throws Exception;
 
     public void saveCategoriasArticulos(CategoriasArticulos entity)
         throws Exception;
@@ -332,10 +343,12 @@ public interface IBusinessDelegatorView {
     public Usuarios obtenerPorMail(String email)throws Exception;
     
     public void deleteCategoriasbyNode(TreeNode selectedNode) throws Exception;
- 
+    
+
     public void modificarPasswordUsuarios(Usuarios usuarios, String claveActual, String nuevaClave, String confirmaClave) throws Exception;
    
     public void modificarNombreDeUsuario(Usuarios usuarios, String nombre) throws Exception;
 
     public void recuperarClave(String email) throws Exception;
+    
 }
