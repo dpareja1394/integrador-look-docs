@@ -351,4 +351,8 @@ public interface IBusinessDelegatorView {
 
     public void recuperarClave(String email) throws Exception;
     
+    public List<Colecciones> consultarColeccionPorUsuario(Usuarios usuarios) throws Exception;
+    
+    public List<Articulos> consultarTodosArticulos() throws Exception;
+    
 }

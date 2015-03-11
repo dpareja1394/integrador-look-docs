@@ -758,4 +758,14 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
 	public Usuarios obtenerPorMail(String email) throws Exception {
 		return usuariosLogic.obtenerPorMail(email);
 	}
+	
+	@Override
+	public List<Colecciones> consultarColeccionPorUsuario(Usuarios usuarios) throws Exception{
+		return coleccionesLogic.consultarColeccionPorUsuario(usuarios);
+	}
+	
+	@Override
+	public List<Articulos> consultarTodosArticulos() throws Exception{
+		return articulosLogic.consultarTodosArticulos(); 
+	}
 }

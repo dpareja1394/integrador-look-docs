@@ -93,6 +93,13 @@ public class ArticulosView implements Serializable {
 
 	public ArticulosView() {
 		super();
+//		
+//		Articulos articulos=null;
+//		 Set<CategoriasArticulos> lasCategoriasArtiulos= articulos.getCategoriasArticuloses();
+//		 for (CategoriasArticulos categoriasArticulos : lasCategoriasArtiulos) {
+//			Categorias categorias=categoriasArticulos.getCategorias();
+//		}
+		 
 	}
 
 	public void rowEventListener(RowEditEvent e) {
@@ -883,6 +890,10 @@ public List<Articulos> getLosArticulos() {
 
 	public void setFiltroArticulos(List<Articulos> filtroArticulos) {
 		this.filtroArticulos = filtroArticulos;
+	}
+
+	public void setLosArticulos(List<Articulos> losArticulos) {
+		this.losArticulos = losArticulos;
 	}
 
 }
