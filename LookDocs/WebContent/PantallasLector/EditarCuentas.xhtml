@@ -19,7 +19,7 @@
 	<f:viewAction action="#{coleccionesView.consultarArbolColecciones()}" />
 </f:metadata>
 <h:body>
-	<ui:composition template="/FeedPrincipalAdministrador.xhtml">
+	<ui:composition template="/PantallasLector/FeedPrincipalLector.xhtml">
 		<ui:define name="body">
 			<f:view contentType="text/html">
 				<p:messages showDetail="true" />
@@ -44,7 +44,7 @@
 						</h:panelGrid>			
 				
 						<p:dialog header="Nombre" widgetVar="dlg2"
-							height="40">
+							height="30">
 							<p:outputLabel value="Nombre: " />
 							<p:inputText id="txtNombreUsuariosEdit"/>
 							<p:commandButton id="btnEditarNombreEdit" icon="ui-icon-check"
