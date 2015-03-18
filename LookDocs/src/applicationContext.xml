@@ -53,7 +53,9 @@
 	<import resource="classpath:aopContext.xml" />
 	
 	<import resource="classpath:dataSourceContext.xml" />
-	<!--  
+	
+	
+	<!-- Si se quiere inhabilitar spring security comentar la siguiente linea -->  
 	<import resource="classpath:securityContext.xml" />
-	-->
+	
 </beans>

@@ -23,7 +23,7 @@
 
 	<h:body>
 
-		<p:messages showDetail="true" />
+		
 		<h:form>
 			<p:growl id="messages" showDetail="false" />
 
@@ -163,7 +163,8 @@
 						</p:submenu>
 						<p:submenu label="Sesion">
 							<p:menuitem value="Cerrar Sesion" icon="ui-icon-home"
-								action="#{usuariosView.cerrarSesionLector}" />
+								action="#{usuariosView.cerrarSesionLector}" onclick="location.href = '../j_spring_security_logout';" />
+								
 						</p:submenu>
 					</p:menu>
 

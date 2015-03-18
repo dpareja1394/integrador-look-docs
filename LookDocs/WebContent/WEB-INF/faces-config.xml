@@ -538,7 +538,7 @@
 	</navigation-rule>
 
 	<navigation-rule>
-		<from-view-id>/PantallasLector/InicioSesionLector.xhtml</from-view-id>
+		<from-view-id>/InicioSesionLector.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>iniciarLector</from-outcome>
 			<to-view-id>/PantallasLector/FeedPrincipalLector.xhtml</to-view-id>
@@ -546,7 +546,7 @@
 		</navigation-case>
 	</navigation-rule>
 	<navigation-rule>
-		<from-view-id>/PantallasAdministrador/InicioSesionAdmin.xhtml</from-view-id>
+		<from-view-id>/InicioSesionAdmin.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>iniciarAdministrador</from-outcome>
 			<to-view-id>/PantallasAdministrador/FeedPrincipalAdministrador.xhtml</to-view-id>
@@ -557,7 +557,7 @@
 		<from-view-id>/PantallasAdministrador/FeedPrincipalAdministrador.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>cerrarAdministrador</from-outcome>
-			<to-view-id>/PantallasAdministrador/InicioSesionAdmin.xhtml</to-view-id>
+			<to-view-id>/InicioSesionAdmin.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
 	</navigation-rule>
@@ -565,15 +565,15 @@
 		<from-view-id>/PantallasLector/FeedPrincipalLector.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>cerrarLector</from-outcome>
-			<to-view-id>/PantallasLector/InicioSesionLector.xhtml</to-view-id>
+			<to-view-id>/InicioSesionLector.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
 	</navigation-rule>
 	<navigation-rule>
-		<from-view-id>/PantallasLector/RegistroLector.xhtml</from-view-id>
+		<from-view-id>/RegistroLector.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>registroLector</from-outcome>
-			<to-view-id>/PantallasLector/InicioSesionLector.xhtml</to-view-id>
+			<to-view-id>/InicioSesionLector.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
 	</navigation-rule>

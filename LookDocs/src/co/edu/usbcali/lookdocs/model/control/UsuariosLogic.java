@@ -4,6 +4,7 @@ import co.edu.usbcali.lookdocs.dataaccess.dao.*;
 import co.edu.usbcali.lookdocs.exceptions.*;
 import co.edu.usbcali.lookdocs.model.*;
 import co.edu.usbcali.lookdocs.model.dto.UsuariosDTO;
+import co.edu.usbcali.lookdocs.utilities.FacesUtils;
 import co.edu.usbcali.lookdocs.utilities.Utilities;
 
 import org.apache.commons.validator.EmailValidator;
@@ -24,6 +25,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 
 /**
  * @author Zathura Code Generator http://code.google.com/p/zathura
@@ -588,6 +593,12 @@ public class UsuariosLogic implements IUsuariosLogic {
 	@Transactional(readOnly = true)
 	public String iniciarSesionLector(String email, String password)
 			throws Exception {
+		
+		if (email.trim().equals("") == true
+				|| password.trim().equals("") == true) {
+			throw new Exception("Debe llenar todos los campos");
+		}		
+		
 		boolean mailCorrecto = validateEmailAddress(email);
 		if (mailCorrecto == false) {
 			throw new Exception("Dirección de Email es incorrecta");
@@ -602,6 +613,7 @@ public class UsuariosLogic implements IUsuariosLogic {
 		if (usuarios.getRoles().getCodigoRol() != 2) {
 			throw new Exception("El usuario no es lector");
 		}
+		
 		return "exito";
 	}
 
@@ -609,6 +621,12 @@ public class UsuariosLogic implements IUsuariosLogic {
 	@Transactional(readOnly = true)
 	public String iniciarSesionAdministrador(String email, String password)
 			throws Exception {
+		
+		if (email.trim().equals("") == true
+				|| password.trim().equals("") == true) {
+			throw new Exception("Debe llenar todos los campos");
+		}
+		
 		boolean mailCorrecto = validateEmailAddress(email);
 		if (mailCorrecto == false) {
 			throw new Exception("Dirección de Email es incorrecta");
@@ -623,6 +641,7 @@ public class UsuariosLogic implements IUsuariosLogic {
 		if (usuarios.getRoles().getCodigoRol() != 1) {
 			throw new Exception("El usuario no es Administrador");
 		}
+		
 		return "exito";
 	}
 

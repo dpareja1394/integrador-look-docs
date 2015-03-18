@@ -11,6 +11,8 @@ import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.component.inputtext.InputText;
 import org.primefaces.component.password.Password;
 import org.primefaces.event.RowEditEvent;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.Serializable;
 import java.sql.*;
@@ -21,6 +23,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -864,16 +868,28 @@ public class UsuariosView implements Serializable {
 		HttpSession httpSession = (HttpSession) FacesContext
 				.getCurrentInstance().getExternalContext().getSession(true);
 		httpSession.removeAttribute("usuarioAdministrador");
+		httpSession.invalidate();
+		httpSession=null;
+//		ServletRequestAttributes servletRequestAttributes=(ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+//    	HttpSession session = servletRequestAttributes.getRequest().getSession();
+//    	session.invalidate();
+//    	session.removeAttribute("usuarioAdministrador");
 
 		return "cerrarAdministrador";
 
 	}
 
 	public String cerrarSesionLector() {
-		HttpSession httpSession = (HttpSession) FacesContext
-				.getCurrentInstance().getExternalContext().getSession(true);
-		httpSession.removeAttribute("usuarioLector");
-
+//		HttpSession httpSession = (HttpSession) FacesContext
+//				.getCurrentInstance().getExternalContext().getSession(true);
+//		httpSession.removeAttribute("usuarioLector");
+//		httpSession.invalidate();
+		ServletRequestAttributes servletRequestAttributes=(ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+    	HttpSession session = servletRequestAttributes.getRequest().getSession();
+    	session.removeAttribute("usuarioLector");
+    	session.invalidate();
+    	session=null;
+    	
 		return "cerrarLector";
 
 	}

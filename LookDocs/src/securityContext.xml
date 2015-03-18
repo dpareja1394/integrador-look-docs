@@ -6,16 +6,18 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">          
 	
-	<http security="none" pattern="/login.xhtml" />
+	<http security="none" pattern="/InicioSesionAdmin.xhtml" />
+	<http security="none" pattern="/InicioSesionLector.xhtml" />
+	<http security="none" pattern="/RegistroLector.xhtml" />
 	
-	
-	<http auto-config="true" access-denied-page="/login.xhtml" access-decision-manager-ref="accessDecisionManager">
-		
-		<intercept-url pattern="/XHTML/*" access="ROLE_USER,Admin" />		
-
-		<form-login login-page="/login.xhtml" default-target-url="/XHTML/initialMenu.xhtml" always-use-default-target="false" authentication-failure-url="/login.xhtml?authfailed=true" />
+	<http auto-config="true" access-denied-page="/InicioSesionLector.xhtml" access-decision-manager-ref="accessDecisionManager"  >
 			
-		<logout invalidate-session="true" logout-success-url="/login.xhtml?loggedout=true" />
+		<intercept-url pattern="/PantallasLector/*" access="LECTOR" />
+		
+		<form-login login-page="/InicioSesionLector.xhtml" default-target-url="/PantallasLector/FeedPrincipalLector.xhtml" always-use-default-target="false" authentication-failure-url="/InicioSesionLector.xhtml?authfailed=true" />
+		
+		<logout invalidate-session="true" logout-success-url="/InicioSesionLector.xhtml?loggedout=true" />
+		
 	</http>
 	
 	<beans:bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
@@ -28,12 +30,18 @@
 			</beans:list>
 		</beans:property>
 	</beans:bean>
-
 	<authentication-manager>
-		<authentication-provider>
-			<user-service>
-				<user name="admin" password="admin" authorities="ROLE_USER, Admin" />
-			</user-service>
-		</authentication-provider> 
+		<authentication-provider ref="LookDocsAuthenticationProvider" /> 
 	</authentication-manager>
 </beans:beans>
+
+
+	<!-- <http auto-config="true" access-denied-page="/InicioSesionAdmin.xhtml" access-decision-manager-ref="accessDecisionManager" pattern="/PantallasAdministrador/**" >
+		
+		<intercept-url pattern="/PantallasAdministrador/*" access="ADMIN" />
+				
+		<form-login login-page="/InicioSesionAdmin.xhtml" default-target-url="/PantallasAdministrador/FeedPrincipalAdministrador.xhtml" always-use-default-target="false" authentication-failure-url="/InicioSesionAdmin.xhtml?authfailed=true" />
+		
+		<logout invalidate-session="true" logout-success-url="/InicioSesionAdmin.xhtml?loggedout=true" />		
+		
+	</http> -->

@@ -18,23 +18,24 @@
 	<h:body>
 
 		<p:messages showDetail="true" />
-		<h:form>
+		<h:form action="j_spring_security_check" method="post" class="form-signin" >
 			<p:panel id="panelLoginAdministrador"
 				header="Inicio de Sesion - Administrador"
 				style="font-size: 12px;position: absolute; top: 20%;left: 35%;width: auto">
 				<p:growl id="mensajesLoginAdministrador" />
 				<h:panelGrid columns="2">
 					<p:outputLabel value="Correo (e-mail): *" />
-					<p:inputText id="txtEmailAdmin"
-						binding="#{usuariosView.txtEmailAdmin}" />
+					<p:inputText id="txtEmailAdmin" 
+						binding="#{usuariosView.txtEmailAdmin}"  />
 					<p:outputLabel value="Contraseña: *" />
-					<p:password id="txtPasswordAdmin"
-						binding="#{usuariosView.pswClaveAdmin}" />
+					<p:password  id="txtPasswordAdmin"
+						binding="#{usuariosView.pswClaveAdmin}"  />
 				</h:panelGrid>
 				<p:commandButton id="btnLoginAdmin" value="Iniciar Sesion"
 					binding="#{usuariosView.btnLoginAdministrador}"
 					action="#{usuariosView.iniciarAdministradorAction}"
 					update="panelLoginAdministrador, mensajesLoginAdministrador" />
+				
 				<f:facet name="footer">
 					<h:outputText value="Los campos con (*) son obligatorios" />
 					<br />

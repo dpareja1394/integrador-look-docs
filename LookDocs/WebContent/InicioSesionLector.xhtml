@@ -17,24 +17,22 @@
 
 	<h:body>
 
-		<p:messages showDetail="true" />
-		<h:form>
+		
+		<form action="j_spring_security_check" method="post" class="form-signin">
 			<p:panel id="panelLoginLector" header="Bienvenido a LookDocs"
 				style="font-size: 12px;position: absolute; top: 20%;left: 35%;width: auto">
 				<p:growl id="mensajesLoginLector" />
 
 				<h:panelGrid columns="2">
 					<p:outputLabel value="Correo (e-mail): *" />
-					<p:inputText id="txtemailUsuarios"
-						binding="#{usuariosView.txtEmail}" />
+					<input id="txtemailUsuarios" type="text"
+						value="#{usuariosView.txtEmail}" class="form-control" name="j_username"/>
 					<p:outputLabel value="Contraseña: *" />
-					<p:password id="txtPasswordUsuarios"
-						binding="#{usuariosView.pswClave}" />
+					<input type="password" id="txtPasswordUsuarios"
+						value="#{usuariosView.pswClave}" class="form-control" name="j_password"/>
 				</h:panelGrid>
-				<p:commandButton id="btnLoginUsuarios" icon="ui-icon-check"
-					value="Iniciar Sesión" binding="#{usuariosView.btnLoginLector}"
-					action="#{usuariosView.iniciarLectorAction}"
-					update="panelLoginLector, mensajesLoginLector" />
+				<button class="btn btn-lg btn-primary btn-block" onclick="#{usuariosView.iniciarLectorAction()}" type="submit"
+				>Iniciar Sesion</button>
 				<f:facet name="footer">
 					<h:outputText value="Los campos con (*) son obligatorios" />
 					<br />
@@ -58,7 +56,7 @@
 						update="panelLoginLector, mensajesLoginLector" />
 				</p:dialog>
 			</p:panel>
-		</h:form>
+		</form>
 
 
 

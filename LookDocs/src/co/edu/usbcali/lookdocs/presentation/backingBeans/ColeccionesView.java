@@ -12,6 +12,8 @@ import org.primefaces.component.inputtext.InputText;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.Serializable;
 import java.sql.*;
@@ -57,6 +59,7 @@ public class ColeccionesView implements Serializable {
     private TreeNode raizArbol;
     private TreeNode seleccionarNodo;
     List<Colecciones> coleccionRaices;
+    private Usuarios usuarioSecurity;
     
     @ManagedProperty(value = "#{BusinessDelegatorView}")
     private IBusinessDelegatorView businessDelegatorView;
@@ -194,11 +197,13 @@ public class ColeccionesView implements Serializable {
     		TreeNode no = new DefaultTreeNode(coleccion, padre);
 		}
     }
-    
     @PostConstruct
-    public Usuarios retornarUsuario(){
-    	HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-        return (Usuarios) httpSession.getAttribute("usuarioLector");
+    public void retornarUsuario(){
+//    	HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+//        usuario = (Usuarios) httpSession.getAttribute("usuarioLector");
+    	ServletRequestAttributes servletRequestAttributes=(ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+    	HttpSession session = servletRequestAttributes.getRequest().getSession();
+    	usuarioSecurity = (Usuarios) session.getAttribute("usuarioLector");
     }
     
     public List<Colecciones> getListaNodos(){   	
@@ -206,9 +211,9 @@ public class ColeccionesView implements Serializable {
         
     	if(coleccionRaices == null){
     		try {
-				return businessDelegatorView.consultarColeccionPorUsuario(retornarUsuario());
+				return businessDelegatorView.consultarColeccionPorUsuario(usuarioSecurity);
 			} catch (Exception e) {
-				// TODO: handle exception
+				FacesUtils.addErrorMessage(e.getMessage());
 			}
     	}
     	return coleccionRaices;
