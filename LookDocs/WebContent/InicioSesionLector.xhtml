@@ -17,8 +17,9 @@
 
 	<h:body>
 
-		
-		<form action="j_spring_security_check" method="post" class="form-signin">
+
+		<form action="j_spring_security_check" method="post"
+			class="form-signin">
 			<p:panel id="panelLoginLector" header="Bienvenido a LookDocs"
 				style="font-size: 12px;position: absolute; top: 20%;left: 35%;width: auto">
 				<p:growl id="mensajesLoginLector" />
@@ -26,13 +27,20 @@
 				<h:panelGrid columns="2">
 					<p:outputLabel value="Correo (e-mail): *" />
 					<input id="txtemailUsuarios" type="text"
-						value="#{usuariosView.txtEmail}" class="form-control" name="j_username"/>
+						value="#{usuariosView.txtEmail}" class="form-control"
+						name="j_username" />
 					<p:outputLabel value="Contraseña: *" />
 					<input type="password" id="txtPasswordUsuarios"
-						value="#{usuariosView.pswClave}" class="form-control" name="j_password"/>
+						value="#{usuariosView.pswClave}" class="form-control"
+						name="j_password" />
 				</h:panelGrid>
-				<button class="btn btn-lg btn-primary btn-block" onclick="#{usuariosView.iniciarLectorAction()}" type="submit"
-				>Iniciar Sesion</button>
+				<button class="btn btn-lg btn-primary btn-block"
+					onclick="#{usuariosView.iniciarLectorAction()}" type="submit">Iniciar
+					Sesion</button>
+				<br />
+				<p:link outcome="RegistroLector.xhtml"
+					value="¿Aún no tienes cuenta? ¡Regístrate!" />
+
 				<f:facet name="footer">
 					<h:outputText value="Los campos con (*) son obligatorios" />
 					<br />
@@ -40,6 +48,8 @@
 						value="¿ Olvido la contraseña ?"
 						onclick="PF('dlgRecuperarClaveLector').show();" />
 				</f:facet>
+
+
 				<p:dialog header="Recuperacion de Contraseña"
 					widgetVar="dlgRecuperarClaveLector" modal="true" height="100">
 					<p:outputLabel

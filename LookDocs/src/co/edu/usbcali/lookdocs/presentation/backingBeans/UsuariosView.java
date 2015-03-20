@@ -1011,6 +1011,7 @@ public class UsuariosView implements Serializable {
 						"",
 						new FacesMessage(
 								"Se ha modificado el nombre de usuario"));
+				txtNombre.setValue("");
 			}
 
 		} catch (Exception e) {
@@ -1062,6 +1063,10 @@ public class UsuariosView implements Serializable {
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e
 							.getMessage(), e.getMessage()));
 		}
+	}
+	
+	public String linkRegistroDeUsuarioLector(){
+		return "registrarLector";
 	}
 
 }

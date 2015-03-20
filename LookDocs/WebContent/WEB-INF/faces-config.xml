@@ -546,6 +546,14 @@
 		</navigation-case>
 	</navigation-rule>
 	<navigation-rule>
+		<from-view-id>/InicioSesionLector.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>registrarLector</from-outcome>
+			<to-view-id>/RegistroLector.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
 		<from-view-id>/InicioSesionAdmin.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>iniciarAdministrador</from-outcome>
