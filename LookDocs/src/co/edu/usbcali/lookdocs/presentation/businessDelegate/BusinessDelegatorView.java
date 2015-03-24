@@ -155,6 +155,20 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
         return anexos;
     }
     
+    public Anexos getAnexosbyArtiuclo(Long codigoArticulo) throws Exception {
+    	
+    	
+    	Anexos anexos = null;
+
+        try {
+            anexos = anexosLogic.getAnexosbyArtiuclo(codigoArticulo);
+        } catch (Exception e) {
+            throw e;
+        }
+
+        return anexos;
+    }
+    
     public void deleteCategoriasbyNode(TreeNode selectedNode)
     		throws Exception {
     	categoriasLogic.deleteCategoriasbyNode(selectedNode);
@@ -768,7 +782,7 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
 	public List<Articulos> consultarTodosArticulos() throws Exception{
 		return articulosLogic.consultarTodosArticulos(); 
 	}
-
+	
 	@Override
 	public void guardarRSS(String urlRss, Long idColeccion) throws Exception{
 		rssLogic.guardarRSS(urlRss, idColeccion);
