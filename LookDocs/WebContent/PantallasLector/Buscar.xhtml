@@ -17,63 +17,134 @@
 <f:metadata>
 	<f:viewAction action="#{categoriasView.consultarArbol()}" />
 	<f:viewAction action="#{coleccionesView.consultarArbolColecciones()}" />
+	<f:viewAction id="perfilUsuario" action="#{usuariosView.perfilLector()}" />
 </f:metadata>	
 
 <h:body>
 	<ui:composition template="/PantallasLector/FeedPrincipalLector.xhtml">
 		<ui:define name="body">
 			<f:view contentType="text/html">
-				<p:growl id="msjBuscar" showDetail="false" />
+				<p:growl id="msgs" showDetail="false" autoUpdate="true" />
 				<h:form>
 					<p:fieldset legend="Buscar " style="margin-bottom:20px">					
 						
 							
-							<p:dataTable id="listaArticulosCate" value="#{articulosView.losArticulos}" var="articulos"  widgetVar="listaArtCate" emptyMessage="No Se Encontro El Articulo" filteredValue="#{articulosView.filtroArticulos}" >
-								
-								<f:facet name="header">
-									<p:outputPanel>
-										<h:outputText value="Buscar Articulo  " />										
-									</p:outputPanel>
-								</f:facet>
-								
-								<p:column headerText="Nombre" filterBy="#{articulos.nombre}" >
-									<p:outputLabel value="#{articulos.nombre}" />
-								</p:column>
-								
-								<p:column headerText="Descripcion" >
-									<p:outputLabel value="#{articulos.descripcion}" />
-								</p:column>							
-								
-								<p:column headerText="Autor" >
-									<p:outputLabel value="#{articulos.autor}" />
-								</p:column  >																
-							
-							</p:dataTable>
-							<p:contextMenu for="listaArticulosCate" >
-								<p:menuitem value="Cambiar De Categoria" />
-								<p:menuitem value="Marcar Como Leido" />
-							</p:contextMenu>
+							<p:panel id="panelDataArticulos" header="Articulos">
+										<p:dataTable id="tabla" value="#{articulosView.data}" emptyMessage="No se han encontrado articulos"
+											var="articulos" paginator="true" rows="5" editable="true">
+
+											<p:ajax event="rowEdit" update="tabla"
+												listener="#{articulosView.rowEventListener}" />
+											<p:column filterBy="#{articulos.nombre}"
+												sortBy="#{articulos.nombre}" headerText="Nombre">
+
+												<p:cellEditor>
+
+													<f:facet name="output">
+														<h:outputText value="#{articulos.nombre}" />
+													</f:facet>
+
+													<f:facet name="input">
+														<p:inputText value="#{articulos.nombre}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column filterBy="#{articulos.descripcion}"
+												sortBy="#{articulos.descripcion}" headerText="Descripcion">
+
+												<p:cellEditor>
+
+													<f:facet name="output">
+														<h:outputText value="#{articulos.descripcion}" />
+													</f:facet>
+
+													<f:facet name="input">
+														<p:inputTextarea value="#{articulos.descripcion}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column filterBy="#{articulos.autor}"
+												sortBy="#{articulos.autor}" headerText="Autor">
+
+												<p:cellEditor>
+
+													<f:facet name="output">
+														<h:outputText value="#{articulos.autor}" />
+													</f:facet>
+
+													<f:facet name="input">
+														<h:outputText value="#{articulos.autor}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+
+											<p:column filterBy="#{articulos.fechaCreacion}"
+												sortBy="#{articulos.fechaCreacion}"
+												headerText="Fecha de Creacion">
+
+												<p:cellEditor>
+
+													<f:facet name="output">
+														<h:outputText value="#{articulos.fechaCreacion}">
+															<f:convertDateTime pattern="dd/MM/yyyy" />
+														</h:outputText>
+													</f:facet>
+
+													<f:facet name="input">
+														<h:outputText value="#{articulos.fechaCreacion}">
+															<f:convertDateTime pattern="dd/MM/yyyy" />
+														</h:outputText>
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											<p:column filterBy="#{articulos.categoria}"
+												sortBy="#{articulos.categoria}" headerText="Categoria">
+
+												<p:cellEditor>
+
+													<f:facet name="output">
+														<h:outputText value="#{articulos.categoria}" />
+													</f:facet>
+
+													<f:facet name="input">
+														<h:outputText value="#{articulos.categoria}" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											<p:column headerText="Opciones">
+												<p:tooltip for="btnDescargarArticulo" value="Descargar Articulo"
+													showEffect="fade" hideEffect="fade" />
+												<p:commandButton id="btnDescargarArticulo"
+												    actionListener="#{articulosView.download}"
+													title="Descargar Articulo"
+													icon="ui-icon-arrowstop-1-s" onstart="PF('statusDescarga').show()" onsuccess="PF('statusDescarga').hide()"
+													style="width: 1.5em;height: 1.5em;">
+													<f:attribute name="selectedArticulos" value="#{articulos}" />
+												</p:commandButton>
+
+											</p:column>
+											
+
+										</p:dataTable>
+
+
+									</p:panel>
 							
 					</p:fieldset>
-					<p:dialog header="Cambiar categoría" widgetVar="dlg1a"
-						minHeight="40">
-						<h:outputText value="Seleccione la Categoria: " />
-						<br />
-						<h:selectOneMenu id="txt3" value="#{selectorView.text3}"
-							required="true" label="Text 3">
-							<f:selectItem itemLabel="Categorias" itemValue=""
-								noSelectionOption="true" />
-							<f:selectItem itemLabel="Option 1" itemValue="1" />
-							<f:selectItem itemLabel="Option 2" itemValue="2" />
-							<f:selectItem itemLabel="Option 3" itemValue="3" />
-						</h:selectOneMenu>
-						<p:separator />
-						<p:commandButton id="btnCambiar" value="Cambiar" />
-					</p:dialog>
+					
 
 
 
 				</h:form>
+				<!--  ><p:ajaxStatus onstart="PF('statusDialog123').show()"
+					onsuccess="PF('statusDialog').hide()" />-->
+				<p:dialog widgetVar="statusDescarga" header="Descargando..."
+					draggable="false" closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
 			</f:view>
 		</ui:define>
 	</ui:composition>
