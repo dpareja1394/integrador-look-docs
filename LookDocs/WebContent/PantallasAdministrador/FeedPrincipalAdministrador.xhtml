@@ -9,7 +9,8 @@
 	xmlns:pe="http://primefaces.org/ui/extensions">
 
 <f:metadata>
-	<f:viewAction id="metadata" action="#{categoriasView.consultarArbol()}" />
+	<f:viewAction action="#{categoriasView.consultarArbol()}" />
+	<f:viewAction action="#{coleccionesView.consultarArbolColeccionesAdmin()}" />
 </f:metadata>
 
 <f:view contentType="text/html">
@@ -51,8 +52,10 @@
 								<p:menuitem value="Gestion de Documentos" update="messages"
 									icon="ui-icon-disk"
 									url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/PantallasAdministrador/PrincipalAdministrador.xhtml" />
-									<p:menuitem value="Inicio" update="messages"
+								<p:menuitem value="Agregar RSS" update="messages"
 									icon="ui-icon-disk"
+									url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/PantallasAdministrador/RSSAdmin.xhtml" />
+								<p:menuitem value="Inicio" update="messages" icon="ui-icon-disk"
 									url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/PantallasAdministrador/FeedPrincipalAdministrador.xhtml" />
 							</p:menu>
 						</p:layoutUnit>
@@ -101,6 +104,60 @@
 							</p:panel>
 							<!-- FIN ARBOL CARGADO DINAMICAMENTE -->
 							<p:separator />
+
+							<p:dialog header="Crear Coleccion" widgetVar="dlg2Admin" 
+								height="100" resizable="true">
+								<h:panelGrid columns="2" cellpadding="10">
+									<p:outputLabel value="Nombre" />
+									<p:inputText id="txtNombrePAdmin"
+										binding="#{coleccionesView.txtNombre}" />
+
+									<p:commandButton id="btnCrearPAdmin" value="Aceptar" ajax="false"
+										binding="#{coleccionesView.btnSave}"
+										action="#{coleccionesView.crearColeccionAdmin()}" />
+								</h:panelGrid>
+							</p:dialog>
+
+							<p:dialog header="Modificar Coleecion" widgetVar="dlg4Admin"
+								height="100" resizable="true">
+								<h:panelGrid columns="2">
+									<p:outputLabel value="Nuevo Nombre" />
+									<p:inputText id="txtModificarNombrePAdmin"
+										binding="#{coleccionesView.txtModificarNombre}" />
+
+									<p:commandButton id="btnModificarPAdmin" value="Modificar"
+										ajax="false" binding="#{coleccionesView.btnModify}"
+										action="#{coleccionesView.modificarColeccionAdmin()}" />
+								</h:panelGrid>
+							</p:dialog>
+
+							<p:accordionPanel>
+								<p:tab title="Colecciones">
+									<p:commandButton value="Crear Coleccion" type="button"
+										onclick="PF('dlg2Admin').show();" />
+									<p:separator />
+
+									<p:tree id="arbolColeccionesPAdmin"
+										value="#{coleccionesView.raizArbol}" var="colecciones" animate="true"
+										selectionMode="single"
+										selection="#{coleccionesView.seleccionarNodo}">
+										<p:treeNode icon="ui-icon-folder-collapsed">
+											<h:outputText value="#{colecciones.nombre}" />
+											<p:contextMenu for="arbolColeccionesPAdmin">
+												<p:menuitem value="Modificar Nombre" icon="ui-icon-open"
+													onclick="PF('dlg4Admin').show();" />
+												<p:menuitem value="Eliminar" icon="ui-icon-close"
+													action="#{coleccionesView.eliminarColeccionAdmin()}" ajax="false" />
+												<p:menuitem value="Crear Coleccion" icon="ui-icon-add"
+													onclick="PF('dlg2Admin').show();" />
+											</p:contextMenu>
+										</p:treeNode>
+
+									</p:tree>
+
+
+								</p:tab>
+							</p:accordionPanel>
 						</p:layoutUnit>
 					</p:layout>
 
@@ -112,7 +169,7 @@
 
 				</pe:layoutPane>
 			</pe:layout>
-			
+
 			<p:dialog header="Cambiar Contraseña" widgetVar="dlgEditPswAdmin"
 				style="font-size: 0.9em;height: 225px;width: 317px;"
 				resizable="true">
@@ -127,26 +184,29 @@
 					<p:password id="pswClaveAdminNuevaConfirmacion"
 						binding="#{usuariosView.pswClaveConfirmacion}" />
 					<p:commandButton id="btnCambiarClave" value="Cambiar Clave"
-						binding="#{usuariosView.btnCambiarClaveAdministrador}" ajax="false"
-						action="#{usuariosView.cambiarClaveAdministrador}"
+						binding="#{usuariosView.btnCambiarClaveAdministrador}"
+						ajax="false" action="#{usuariosView.cambiarClaveAdministrador}"
 						update="messages" />
 				</h:panelGrid>
 			</p:dialog>
 
-			<p:dialog header="Cambiar Nombre de Usuario" widgetVar="dlgEditNombreUsuarioAdmin"
+			<p:dialog header="Cambiar Nombre de Usuario"
+				widgetVar="dlgEditNombreUsuarioAdmin"
 				style="font-size: 0.9em;height: 225px;width: 317px;"
 				resizable="true">
 				<h:panelGrid columns="2" cellpadding="10">
 					<p:outputLabel value="Nuevo Nombre de Usuario: " />
 					<p:inputText id="txtNombreUsuario"
 						binding="#{usuariosView.txtNombre}" />
-					<p:commandButton id="btnCambiarNombreUsuario" value="Cambiar Nombre de Usuario"
-						binding="#{usuariosView.btnCambiarNombreUsuarioAdministrador}" ajax="false"
+					<p:commandButton id="btnCambiarNombreUsuario"
+						value="Cambiar Nombre de Usuario"
+						binding="#{usuariosView.btnCambiarNombreUsuarioAdministrador}"
+						ajax="false"
 						action="#{usuariosView.cambiarNombreDeUsuarioAdministrador}"
 						update="messages" />
 				</h:panelGrid>
 			</p:dialog>
-			
+
 			<p:dialog header="Crear Categoria" widgetVar="dlgCrear"
 				style="font-size: 0.9em;height: 225px;width: 317px;"
 				resizable="true">

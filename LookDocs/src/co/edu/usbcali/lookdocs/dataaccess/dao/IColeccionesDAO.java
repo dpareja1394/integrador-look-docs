@@ -15,4 +15,5 @@ public interface IColeccionesDAO extends Dao<Colecciones, Long> {
 	
 	public Long getConsecutivo(String sqlNombre) throws Exception ;
 	public List<Colecciones> consultarColeccionPorUsuario(Usuarios usuarios) throws Exception;
+	public Colecciones consultarColeccionPorNombreYUsuario(Usuarios usuarios, String nombreColeccion) throws Exception;
 }

@@ -24,4 +24,10 @@
             <one-to-many class="co.edu.usbcali.lookdocs.model.Entradas" />
         </set>
     </class>
+    <sql-query name="rss_codigo_rss_seq">
+        <return-scalar column="nextval" type="java.lang.Long" />
+	  <![CDATA[
+	    SELECT nextval('RSS_CODIGO_RSS_SEQ');
+	  ]]>
+    </sql-query>
 </hibernate-mapping>

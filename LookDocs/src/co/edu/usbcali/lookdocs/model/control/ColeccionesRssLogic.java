@@ -7,16 +7,12 @@ import co.edu.usbcali.lookdocs.model.dto.ColeccionesRssDTO;
 import co.edu.usbcali.lookdocs.utilities.Utilities;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.context.annotation.Scope;
-
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -402,4 +398,30 @@ public class ColeccionesRssLogic implements IColeccionesRssLogic {
 
         return list;
     }
+
+    @Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public void guardarColeccionesRSS(ColeccionesRss coleccionesRss)
+			throws Exception {
+		if(coleccionesRss.getColecciones()==null){
+			throw new Exception("No ha llegado la colección");
+		}
+		if(coleccionesRss.getRss()==null){
+			throw new Exception("No ha llegado el RSS");
+		}
+		Long codigo = getConsecutivo("colecciones_rss_codigo_col_rss_seq");
+		coleccionesRss.setCodigoColRss(codigo);
+		coleccionesRssDAO.save(coleccionesRss);
+		
+		
+	}
+
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public Long getConsecutivo(String sqlName) throws Exception {
+		if (sqlName.trim().equals("")) {
+			throw new Exception("El nombre del Sql no debe estar vacío");
+		}
+		return coleccionesRssDAO.getConsecutivo(sqlName);
+	}
 }

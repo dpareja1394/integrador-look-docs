@@ -15,4 +15,10 @@
             <column name="colecciones_codigo_cole" not-null="true" />
         </many-to-one>
     </class>
+    <sql-query name="colecciones_rss_codigo_col_rss_seq">
+        <return-scalar column="nextval" type="java.lang.Long" />
+	  <![CDATA[
+	    SELECT nextval('COLECCIONES_RSS_CODIGO_COL_RSS_SEQ');
+	  ]]>
+    </sql-query>
 </hibernate-mapping>

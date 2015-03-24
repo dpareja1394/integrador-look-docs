@@ -768,4 +768,14 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
 	public List<Articulos> consultarTodosArticulos() throws Exception{
 		return articulosLogic.consultarTodosArticulos(); 
 	}
+
+	@Override
+	public void guardarRSS(String urlRss, Long idColeccion) throws Exception{
+		rssLogic.guardarRSS(urlRss, idColeccion);
+	}
+
+	@Override
+	public List<Rss> getRssDadoIdColeccion(Long codigoCole) throws Exception {
+		return rssLogic.getRssDadoIdColeccion(codigoCole);
+	}
 }

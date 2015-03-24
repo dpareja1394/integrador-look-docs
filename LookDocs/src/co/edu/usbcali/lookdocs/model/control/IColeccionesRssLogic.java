@@ -4,11 +4,7 @@ import co.edu.usbcali.lookdocs.model.ColeccionesRss;
 import co.edu.usbcali.lookdocs.model.dto.ColeccionesRssDTO;
 
 import java.math.BigDecimal;
-
 import java.util.*;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -58,4 +54,8 @@ public interface IColeccionesRssLogic {
 
     public List<ColeccionesRssDTO> getDataColeccionesRss()
         throws Exception;
+    
+    public void guardarColeccionesRSS(ColeccionesRss coleccionesRss) throws Exception;
+    
+    public Long getConsecutivo(String sqlName) throws Exception;
 }

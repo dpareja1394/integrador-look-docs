@@ -76,4 +76,15 @@ public class ColeccionesDAO extends HibernateDaoImpl<Colecciones, Long>
     	return lasColecciones;
     	
     }
+
+	@Override
+	public Colecciones consultarColeccionPorNombreYUsuario(Usuarios usuarios,
+			String nombreColeccion) throws Exception {
+		String hql2 = "SELECT col FROM Colecciones col WHERE col.usuarios.codigoUsua = "+usuarios.getCodigoUsua()+
+				" and col.nombre = '"+nombreColeccion+"' ";
+    	Query query = sessionFactory.getCurrentSession().createQuery(hql2);
+    	Colecciones colecciones = (Colecciones) query.uniqueResult();
+    	return colecciones;
+		
+	}
 }

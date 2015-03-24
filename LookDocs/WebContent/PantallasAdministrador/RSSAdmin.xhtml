@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:head>
+	<f:facet name="first">
+		<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
+		<title>Bievenido a LookDoocs</title>
+	</f:facet>
+</h:head>
+<f:metadata>
+	<f:viewAction action="#{categoriasView.consultarArbol()}" />
+	<f:viewAction action="#{coleccionesView.consultarArbolColeccionesAdmin()}" />
+</f:metadata>
+
+<h:body>
+	<ui:composition template="/PantallasAdministrador/FeedPrincipalAdministrador.xhtml">
+		<ui:define name="body">
+			<f:view contentType="text/html">
+
+				<h:form>
+					<p:growl id="msjRSSAdmin" showDetail="false" />
+					<p:panel header="RSS Admin">
+						<p:panelGrid columns="3">
+							<p:outputLabel id="txtRSS" value="Buscar Blog De Su Interes" />
+							<p:inputText id="txtRSSBuscar" style="width: 300px"
+								binding="#{rssView.txtRSSBuscar}" />
+							<p:commandButton id="btnBuscarRSS" value="Buscar"
+								binding="#{rssView.btnBuscarRSS}"
+								action="#{rssView.actionBuscarRss}"
+								update="panelBusquedaRSSAdmin, msjRSSAdmin" />
+
+							<p:outputLabel id="txtSelectCole"
+								value="Seleccionar Coleccion Para Agregar RSS" />
+							<p:selectOneMenu id="somColeccionesLector"
+								binding="#{rssView.somColeccionesRSSLector}">
+								<f:selectItem itemValue="-1"
+									itemLabel="Seleccione una Colección" />
+								<f:selectItems value="#{coleccionesView.lasColeccionesItemsAdmin}" />
+							</p:selectOneMenu>
+						</p:panelGrid>
+						<p:panelGrid columns="1">
+							<p:commandButton id="btnAgregarRSS" value="Guardar RSS"
+								action="#{rssView.actionGuardarRss}"
+								update="panelBusquedaRSSAdmin, msjRSSAdmin" />
+						</p:panelGrid>
+					</p:panel>
+					<p:panel id="panelBusquedaRSSAdmin" header="Busqueda RSS">
+						<p:feedReader id="feedReaderMostrar" var="feed"
+							binding="#{rssView.feedReaderMostrar}">
+							<h:outputText value="#{feed.title}"
+								style="font-weight: bold;display:block" />
+							<h:outputText value="#{feed.description.value}" escape="false" />
+							<p:separator />
+						</p:feedReader>
+					</p:panel>
+
+
+				</h:form>
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

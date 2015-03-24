@@ -73,6 +73,10 @@
 						<p:menuitem value="Buscar Artículo" update="messages"
 							icon="ui-icon-disk"
 							url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/PantallasLector/Buscar.xhtml" />
+							
+							<p:menuitem value="Agregar RSS" update="messages"
+							icon="ui-icon-disk"
+							url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/PantallasLector/RSSLector.xhtml" />
 
 						<p:menuitem value="Inicio" update="messages" icon="ui-icon-disk"
 							url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/PantallasLector/FeedPrincipalLector.xhtml" />
@@ -92,18 +96,19 @@
 					</p:panel>
 					<!-- FIN ARBOL CARGADO DINAMICAMENTE -->
 					<p:separator />
-					<p:accordionPanel>
+					<p:accordionPanel >
 						<p:tab title="Colecciones">
 							<p:commandButton value="Crear Coleccion" type="button"
 								onclick="PF('dlg2').show();" />
 							<p:separator />
 
 							<p:tree id="arbolColecciones"
-								value="#{coleccionesView.raizArbol}" var="colecciones"
+								value="#{coleccionesView.raizArbol}" var="colecciones" animate="true"
 								selectionMode="single"
 								selection="#{coleccionesView.seleccionarNodo}">
 								<p:treeNode icon="ui-icon-folder-collapsed">
-									<h:outputText value="#{colecciones.nombre}" />
+									<h:outputText value="#{colecciones}" />
+									
 									<p:contextMenu for="arbolColecciones">
 										<p:menuitem value="Modificar Nombre" icon="ui-icon-open"
 											onclick="PF('dlg4').show();" />

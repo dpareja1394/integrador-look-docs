@@ -70,10 +70,10 @@ public class ColeccionesLogic implements IColeccionesLogic {
         	long codigoColeccion = coleccionesDAO.getConsecutivo("COLECCIONES_CODIGO_COLE_SEQ");
         	entity.setCodigoCole(codigoColeccion);
 
-        	Colecciones compararNombre = coleccionesDAO.findEntityByProperty("nombre", entity.getNombre());
+        	Colecciones compararNombre = coleccionesDAO.consultarColeccionPorNombreYUsuario(entity.getUsuarios(), entity.getNombre());
         	
         	if (compararNombre != null){
-        		throw new Exception("Ya existe este nombre de categoria");
+        		throw new Exception("Ya existe este nombre de colección");
         	}
         	
             if (entity.getUsuarios() == null) {
