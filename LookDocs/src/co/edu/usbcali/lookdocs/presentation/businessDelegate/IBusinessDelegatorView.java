@@ -355,6 +355,8 @@ public interface IBusinessDelegatorView {
     
     public List<Articulos> consultarTodosArticulos() throws Exception;
     
+    public Anexos getAnexosbyArtiuclo(Long codigoArticulo) throws Exception;
+    
     public void guardarRSS(String urlRss, Long idColeccion) throws Exception;
     
     public List<Rss> getRssDadoIdColeccion(Long codigoCole) throws Exception;
