@@ -9,6 +9,7 @@ import co.edu.usbcali.lookdocs.utilities.*;
 import org.primefaces.component.calendar.*;
 import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.component.inputtext.InputText;
+import org.primefaces.component.outputlabel.OutputLabel;
 import org.primefaces.component.password.Password;
 import org.primefaces.event.RowEditEvent;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -26,6 +27,7 @@ import java.util.TimeZone;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -55,6 +57,8 @@ public class UsuariosView implements Serializable {
 	private InputText txtCodigoUsua;
 	private InputText txtEmailClaveAdmin;
 	private InputText txtEmailClaveLector;
+	private String txtNombreUsuario;
+	private String txtNombreUsuarioLector;
 	private Calendar txtFechaCreacion;
 	private Calendar txtFechaModifcacion;
 	private CommandButton btnSave;
@@ -746,6 +750,35 @@ public class UsuariosView implements Serializable {
 	public void setBtnRecuperarClaveLector(CommandButton btnRecuperarClaveLector) {
 		this.btnRecuperarClaveLector = btnRecuperarClaveLector;
 	}
+	
+
+	/**
+	 * @return the txtNombreUsuario
+	 */
+	public String getTxtNombreUsuario() {
+		return txtNombreUsuario;
+	}
+
+	/**
+	 * @param txtNombreUsuario the txtNombreUsuario to set
+	 */
+	public void setTxtNombreUsuario(String txtNombreUsuario) {
+		this.txtNombreUsuario = txtNombreUsuario;
+	}
+
+	/**
+	 * @return the txtNombreUsuarioLector
+	 */
+	public String getTxtNombreUsuarioLector() {
+		return txtNombreUsuarioLector;
+	}
+
+	/**
+	 * @param txtNombreUsuarioLector the txtNombreUsuarioLector to set
+	 */
+	public void setTxtNombreUsuarioLector(String txtNombreUsuarioLector) {
+		this.txtNombreUsuarioLector = txtNombreUsuarioLector;
+	}
 
 	public void clearAction() {
 		txtEmail.setValue("");
@@ -754,6 +787,8 @@ public class UsuariosView implements Serializable {
 		pswClaveConfirmacion.setValue("");
 		pswClaveAdmin.setValue("");
 	}
+	
+	
 
 	public String iniciarLectorAction() {
 		try {
@@ -976,10 +1011,18 @@ public class UsuariosView implements Serializable {
 				String nombreDeUsuarioNuevo = txtNombre.getValue().toString();
 				businessDelegatorView.modificarNombreDeUsuario(usuarios,
 						nombreDeUsuarioNuevo);
+				//Lineas para actualizar nombre de usuario en la vista y en la sesion
+				String nuevoNombre = businessDelegatorView.getUsuarios(usuarios.getCodigoUsua()).getNombre();
+				setTxtNombreUsuario(nuevoNombre);
+				httpSession.removeAttribute("usuarioAdministrador");
+				Usuarios nuevoUsua = businessDelegatorView.getUsuarios(usuarios.getCodigoUsua());
+				httpSession.setAttribute("usuarioAdministrador", nuevoUsua);
+				//Lineas para actualizar nombre de usuario en la vista y en la sesion
 				FacesContext.getCurrentInstance().addMessage(
 						"",
 						new FacesMessage(
 								"Se ha modificado el nombre de usuario"));
+				
 			}
 
 		} catch (Exception e) {
@@ -1007,11 +1050,17 @@ public class UsuariosView implements Serializable {
 				String nombreDeUsuarioNuevo = txtNombre.getValue().toString();
 				businessDelegatorView.modificarNombreDeUsuario(usuarios,
 						nombreDeUsuarioNuevo);
+				//Lineas para actualizar nombre de usuario en la vista y en la sesion
+				String nuevoNombre = businessDelegatorView.getUsuarios(usuarios.getCodigoUsua()).getNombre();
+				setTxtNombreUsuarioLector(nuevoNombre);
+				httpSession.removeAttribute("usuarioLector");
+				Usuarios nuevoUsua = businessDelegatorView.getUsuarios(usuarios.getCodigoUsua());
+				httpSession.setAttribute("usuarioLector", nuevoUsua);
+				//Lineas para actualizar nombre de usuario en la vista y en la sesion
 				FacesContext.getCurrentInstance().addMessage(
 						"",
 						new FacesMessage(
 								"Se ha modificado el nombre de usuario"));
-				txtNombre.setValue("");
 			}
 
 		} catch (Exception e) {
@@ -1063,6 +1112,39 @@ public class UsuariosView implements Serializable {
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e
 							.getMessage(), e.getMessage()));
 		}
+	}
+	
+	
+
+	
+	public void perfil (){
+		try {
+			HttpSession httpSession = (HttpSession) FacesContext
+					.getCurrentInstance().getExternalContext().getSession(true);
+			Usuarios usuario = (Usuarios) httpSession.getAttribute("usuarioAdministrador");
+			setTxtNombreUsuario(usuario.getNombre());
+			
+			
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage("No se ha podido cargar su nombre de usuario, porfavor inicie sesion correctamente.");
+		}
+	
+		
+	}
+	
+	public void perfilLector (){
+		try {
+			ServletRequestAttributes servletRequestAttributes=(ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+	    	HttpSession session = servletRequestAttributes.getRequest().getSession();
+	    	Usuarios usuario = (Usuarios) session.getAttribute("usuarioLector");
+			setTxtNombreUsuarioLector(usuario.getNombre());
+			
+			
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage("No se ha podido cargar su nombre de usuario, porfavor inicie sesion correctamente.");
+		}
+	
+		
 	}
 	
 	public String linkRegistroDeUsuarioLector(){
