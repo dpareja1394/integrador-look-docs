@@ -1,0 +1,143 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	</h:head>
+
+	<h:body>
+		  <ui:composition template="/WEB-INF/facelets/template.xhtml">	
+		 
+		 	<ui:define name="body">	
+				<f:view>
+					<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>               
+					<p:dialog modal="true" widgetVar="statusDialog" header="Loading"  draggable="false" closable="false">  
+   						<p:graphicImage value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />   
+					</p:dialog>
+		  			<h:form id="frm">								  		
+						
+						<p:panel id="panelDataTableEventosArticulos" header="EventosArticulosData">
+							<p:growl id="men"/>				
+							<p:dataTable value="#{eventosArticulosView.data}" var="eventosArticulos"
+								paginator="true" rows="5">
+																										<p:column filterBy="#{eventosArticulos.codigoEveArt}" sortBy="#{eventosArticulos.codigoEveArt}" >
+										 <f:facet name="header">
+										<h:outputText value="codigoEveArt"/>
+										</f:facet>
+										 <h:outputText value="#{eventosArticulos.codigoEveArt}"/>
+										 </p:column>
+			                    																									
+										<p:column filterBy="#{eventosArticulos.favorito}" sortBy="#{eventosArticulos.favorito}" >
+										 <f:facet name="header">
+										<h:outputText value="Favorito"/>
+										</f:facet>
+										 <h:outputText value="#{eventosArticulos.favorito}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{eventosArticulos.fechaFavorito}" sortBy="#{eventosArticulos.fechaFavorito}" >
+										 <f:facet name="header">
+										<h:outputText value="FechaFavorito"/>
+										</f:facet>
+										 <h:outputText value="#{eventosArticulos.fechaFavorito}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{eventosArticulos.fechaMeGusta}" sortBy="#{eventosArticulos.fechaMeGusta}" >
+										 <f:facet name="header">
+										<h:outputText value="FechaMeGusta"/>
+										</f:facet>
+										 <h:outputText value="#{eventosArticulos.fechaMeGusta}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{eventosArticulos.meGusta}" sortBy="#{eventosArticulos.meGusta}" >
+										 <f:facet name="header">
+										<h:outputText value="MeGusta"/>
+										</f:facet>
+										 <h:outputText value="#{eventosArticulos.meGusta}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{eventosArticulos.codigoArti_Articulos}" sortBy="#{eventosArticulos.codigoArti_Articulos}" >
+										 <f:facet name="header">
+										<h:outputText value="CodigoArti_Articulos"/>
+										</f:facet>
+										 <h:outputText value="#{eventosArticulos.codigoArti_Articulos}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{eventosArticulos.codigoUsua_Usuarios}" sortBy="#{eventosArticulos.codigoUsua_Usuarios}" >
+										 <f:facet name="header">
+										<h:outputText value="CodigoUsua_Usuarios"/>
+										</f:facet>
+										 <h:outputText value="#{eventosArticulos.codigoUsua_Usuarios}"/>
+										</p:column>   
+			                    			                    
+								<p:column headerText="Options">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogEventosArticulos"
+										actionListener="#{eventosArticulosView.action_edit}">
+										<f:attribute name="selectedEventosArticulos" value="#{eventosArticulos}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete"									
+										title="Delete" actionListener="#{eventosArticulosView.action_delete_datatable}"
+										onclick="if(!confirm('Do you really want to delete this Entry?')){return false;}"
+										icon="ui-icon-trash" update="@form">
+										<f:attribute name="selectedEventosArticulos" value="#{eventosArticulos}" />
+									</p:commandButton>
+								</p:column>									                    
+							</p:dataTable>	
+						</p:panel>
+						<p:panel id="panelBoton">
+							<div align="center">
+								<p:commandButton id="btnNew" value="New"
+									action="#{eventosArticulosView.action_new()}" update=":dialogEventosArticulos" />
+							</div>
+						</p:panel>						
+		   			</h:form>
+					<p:dialog id="dialogEventosArticulos" appendTo="@(body)" draggable="true"
+						closable="false" visible="#{eventosArticulosView.showDialog}" resizable="false"
+						modal="true" width="500">
+						<h:form id="formDialog">
+							<p:messages id="msg" />
+							<p:panel id="panelEventosArticulos" header="EventosArticulos">							
+							    <h:panelGrid columns="2" id="panelGrid" >
+																		 <h:outputText id="msgCodigoEveArt" value="CodigoEveArt"/>
+									 <p:inputText id="txtCodigoEveArt" binding="#{eventosArticulosView.txtCodigoEveArt}">
+									 <p:ajax update=":dialogEventosArticulos" listener="#{eventosArticulosView.listener_txtId}"/>
+									 </p:inputText>	
+																											
+																		<h:outputText id="msgFavorito" value=" Favorito"/>
+									<p:inputText id="txtFavorito" disabled="true" binding="#{eventosArticulosView.txtFavorito}"/>
+																		<h:outputText id="msgMeGusta" value=" MeGusta"/>
+									<p:inputText id="txtMeGusta" disabled="true" binding="#{eventosArticulosView.txtMeGusta}"/>
+																		<h:outputText id="msgCodigoArti_Articulos" value=" CodigoArti_Articulos"/>
+									<p:inputText id="txtCodigoArti_Articulos" disabled="true" binding="#{eventosArticulosView.txtCodigoArti_Articulos}"/>
+																		<h:outputText id="msgCodigoUsua_Usuarios" value=" CodigoUsua_Usuarios"/>
+									<p:inputText id="txtCodigoUsua_Usuarios" disabled="true" binding="#{eventosArticulosView.txtCodigoUsua_Usuarios}"/>
+																		
+																													<h:outputText id="msgFechaFavorito" value=" FechaFavorito"/>
+																				<p:calendar showOn="button" navigator="true" locale="en" 
+										binding="#{eventosArticulosView.txtFechaFavorito}" >
+										<p:ajax event="dateSelect" listener="#{eventosArticulosView.listener_txtFechaFavorito}" />
+										</p:calendar>
+																				<h:outputText id="msgFechaMeGusta" value=" FechaMeGusta"/>
+																				<p:calendar showOn="button" navigator="true" locale="en" 
+										binding="#{eventosArticulosView.txtFechaMeGusta}" >
+										<p:ajax event="dateSelect" listener="#{eventosArticulosView.listener_txtFechaMeGusta}" />
+										</p:calendar>
+																										    </h:panelGrid>
+							</p:panel>						   
+							<p:panel id="panelBotones">
+								<div align="center">					
+									<p:commandButton id="btnSave" binding="#{eventosArticulosView.btnSave}" value="Save" action="#{eventosArticulosView.action_save()}" update=":dialogEventosArticulos :frm:panelDataTableEventosArticulos" />
+									<p:commandButton id="btnClear" value="Clear" action="#{eventosArticulosView.action_clear()}" update=":dialogEventosArticulos" />
+									<p:commandButton id="btnExit" value="Exit" action="#{eventosArticulosView.action_closeDialog()}" update=":dialogEventosArticulos" />
+								</div>
+							</p:panel>					
+						</h:form>
+					</p:dialog>
+				</f:view>
+			</ui:define>		
+		</ui:composition>	
+	</h:body>	
+</html>	

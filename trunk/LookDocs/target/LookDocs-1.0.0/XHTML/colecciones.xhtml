@@ -1,0 +1,48 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	
+	<h:head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	</h:head>		
+	
+	<h:body>
+		<ui:composition template="/WEB-INF/facelets/template.xhtml">	
+		<ui:define name="body">	
+		<f:view>
+			<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>               
+			<p:dialog modal="true" widgetVar="statusDialog" header="Loading"  draggable="false" closable="false">  
+   				<p:graphicImage value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />   
+			</p:dialog>
+			<h:form id="formDialog">
+				<p:messages id="msg" />
+				<p:growl id="men"/>
+					<p:panel id="panelColecciones" header="Colecciones">							
+						<h:panelGrid columns="2" id="panelGrid" >
+												 	<h:outputText id="msgCodigoCole" value="CodigoCole"/>
+						 	<p:inputText id="txtCodigoCole" binding="#{coleccionesView.txtCodigoCole}">
+						 		<p:ajax update="panelColecciones,msg,panelBotones" listener="#{coleccionesView.listener_txtId}"/>
+						 	</p:inputText>	
+																		
+													<h:outputText id="msgNombre" value=" Nombre"/>
+							<p:inputText id="txtNombre" disabled="true" binding="#{coleccionesView.txtNombre}"/>
+													<h:outputText id="msgCodigoUsua_Usuarios" value=" CodigoUsua_Usuarios"/>
+							<p:inputText id="txtCodigoUsua_Usuarios" disabled="true" binding="#{coleccionesView.txtCodigoUsua_Usuarios}"/>
+												
+										   </h:panelGrid>
+				</p:panel>
+	   			<p:panel id="panelBotones">
+					<div align="center">					
+						<p:commandButton id="btnSave" binding="#{coleccionesView.btnSave}" disabled="true" value="Save" action="#{coleccionesView.action_save()}" update="panelColecciones,msg,panelBotones" />
+						<p:commandButton id="btnDelete" binding="#{coleccionesView.btnDelete}" disabled="true" value="Delete" action="#{coleccionesView.action_delete_master()}" onclick="if(!confirm('Do you really want to delete this Entry?')){return false;}" update="panelColecciones,msg,panelBotones" />
+						<p:commandButton id="btnClear" value="Clear" action="#{coleccionesView.action_clear()}" update="panelColecciones,msg,panelBotones" />
+					</div>
+				</p:panel>			
+			</h:form>
+		</f:view>
+			</ui:define>		
+		</ui:composition>	
+	</h:body>	
+</html>	
