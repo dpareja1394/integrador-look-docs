@@ -361,7 +361,9 @@ public interface IBusinessDelegatorView {
     
     public List<Rss> getRssDadoIdColeccion(Long codigoCole) throws Exception;
     
-    public Colecciones consultarNodoSeleccionado(String nodoSeleccionado) throws Exception;
+    public List<Articulos> consultaArticulosPorCategoria(Long idCate) throws Exception;
+    
+ public Colecciones consultarNodoSeleccionado(String nodoSeleccionado) throws Exception;
     
     public Colecciones consultarColeccionPorNombreYUsuario(Usuarios usuarios, String nombreColeccion) throws Exception;
     

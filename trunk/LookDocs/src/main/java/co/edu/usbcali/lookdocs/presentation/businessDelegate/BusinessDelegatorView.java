@@ -792,7 +792,12 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
 	public List<Rss> getRssDadoIdColeccion(Long codigoCole) throws Exception {
 		return rssLogic.getRssDadoIdColeccion(codigoCole);
 	}
-
+	
+	@Override
+	public List<Articulos> consultaArticulosPorCategoria(Long idCate) throws Exception {
+		return categoriasLogic.consultaArticulosPorCategoria(idCate);
+	}
+	
 	@Override
 	public Colecciones consultarNodoSeleccionado(String nodoSeleccionado)
 			throws Exception {
