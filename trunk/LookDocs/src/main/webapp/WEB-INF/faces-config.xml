@@ -565,7 +565,7 @@
 		<from-view-id>/PantallasAdministrador/FeedPrincipalAdministrador.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>cerrarAdministrador</from-outcome>
-			<to-view-id>/InicioSesionAdmin.xhtml</to-view-id>
+			<to-view-id>/InicioSesionLector.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
 	</navigation-rule>
@@ -589,7 +589,7 @@
 		<from-view-id>/PantallasAdministrador/PrincipalAdministrador.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>cerrarAdministrador</from-outcome>
-			<to-view-id>/InicioSesionAdmin.xhtml</to-view-id>
+			<to-view-id>/InicioSesionLector.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
 	</navigation-rule>
@@ -605,7 +605,7 @@
 		<from-view-id>/PantallasAdministrador/RSSAdmin.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>cerrarAdministrador</from-outcome>
-			<to-view-id>/InicioSesionAdmin.xhtml</to-view-id>
+			<to-view-id>/InicioSesionLector.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
 	</navigation-rule>
@@ -626,6 +626,14 @@
 		</navigation-case>
 	</navigation-rule>
 	<navigation-rule>
+		<from-view-id>/PantallasAdministrador/PrincipalAdministrador.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>viewPDF</from-outcome>
+			<to-view-id>/PantallasAdministrador/ViewPDF.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
 		<from-view-id>/PantallasLector/RSSLector.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>guardar</from-outcome>
@@ -641,5 +649,4 @@
 			<redirect />
 		</navigation-case>
 	</navigation-rule>
-	
-</faces-config>
+	</faces-config>
