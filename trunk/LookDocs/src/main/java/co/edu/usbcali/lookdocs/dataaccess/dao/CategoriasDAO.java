@@ -1,6 +1,7 @@
 package co.edu.usbcali.lookdocs.dataaccess.dao;
 
 import co.edu.usbcali.lookdocs.dataaccess.api.HibernateDaoImpl;
+import co.edu.usbcali.lookdocs.model.Articulos;
 import co.edu.usbcali.lookdocs.model.Categorias;
 
 import org.hibernate.Query;
@@ -66,5 +67,18 @@ public class CategoriasDAO extends HibernateDaoImpl<Categorias, Long>
         }
 
         return consecutivo;
+    }
+    
+    @Override
+    public List<Articulos> consultaArticulosPorCategoria(Long idCate) throws Exception {
+    	
+    	String hql2 = "SELECT a "
+    			+ "FROM Articulos a, Categorias c, CategoriasArticulos ca "
+    			+ "WHERE a.codigoArti=ca.articulos.codigoArti and c.codigoCate=ca.categorias.codigoCate and"
+    			+ " ca.categorias.codigoCate="+idCate;
+    	Query query = sessionFactory.getCurrentSession().createQuery(hql2);
+    	List<Articulos> losArticulos = query.list();
+    	return losArticulos;
+    	
     }
 }

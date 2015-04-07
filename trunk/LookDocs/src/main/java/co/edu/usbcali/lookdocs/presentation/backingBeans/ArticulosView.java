@@ -57,6 +57,7 @@ import javax.servlet.http.HttpSession;
 @ViewScoped
 public class ArticulosView implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private static final long CATEGORIA_PREDETERMINADA = 1L;
 	private InputText txtAutor;
 	private InputText txtDescripcion;
 	private InputText txtEstadoRegistro;
@@ -76,8 +77,8 @@ public class ArticulosView implements Serializable {
 	private String pdfUrl;
 	private UploadedFile file;
 	private List<Articulos> losArticulos;
-    private List<Articulos> filtroArticulos;
-
+	private List<Articulos> filtroArticulos;
+	private String viewURL;
 	private File fileUpload;
 	private CommandButton btnSave;
 	private CommandButton btnModify;
@@ -97,13 +98,15 @@ public class ArticulosView implements Serializable {
 
 	public ArticulosView() {
 		super();
-//		
-//		Articulos articulos=null;
-//		 Set<CategoriasArticulos> lasCategoriasArtiulos= articulos.getCategoriasArticuloses();
-//		 for (CategoriasArticulos categoriasArticulos : lasCategoriasArtiulos) {
-//			Categorias categorias=categoriasArticulos.getCategorias();
-//		}
-		 
+		//
+		// Articulos articulos=null;
+		// Set<CategoriasArticulos> lasCategoriasArtiulos=
+		// articulos.getCategoriasArticuloses();
+		// for (CategoriasArticulos categoriasArticulos : lasCategoriasArtiulos)
+		// {
+		// Categorias categorias=categoriasArticulos.getCategorias();
+		// }
+
 	}
 
 	public void rowEventListener(RowEditEvent e) {
@@ -180,78 +183,78 @@ public class ArticulosView implements Serializable {
 	}
 
 	public String action_new() {
-		//action_clear();
+		// action_clear();
 		selectedArticulos = null;
 		setShowDialog(true);
 
 		return "";
 	}
 
-//	public String action_clear() {
-//		entity = null;
-//		selectedArticulos = null;
-//
-//		if (txtAutor != null) {
-//			txtAutor.setValue(null);
-//			txtAutor.setDisabled(true);
-//		}
-//
-//		if (txtDescripcion != null) {
-//			txtDescripcion.setValue(null);
-//			txtDescripcion.setDisabled(true);
-//		}
-//		
-//
-//		if (txtEstadoRegistro != null) {
-//			txtEstadoRegistro.setValue(null);
-//			txtEstadoRegistro.setDisabled(true);
-//		}
-//
-//		if (txtNombre != null) {
-//			txtNombre.setValue(null);
-//			txtNombre.setDisabled(false);
-//		}
-//
-//		if (txtUsuCrea != null) {
-//			txtUsuCrea.setValue(null);
-//			txtUsuCrea.setDisabled(true);
-//		}
-//
-//		if (txtUsuModifica != null) {
-//			txtUsuModifica.setValue(null);
-//			txtUsuModifica.setDisabled(true);
-//		}
-//
-//		if (txtCodigoUsua_Usuarios != null) {
-//			txtCodigoUsua_Usuarios.setValue(null);
-//			txtCodigoUsua_Usuarios.setDisabled(true);
-//		}
-//
-//		if (txtFechaCreacion != null) {
-//			txtFechaCreacion.setValue(null);
-//			txtFechaCreacion.setDisabled(true);
-//		}
-//
-//		if (txtFechaModifcacion != null) {
-//			txtFechaModifcacion.setValue(null);
-//			txtFechaModifcacion.setDisabled(true);
-//		}
-//
-//		if (txtCodigoArti != null) {
-//			txtCodigoArti.setValue(null);
-//			txtCodigoArti.setDisabled(false);
-//		}
-//
-//		if (btnSave != null) {
-//			btnSave.setDisabled(true);
-//		}
-//
-//		if (btnDelete != null) {
-//			btnDelete.setDisabled(true);
-//		}
-//
-//		return "";
-//	}
+	// public String action_clear() {
+	// entity = null;
+	// selectedArticulos = null;
+	//
+	// if (txtAutor != null) {
+	// txtAutor.setValue(null);
+	// txtAutor.setDisabled(true);
+	// }
+	//
+	// if (txtDescripcion != null) {
+	// txtDescripcion.setValue(null);
+	// txtDescripcion.setDisabled(true);
+	// }
+	//
+	//
+	// if (txtEstadoRegistro != null) {
+	// txtEstadoRegistro.setValue(null);
+	// txtEstadoRegistro.setDisabled(true);
+	// }
+	//
+	// if (txtNombre != null) {
+	// txtNombre.setValue(null);
+	// txtNombre.setDisabled(false);
+	// }
+	//
+	// if (txtUsuCrea != null) {
+	// txtUsuCrea.setValue(null);
+	// txtUsuCrea.setDisabled(true);
+	// }
+	//
+	// if (txtUsuModifica != null) {
+	// txtUsuModifica.setValue(null);
+	// txtUsuModifica.setDisabled(true);
+	// }
+	//
+	// if (txtCodigoUsua_Usuarios != null) {
+	// txtCodigoUsua_Usuarios.setValue(null);
+	// txtCodigoUsua_Usuarios.setDisabled(true);
+	// }
+	//
+	// if (txtFechaCreacion != null) {
+	// txtFechaCreacion.setValue(null);
+	// txtFechaCreacion.setDisabled(true);
+	// }
+	//
+	// if (txtFechaModifcacion != null) {
+	// txtFechaModifcacion.setValue(null);
+	// txtFechaModifcacion.setDisabled(true);
+	// }
+	//
+	// if (txtCodigoArti != null) {
+	// txtCodigoArti.setValue(null);
+	// txtCodigoArti.setDisabled(false);
+	// }
+	//
+	// if (btnSave != null) {
+	// btnSave.setDisabled(true);
+	// }
+	//
+	// if (btnDelete != null) {
+	// btnDelete.setDisabled(true);
+	// }
+	//
+	// return "";
+	// }
 
 	public void listener_txtFechaCreacion() {
 		Date inputDate = (Date) txtFechaCreacion.getValue();
@@ -368,19 +371,82 @@ public class ArticulosView implements Serializable {
 		return "";
 	}
 
-	public void download(ActionEvent evt) {
-		
-		selectedArticulos = (ArticulosDTO) (evt.getComponent()
-				.getAttributes().get("selectedArticulos"));
+	public void visualizarArticulo(ActionEvent evt) {
+		selectedArticulos = (ArticulosDTO) (evt.getComponent().getAttributes()
+				.get("selectedArticulos"));
 		returnCodigoArti = selectedArticulos.getCodigoArti();
-		
+
 		Long codigoArti = new Long(returnCodigoArti);
-		
+
 		try {
-			Anexos download = businessDelegatorView.getAnexosbyArtiuclo(codigoArti);
+			Anexos download = businessDelegatorView
+					.getAnexosbyArtiuclo(codigoArti);
 			businessDelegatorView.downloadFileByFTP("integrador.comli.com",
-					"a6132029", "andres20021994", download.getNombre()+".pdf",
-					download.getUrl());
+					"a6132029", "andres20021994",
+					download.getNombre() + ".pdf", download.getUrl());
+
+			// trae el directorio de descargas por defecto
+			String defaultDownloadPath = System.getProperty("user.home")
+					+ File.separator + "Downloads";
+			// arma el directorio final de la descarga
+			String localPath = defaultDownloadPath + File.separator
+					+ download.getNombre() + ".pdf";
+			viewURL = "file:///"+localPath;
+			FacesContext.getCurrentInstance().getExternalContext().redirect(viewURL);
+		} catch (Exception ex) {
+			FacesUtils.addErrorMessage(ex.getMessage());
+
+		}
+
+		
+	}
+	
+	public String viewURL(){
+		return "viewURL";
+	}
+
+	public String verList() {
+
+		returnCodigoArti = selectedArticulos.getCodigoArti();
+
+		Long codigoArti = new Long(returnCodigoArti);
+
+		try {
+			Anexos download = businessDelegatorView
+					.getAnexosbyArtiuclo(codigoArti);
+			businessDelegatorView.downloadFileByFTP("integrador.comli.com",
+					"a6132029", "andres20021994",
+					download.getNombre() + ".pdf", download.getUrl());
+
+			// trae el directorio de descargas por defecto
+			String defaultDownloadPath = System.getProperty("user.home")
+					+ File.separator + "Downloads";
+			// arma el directorio final de la descarga
+			String localPath = defaultDownloadPath + File.separator
+					+ download.getNombre() + ".pdf";
+			viewURL = localPath;
+		} catch (Exception ex) {
+			FacesUtils.addErrorMessage(ex.getMessage());
+
+		}
+
+		return "viewpdf";
+	}
+
+	public void download(ActionEvent evt) {
+
+		selectedArticulos = (ArticulosDTO) (evt.getComponent().getAttributes()
+				.get("selectedArticulos"));
+		returnCodigoArti = selectedArticulos.getCodigoArti();
+
+		Long codigoArti = new Long(returnCodigoArti);
+
+		try {
+			Anexos download = businessDelegatorView
+					.getAnexosbyArtiuclo(codigoArti);
+			businessDelegatorView.downloadFileByFTP("integrador.comli.com",
+					"a6132029", "andres20021994",
+					download.getNombre() + ".pdf", download.getUrl());
 			FacesUtils
 					.addInfoMessage("Articulo descargado. Revise su directorio de descargas predeterminado");
 
@@ -391,11 +457,11 @@ public class ArticulosView implements Serializable {
 	}
 
 	public void action_create() {
-		
 
 		HttpSession httpSession = (HttpSession) FacesContext
 				.getCurrentInstance().getExternalContext().getSession(true);
-		Usuarios autor = (Usuarios) httpSession.getAttribute("usuarioAdministrador");
+		Usuarios autor = (Usuarios) httpSession
+				.getAttribute("usuarioAdministrador");
 
 		String extValidate;
 		pdfUrl = defaulturl + getFile().getFileName();
@@ -410,28 +476,28 @@ public class ArticulosView implements Serializable {
 
 			if (extValidate.equals("pdf")) {
 				try {
-					
+
 					entity = new Articulos();
 
 					entity.setAutor(autor.getNombre());
 
 					entity.setDescripcion(FacesUtils.checkString(txtAreaDes));
-					entity.setEstadoRegistro(
-		            		(estadoRegArticulo.equals("1")) ? "a" : 
-		            			(estadoRegArticulo.equals("2") ? "i" : null) );
+					entity.setEstadoRegistro((estadoRegArticulo.equals("1")) ? "a"
+							: (estadoRegArticulo.equals("2") ? "i" : null));
 					entity.setNombre(FacesUtils.checkString(txtNombre));
 					entity.setUsuCrea(autor.getNombre());
 					entity.setUsuarios(autor);
 					businessDelegatorView.TransferFile("integrador.comli.com",
 							"a6132029", "andres20021994", file, pdfUrl);
-					businessDelegatorView.saveArticulos(entity, somCategorias.getValue().toString(), pdfUrl);
+					businessDelegatorView.saveArticulos(entity, somCategorias
+							.getValue().toString(), pdfUrl);
 					txtNombre.setValue(null);
 					txtNombre.setValue("");
 					txtNombre.setDisabled(false);
 					txtAreaDes.setValue(null);
 					txtAreaDes.setValue("");
 					txtAreaDes.setDisabled(false);
-					data=null;
+					data = null;
 					getData();
 					FacesUtils.addInfoMessage("Archivo cargado correctamente");
 				} catch (Exception e) {
@@ -445,13 +511,78 @@ public class ArticulosView implements Serializable {
 		} else {
 			FacesUtils.addErrorMessage("Porfavor seleccione un archivo");
 		}
-	
-
 
 		try {
-			
+
 		} catch (Exception e) {
-			data=null;
+			data = null;
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
+
+	}
+
+	public void action_create_default() {
+
+		HttpSession httpSession = (HttpSession) FacesContext
+				.getCurrentInstance().getExternalContext().getSession(true);
+		Usuarios autor = (Usuarios) httpSession
+				.getAttribute("usuarioAdministrador");
+
+		String extValidate;
+		pdfUrl = defaulturl + getFile().getFileName();
+
+		if (getFile() != null && !file.getFileName().trim().equals("")) {
+			String ext = getFile().getFileName();
+			if (ext != null) {
+				extValidate = ext.substring(ext.indexOf(".") + 1);
+			} else {
+				extValidate = "null";
+			}
+
+			if (extValidate.equals("pdf")) {
+				try {
+
+					entity = new Articulos();
+
+					entity.setAutor(autor.getNombre());
+
+					entity.setDescripcion(FacesUtils.checkString(txtAreaDes));
+					entity.setEstadoRegistro((estadoRegArticulo.equals("1")) ? "a"
+							: (estadoRegArticulo.equals("2") ? "i" : null));
+					entity.setNombre(FacesUtils.checkString(txtNombre));
+					entity.setUsuCrea(autor.getNombre());
+					entity.setUsuarios(autor);
+					businessDelegatorView.TransferFile("integrador.comli.com",
+							"a6132029", "andres20021994", file, pdfUrl);
+					Categorias defaultCate = businessDelegatorView
+							.getCategorias(CATEGORIA_PREDETERMINADA);
+					businessDelegatorView.saveArticulos(entity, defaultCate
+							.getCodigoCate().toString(), pdfUrl);
+					txtNombre.setValue(null);
+					txtNombre.setValue("");
+					txtNombre.setDisabled(false);
+					txtAreaDes.setValue(null);
+					txtAreaDes.setValue("");
+					txtAreaDes.setDisabled(false);
+					data = null;
+					getData();
+					FacesUtils.addInfoMessage("Archivo cargado correctamente");
+				} catch (Exception e) {
+					FacesUtils.addErrorMessage(e.getMessage());
+				}
+
+			} else {
+				FacesUtils
+						.addErrorMessage("Solo puede subir archivos con extension .pdf");
+			}
+		} else {
+			FacesUtils.addErrorMessage("Porfavor seleccione un archivo");
+		}
+
+		try {
+
+		} catch (Exception e) {
+			data = null;
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
 
@@ -477,46 +608,46 @@ public class ArticulosView implements Serializable {
 					.getUsuarios(FacesUtils.checkLong(txtCodigoUsua_Usuarios))
 					: null);
 			businessDelegatorView.updateArticulos(entity);
-			data=null;
+			data = null;
 			FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYMODIFIED);
 		} catch (Exception e) {
 			data = null;
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
 	}
-	
-public List<Articulos> getLosArticulos() {
-		
-    	
-    	if(losArticulos == null){
-    		
-    		try {
-    			losArticulos = businessDelegatorView.consultarTodosArticulos();
+
+	public List<Articulos> getLosArticulos() {
+
+		if (losArticulos == null) {
+
+			try {
+				losArticulos = businessDelegatorView.consultarTodosArticulos();
 			} catch (Exception e) {
 				// TODO: handle exception
 			}
-    		
-    	}
-    	
-    	return losArticulos;
+
+		}
+
+		return losArticulos;
 	}
-	
-	public void returnCodigoArticulo(ActionEvent evt){
-		selectedArticulos = (ArticulosDTO) (evt.getComponent()
-				.getAttributes().get("selectedArticulos"));
+
+	public void returnCodigoArticulo(ActionEvent evt) {
+		selectedArticulos = (ArticulosDTO) (evt.getComponent().getAttributes()
+				.get("selectedArticulos"));
 		returnCodigoArti = selectedArticulos.getCodigoArti();
 	}
 
 	public String action_modifyCategoria() {
 		try {
-				Long codigoArti = new Long(returnCodigoArti);
-				CategoriasArticulos entity = businessDelegatorView.getCategoriasArticulos(codigoArti);
+			Long codigoArti = new Long(returnCodigoArti);
+			CategoriasArticulos entity = businessDelegatorView
+					.getCategoriasArticulos(codigoArti);
 
-			entity.setCategorias(businessDelegatorView.getCategorias(Long.parseLong(somCategoriasTable.getValue().toString())));
+			entity.setCategorias(businessDelegatorView.getCategorias(Long
+					.parseLong(somCategoriasTable.getValue().toString())));
 			businessDelegatorView.updateCategoriasArticulos(entity);
 			data = null;
 			FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYMODIFIED);
-			
 		} catch (Exception e) {
 			data = null;
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -556,7 +687,7 @@ public List<Articulos> getLosArticulos() {
 		try {
 			businessDelegatorView.deleteArticulos(entity);
 			FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYDELETED);
-			//action_clear();
+			// action_clear();
 			data = null;
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
@@ -565,12 +696,13 @@ public List<Articulos> getLosArticulos() {
 
 	public String action_closeDialog() {
 		setShowDialog(false);
-		//action_clear();
+		// action_clear();
 
 		return "";
 	}
 
 	public String actionDeleteDataTableEditable(ActionEvent evt) {
+
 		try {
 			selectedArticulos = (ArticulosDTO) (evt.getComponent()
 					.getAttributes().get("selectedArticulos"));
@@ -580,7 +712,10 @@ public List<Articulos> getLosArticulos() {
 			businessDelegatorView.deleteArticulos(entity);
 			data.remove(selectedArticulos);
 			FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYDELETED);
-			//action_clear();
+			selectedArticulos = null;
+			data = null;
+			getData();
+			// action_clear();
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
@@ -832,27 +967,25 @@ public List<Articulos> getLosArticulos() {
 	/**
 	 * @return the txtAreaDescripcion
 	 */
-	
 
 	/**
 	 * @return the lasCategoriasItems
 	 */
 	public List<SelectItem> getLasCategoriasItems() {
-			try {				
-				lasCategoriasItems = new ArrayList<SelectItem>();
-				List<Categorias> losTiposDeCategorias = businessDelegatorView
-						.getCategorias();
-				for (Categorias categorias : losTiposDeCategorias) {
-					SelectItem selectItem = new SelectItem(
-							categorias.getCodigoCate(), categorias.getNombre());
-					lasCategoriasItems.add(selectItem);
+		try {
+			lasCategoriasItems = new ArrayList<SelectItem>();
+			List<Categorias> losTiposDeCategorias = businessDelegatorView
+					.getCategorias();
+			for (Categorias categorias : losTiposDeCategorias) {
+				SelectItem selectItem = new SelectItem(
+						categorias.getCodigoCate(), categorias.getNombre());
+				lasCategoriasItems.add(selectItem);
 
-				}
-			} catch (Exception ex) {
-				FacesUtils.addErrorMessage("Error cargando las categorias");
 			}
-			
-		
+		} catch (Exception ex) {
+			FacesUtils.addErrorMessage("Error cargando las categorias");
+		}
+
 		return lasCategoriasItems;
 	}
 
@@ -867,7 +1000,7 @@ public List<Articulos> getLosArticulos() {
 	/**
 	 * @return the categoriaSelected
 	 */
-	
+
 	/**
 	 * @return the txtAreaDes
 	 */
@@ -876,7 +1009,8 @@ public List<Articulos> getLosArticulos() {
 	}
 
 	/**
-	 * @param txtAreaDes the txtAreaDes to set
+	 * @param txtAreaDes
+	 *            the txtAreaDes to set
 	 */
 	public void setTxtAreaDes(InputTextarea txtAreaDes) {
 		this.txtAreaDes = txtAreaDes;
@@ -890,12 +1024,13 @@ public List<Articulos> getLosArticulos() {
 	}
 
 	/**
-	 * @param estadoRegArticulo the estadoRegArticulo to set
+	 * @param estadoRegArticulo
+	 *            the estadoRegArticulo to set
 	 */
 	public void setEstadoRegArticulo(String estadoRegArticulo) {
 		this.estadoRegArticulo = estadoRegArticulo;
 	}
-	
+
 	public List<Articulos> getFiltroArticulos() {
 		return filtroArticulos;
 	}
@@ -916,7 +1051,8 @@ public List<Articulos> getLosArticulos() {
 	}
 
 	/**
-	 * @param cateogriaSelect the cateogriaSelect to set
+	 * @param cateogriaSelect
+	 *            the cateogriaSelect to set
 	 */
 	public void setCateogriaSelect(String cateogriaSelect) {
 		this.cateogriaSelect = cateogriaSelect;
@@ -930,7 +1066,8 @@ public List<Articulos> getLosArticulos() {
 	}
 
 	/**
-	 * @param somCategorias the somCategorias to set
+	 * @param somCategorias
+	 *            the somCategorias to set
 	 */
 	public void setSomCategorias(SelectOneMenu somCategorias) {
 		this.somCategorias = somCategorias;
@@ -953,16 +1090,17 @@ public List<Articulos> getLosArticulos() {
 		} catch (Exception ex) {
 			FacesUtils.addErrorMessage("Error cargando las categorias");
 		}
-		
-	
-	return lasCategoriasItemsTabla;
-		
+
+		return lasCategoriasItemsTabla;
+
 	}
 
 	/**
-	 * @param lasCategoriasItemsTabla the lasCategoriasItemsTabla to set
+	 * @param lasCategoriasItemsTabla
+	 *            the lasCategoriasItemsTabla to set
 	 */
-	public void setLasCategoriasItemsTabla(List<SelectItem> lasCategoriasItemsTabla) {
+	public void setLasCategoriasItemsTabla(
+			List<SelectItem> lasCategoriasItemsTabla) {
 		this.lasCategoriasItemsTabla = lasCategoriasItemsTabla;
 	}
 
@@ -974,7 +1112,8 @@ public List<Articulos> getLosArticulos() {
 	}
 
 	/**
-	 * @param somCategoriasTable the somCategoriasTable to set
+	 * @param somCategoriasTable
+	 *            the somCategoriasTable to set
 	 */
 	public void setSomCategoriasTable(SelectOneMenu somCategoriasTable) {
 		this.somCategoriasTable = somCategoriasTable;
@@ -988,10 +1127,26 @@ public List<Articulos> getLosArticulos() {
 	}
 
 	/**
-	 * @param returnCodigoArti the returnCodigoArti to set
+	 * @param returnCodigoArti
+	 *            the returnCodigoArti to set
 	 */
 	public void setReturnCodigoArti(Long returnCodigoArti) {
 		this.returnCodigoArti = returnCodigoArti;
+	}
+
+	/**
+	 * @return the viewURL
+	 */
+	public String getViewURL() {
+		return viewURL;
+	}
+
+	/**
+	 * @param viewURL
+	 *            the viewURL to set
+	 */
+	public void setViewURL(String viewURL) {
+		this.viewURL = viewURL;
 	}
 
 }

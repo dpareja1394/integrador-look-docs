@@ -867,7 +867,7 @@ public class UsuariosView implements Serializable {
 				return "registroLector";
 			} else {
 				FacesContext.getCurrentInstance().addMessage("",
-						new FacesMessage("Las contraseñas no coinciden"));
+						new FacesMessage("Las contraseï¿½as no coinciden"));
 				
 			}
 		} catch (Exception e) {
@@ -889,7 +889,7 @@ public class UsuariosView implements Serializable {
 			/*
 			 * if(clave.equals(claveConfirma)==false){
 			 * FacesContext.getCurrentInstance().addMessage("", new
-			 * FacesMessage("Las contraseñas no coinciden")); }
+			 * FacesMessage("Las contraseï¿½as no coinciden")); }
 			 */
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage(
@@ -900,15 +900,17 @@ public class UsuariosView implements Serializable {
 	}
 
 	public String cerrarSesionAdministrador() {
-		HttpSession httpSession = (HttpSession) FacesContext
-				.getCurrentInstance().getExternalContext().getSession(true);
-		httpSession.removeAttribute("usuarioAdministrador");
-		httpSession.invalidate();
-		httpSession=null;
-//		ServletRequestAttributes servletRequestAttributes=(ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-//    	HttpSession session = servletRequestAttributes.getRequest().getSession();
-//    	session.invalidate();
-//    	session.removeAttribute("usuarioAdministrador");
+//		HttpSession httpSession = (HttpSession) FacesContext
+//				.getCurrentInstance().getExternalContext().getSession(true);
+//		httpSession.removeAttribute("usuarioAdministrador");
+//		httpSession.invalidate();
+//		httpSession=null;
+		ServletRequestAttributes servletRequestAttributes=(ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+    	HttpSession session = servletRequestAttributes.getRequest().getSession();
+    	session.removeAttribute("usuarioAdministrador");
+    	session.invalidate();
+    	session=null;
+    	
 
 		return "cerrarAdministrador";
 
@@ -950,7 +952,7 @@ public class UsuariosView implements Serializable {
 				businessDelegatorView.modificarPasswordUsuarios(usuarios,
 						claveActual, nuevaClave, confirmaClave);
 				FacesContext.getCurrentInstance().addMessage("",
-						new FacesMessage("Su contraseña ha sido modificada"));
+						new FacesMessage("Su contraseï¿½a ha sido modificada"));
 			}
 
 		} catch (Exception e) {
@@ -983,7 +985,7 @@ public class UsuariosView implements Serializable {
 				businessDelegatorView.modificarPasswordUsuarios(usuarios,
 						claveActual, nuevaClave, confirmaClave);
 				FacesContext.getCurrentInstance().addMessage("",
-						new FacesMessage("Su contraseña ha sido modificada"));
+						new FacesMessage("Su contraseï¿½a ha sido modificada"));
 			}
 
 		} catch (Exception e) {

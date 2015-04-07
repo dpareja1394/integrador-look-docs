@@ -139,6 +139,7 @@
 						</p:tab>
 					</p:accordionPanel>
 					<p:separator />
+					<!-- onclick="location.href = '../j_spring_security_logout';" -->
 					<p:menu toggleable="true" style="width:235px;border-style: none;border: none">
 						<p:submenu label="Cuenta">
 							<p:menuitem value="Editar Cuenta" icon="ui-icon-disk"
@@ -147,9 +148,10 @@
 
 						</p:submenu>
 						<p:submenu label="Sesion">
+						
 							<p:menuitem value="Cerrar Sesion" icon="ui-icon-home"
 								action="#{usuariosView.cerrarSesionLector}"
-								onclick="location.href = '../j_spring_security_logout';" />
+								url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/j_spring_security_logout"/>
 
 						</p:submenu>
 					</p:menu>

@@ -57,6 +57,7 @@ public class CategoriasView implements Serializable {
 	private CommandButton btnDelete;
 	private CommandButton btnClear;
 	private List<CategoriasDTO> data;
+	private List<Articulos> articulosHijo;
 	private CategoriasDTO selectedCategorias;
 	private Categorias entity;
 	private boolean showDialog;
@@ -102,16 +103,30 @@ public class CategoriasView implements Serializable {
 
 		} catch (Exception e) {
 			if (e.toString().equals("java.lang.NullPointerException")) {
-				FacesUtils.addErrorMessage("Lo sentimos, no se pudo cargar correctamente sus categorias");
-			}else{
-			FacesUtils.addErrorMessage(e.getMessage());
+				FacesUtils
+						.addErrorMessage("Lo sentimos, no se pudo cargar correctamente sus categorias");
+			} else {
+				FacesUtils.addErrorMessage(e.getMessage());
 			}
 		}
 	}
 
 	private void adicionarNodos(List<Categorias> categorias, TreeNode padre) {
-		for (Categorias categoria : categorias) {
-			TreeNode no = new DefaultTreeNode(categoria, padre);
+		try {
+			for (Categorias categoria : categorias) {
+				TreeNode no = new DefaultTreeNode(categoria, padre);
+
+				articulosHijo = businessDelegatorView
+						.consultaArticulosPorCategoria(categoria
+								.getCodigoCate());
+				
+				for (Articulos articulos : articulosHijo) {
+					TreeNode hijos = new DefaultTreeNode(articulos, no);
+				}				
+
+			}
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
 		}
 	}
 
@@ -345,10 +360,11 @@ public class CategoriasView implements Serializable {
 			// action_clear();
 		} catch (Exception e) {
 			if (e.toString().equals("java.lang.NullPointerException")) {
-				FacesUtils.addErrorMessage("Lo sentimos, no se pudo crear la categoria deseada");
-			}else{
-			entity = null;
-			FacesUtils.addErrorMessage(e.getMessage());
+				FacesUtils
+						.addErrorMessage("Lo sentimos, no se pudo crear la categoria deseada");
+			} else {
+				entity = null;
+				FacesUtils.addErrorMessage(e.getMessage());
 			}
 		}
 
@@ -376,10 +392,11 @@ public class CategoriasView implements Serializable {
 			// action_clear();
 		} catch (Exception e) {
 			if (e.toString().equals("java.lang.NullPointerException")) {
-				FacesUtils.addErrorMessage("Lo sentimos, no se pudo modificar la categoria deseada");
-			}else{
-			entity = null;
-			FacesUtils.addErrorMessage(e.getMessage());
+				FacesUtils
+						.addErrorMessage("Lo sentimos, no se pudo modificar la categoria deseada");
+			} else {
+				entity = null;
+				FacesUtils.addErrorMessage(e.getMessage());
 			}
 		}
 
@@ -430,10 +447,11 @@ public class CategoriasView implements Serializable {
 			data = null;
 		} catch (Exception e) {
 			if (e.toString().equals("java.lang.NullPointerException")) {
-				FacesUtils.addErrorMessage("Lo sentimos, no se pudo eliminar la categoria deseada");
-			}else{
-			
-			FacesUtils.addErrorMessage(e.getMessage());
+				FacesUtils
+						.addErrorMessage("Lo sentimos, no se pudo eliminar la categoria deseada");
+			} else {
+
+				FacesUtils.addErrorMessage(e.getMessage());
 			}
 		}
 	}

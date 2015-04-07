@@ -58,6 +58,23 @@ public class CategoriasLogic implements ICategoriasLogic {
 
 		return list;
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<Articulos> consultaArticulosPorCategoria(Long idCate) throws Exception {
+		if(idCate==null){
+			throw new ZMessManager("El id de la categoria es nulo");
+		}
+		
+		if((idCate.toString()).trim().equals("")){
+			throw new ZMessManager("El id de la categoria esta vacio");
+		}
+		
+		List<Articulos> losAritculos = categoriasDAO.consultaArticulosPorCategoria(idCate);
+		
+		
+		return losAritculos;
+	}
 
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	public void saveCategorias(Categorias entity) throws Exception {
@@ -66,7 +83,7 @@ public class CategoriasLogic implements ICategoriasLogic {
 					"nombre", entity.getNombre());
 
 			if (entityCompare != null) {
-				throw new Exception("Ya existe una categoría con ese nombre");
+				throw new Exception("Ya existe una categorï¿½a con ese nombre");
 			}
 
 			entity.setCodigoCate(categoriasDAO
@@ -178,7 +195,7 @@ public class CategoriasLogic implements ICategoriasLogic {
 
 		if (selectedNode == null) {
 			throw new Exception(
-					"No ha seleccionado ninguna carpeta del menú para borrar.");
+					"No ha seleccionado ninguna carpeta del menï¿½ para borrar.");
 		}
 
 		Categorias entity = (Categorias) selectedNode.getData();
@@ -232,7 +249,7 @@ public class CategoriasLogic implements ICategoriasLogic {
 			Categorias entityByName = categoriasDAO.findById(entity.getCodigoCate());
 
 			if (entity.getCodigoCate() == 1) {
-				throw new Exception("Esta categoría no se puede modificar");
+				throw new Exception("Esta categorï¿½a no se puede modificar");
 			}
 
 			if (entity.getEstadoRegistro() == null) {

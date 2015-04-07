@@ -75,6 +75,7 @@ public class LookDocsAuthenticationProvider implements AuthenticationProvider {
             grantedAuths.add(new SimpleGrantedAuthority("LECTOR"));
             final UserDetails principal = new User(email, password, grantedAuths);
             final Authentication auth = new UsernamePasswordAuthenticationToken(principal, password, grantedAuths);
+            
             ServletRequestAttributes servletRequestAttributes=(ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
             HttpSession session = servletRequestAttributes.getRequest().getSession();
             session.setAttribute("usuarioLector", usu);
@@ -85,6 +86,7 @@ public class LookDocsAuthenticationProvider implements AuthenticationProvider {
                 grantedAuths.add(new SimpleGrantedAuthority("ADMIN"));
                 final UserDetails principal = new User(email, password, grantedAuths);
                 final Authentication auth = new UsernamePasswordAuthenticationToken(principal, password, grantedAuths);
+                
                 ServletRequestAttributes servletRequestAttributes=(ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
                 HttpSession session = servletRequestAttributes.getRequest().getSession();
                 session.setAttribute("usuarioAdministrador", usu);

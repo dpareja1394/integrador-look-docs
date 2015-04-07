@@ -13,12 +13,16 @@
 	<http auto-config="true" access-denied-page="/InicioSesionLector.xhtml" access-decision-manager-ref="accessDecisionManager"  >
 			
 		<intercept-url pattern="/PantallasLector/*" access="LECTOR" />
+		<intercept-url pattern="/PantallasAdministrador/*" access="ADMIN" />
 		
-		<form-login login-page="/InicioSesionLector.xhtml" default-target-url="/PantallasLector/FeedPrincipalLector.xhtml" always-use-default-target="false" authentication-failure-url="/InicioSesionLector.xhtml?authfailed=true" />
+		<form-login login-page="/InicioSesionLector.xhtml" authentication-success-handler-ref="urlAuthenticationSuccessHandler"
+		  always-use-default-target="false" authentication-failure-url="/InicioSesionLector.xhtml?authfailed=true" /> 		
 		
 		<logout invalidate-session="true" logout-success-url="/InicioSesionLector.xhtml?loggedout=true" />
 		
 	</http>
+	
+	 <beans:bean id="urlAuthenticationSuccessHandler" class="co.edu.usbcali.lookdocs.utilities.UrlAuthenticationSuccessHandler" />
 	
 	<beans:bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
 		<beans:property name="decisionVoters">

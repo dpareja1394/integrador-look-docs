@@ -1,5 +1,6 @@
 package co.edu.usbcali.lookdocs.model.control;
 
+import co.edu.usbcali.lookdocs.model.Articulos;
 import co.edu.usbcali.lookdocs.model.Categorias;
 import co.edu.usbcali.lookdocs.model.dto.CategoriasDTO;
 
@@ -53,4 +54,6 @@ public interface ICategoriasLogic {
     public List<CategoriasDTO> getDataCategorias() throws Exception;
     
     public void deleteCategoriasbyNode(TreeNode selectedNode) throws Exception;
+    
+    public List<Articulos> consultaArticulosPorCategoria(Long idCate) throws Exception;
 }

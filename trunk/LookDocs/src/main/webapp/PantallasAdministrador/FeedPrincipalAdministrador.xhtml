@@ -51,7 +51,7 @@
 					resizable="false" closable="true" style="width:211px">
 					<p:layout
 						style="min-height:630px;height:auto; background-color:#E8E8E8 ; font-size: 0.9em; line-height: 150%;">
-						<p:layoutUnit position="north" size="200"
+						<p:layoutUnit position="north" size="200" resizable="flase"
 							style="background-color: #E8E8E8">
 							<p:panel  id="perfil" style="border-style: none;border: none">
 							<h:panelGrid columns="2" cellpadding="10">
@@ -71,10 +71,10 @@
 									url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/PantallasAdministrador/FeedPrincipalAdministrador.xhtml" />
 							</p:menu>
 						</p:layoutUnit>
-						<p:layoutUnit position="south" size="200"
-							style="background-color:#E8E8E8; width:211px">
-							<p:menu toggleable="true" style="width:211px;border-style: none;border: none">
-								<p:submenu label="Cuenta" style="width:211px">
+						<p:layoutUnit position="south" resizable="false"
+							style="background-color:#E8E8E8; width:211px; height: 151px; bottom: -68px">
+							<p:menu toggleable="true" style="width:211px; height: 151px;border-style: none;border: none;">
+								<p:submenu label="Cuenta" >
 									<p:menuitem value="Cambiar Contraseña" icon="ui-icon-disk"
 										onclick="PF('dlgEditPswAdmin').show();" update="messages" />
 									<p:menuitem value="Modificar Nombre de Usuario"
@@ -82,14 +82,15 @@
 										onclick="PF('dlgEditNombreUsuarioAdmin').show();"
 										update="messages" />
 								</p:submenu>
-								<p:submenu label="Sesion" style="width:211px">
+								<p:submenu label="Sesion" >
 									<p:menuitem value="Cerrar Sesion" icon="ui-icon-home"
-										action="#{usuariosView.cerrarSesionAdministrador}" />
+										action="#{usuariosView.cerrarSesionAdministrador}"
+										url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/j_spring_security_logout" />
 								</p:submenu>
 							</p:menu>
 						</p:layoutUnit>
-						<p:layoutUnit resizable="true" position="center"
-							style="width:211px;height:500;overflow">
+						<p:layoutUnit resizable="false" position="center"
+							style="width:211px;height: 386px;">
 
 							<p:contextMenu for="arbolCategorias">
 								<p:menuitem value="Crear Categoria"
@@ -108,7 +109,7 @@
 							<!-- ARBOL CARGADO DINAMICAMENTE -->
 							<p:panel id="panelCategorias" header="Categorias" style="width:190px;border-style: none;border: none">
 								<p:tree id="arbolCategorias" value="#{categoriasView.raiz}"
-									var="categorias" selectionMode="single" style="width:199px;border-style: none;border: none"
+									var="categorias" selectionMode="single" style="width:198px;border-style: none;border: none"
 									selection="#{categoriasView.selectedNode}" dynamic="true">
 									<p:treeNode expandedIcon="ui-icon-folder-open"
 										collapsedIcon="ui-icon-folder-collapsed">
@@ -153,7 +154,7 @@
 
 									<p:tree id="arbolColeccionesPAdmin"
 										value="#{coleccionesView.raizArbol}" var="colecciones"
-										selectionMode="single" style="width:211px;border-style: none;border: none"
+										selectionMode="single" style="width:196px;border-style: none;border: none"
 										selection="#{coleccionesView.seleccionarNodo}">
 										<p:treeNode icon="ui-icon-folder-collapsed" >
 											<h:outputText value="#{colecciones.nombre}" />
