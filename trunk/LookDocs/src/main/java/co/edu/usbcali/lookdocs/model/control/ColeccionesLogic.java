@@ -73,7 +73,7 @@ public class ColeccionesLogic implements IColeccionesLogic {
         	Colecciones compararNombre = coleccionesDAO.consultarColeccionPorNombreYUsuario(entity.getUsuarios(), entity.getNombre());
         	
         	if (compararNombre != null){
-        		throw new Exception("Ya existe este nombre de colección");
+        		throw new Exception("Ya existe este nombre de colecciï¿½n");
         	}
         	
             if (entity.getUsuarios() == null) {
@@ -420,4 +420,19 @@ public class ColeccionesLogic implements IColeccionesLogic {
     public List<Colecciones> consultarColeccionPorUsuario(Usuarios usuarios) throws Exception{
     	return coleccionesDAO.consultarColeccionPorUsuario(usuarios);
     }
+
+	@Override
+	@Transactional(readOnly = true)
+	public Colecciones consultarNodoSeleccionado(String nodoSeleccionado)
+			throws Exception {
+		
+		return coleccionesDAO.consultarNodoSeleccionado(nodoSeleccionado);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Colecciones consultarColeccionPorNombreYUsuario(Usuarios usuarios,
+			String nombreColeccion) throws Exception {
+		return coleccionesDAO.consultarColeccionPorNombreYUsuario(usuarios, nombreColeccion);
+	}
 }

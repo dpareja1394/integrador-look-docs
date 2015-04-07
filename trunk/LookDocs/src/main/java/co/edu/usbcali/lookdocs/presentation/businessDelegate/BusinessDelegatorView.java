@@ -792,4 +792,17 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
 	public List<Rss> getRssDadoIdColeccion(Long codigoCole) throws Exception {
 		return rssLogic.getRssDadoIdColeccion(codigoCole);
 	}
+
+	@Override
+	public Colecciones consultarNodoSeleccionado(String nodoSeleccionado)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return coleccionesLogic.consultarNodoSeleccionado(nodoSeleccionado);
+	}
+
+	@Override
+	public Colecciones consultarColeccionPorNombreYUsuario(Usuarios usuarios,
+			String nombreColeccion) throws Exception {
+		return coleccionesLogic.consultarColeccionPorNombreYUsuario(usuarios, nombreColeccion);
+	}
 }

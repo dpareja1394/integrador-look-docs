@@ -123,18 +123,17 @@
 								selectionMode="single" style="width:199px;border-style: none;border: none"
 								selection="#{coleccionesView.seleccionarNodo}">
 								<p:treeNode icon="ui-icon-folder-collapsed">
-									<h:outputText value="#{colecciones}" />
+									<h:outputLabel  value="#{colecciones}"  />
 									
-									<p:contextMenu for="arbolColecciones">
-										<p:menuitem value="Modificar Nombre" icon="ui-icon-open"
-											onclick="PF('dlg4').show();" />
-										<p:menuitem value="Eliminar" icon="ui-icon-close"
-											action="#{coleccionesView.action_delete()}" ajax="false" />
-										<p:menuitem value="Crear Coleccion" icon="ui-icon-add"
-											onclick="PF('dlg2').show();" />
+									<p:contextMenu for="arbolColecciones" >
+										<p:menuitem  value="Ver" icon="ui-icon-search"
+											action="#{coleccionesView.obtenerSeleccionado}"
+											 />  											
 									</p:contextMenu>
+									
 								</p:treeNode>
 							</p:tree>
+							
 							<!-- para buscar un componente  se utiliza @([id$=idDelComponente]) -->
 												
 						</p:tab>

@@ -87,4 +87,12 @@ public class ColeccionesDAO extends HibernateDaoImpl<Colecciones, Long>
     	return colecciones;
 		
 	}
+	
+	@Override
+	public Colecciones consultarNodoSeleccionado(String nodoSeleccionado) throws Exception{
+		String hql = "SELECT col FROM Colecciones col WHERE col.nombre = '"+nodoSeleccionado+"' ";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		Colecciones colecciones = (Colecciones) query.uniqueResult();
+		return colecciones;
+	}
 }

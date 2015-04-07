@@ -53,4 +53,8 @@ public interface IColeccionesLogic {
     public List<ColeccionesDTO> getDataColecciones() throws Exception;
     
     public List<Colecciones> consultarColeccionPorUsuario(Usuarios usuarios) throws Exception;
+    
+    public Colecciones consultarNodoSeleccionado(String nodoSeleccionado) throws Exception;
+    
+    public Colecciones consultarColeccionPorNombreYUsuario(Usuarios usuarios, String nombreColeccion) throws Exception;
 }

@@ -82,6 +82,8 @@ public class RssDAO extends HibernateDaoImpl<Rss, Long> implements IRssDAO {
     	List<Rss> losRss = query.list();
     	return losRss;
 	}
+	
+	
 
 
 }

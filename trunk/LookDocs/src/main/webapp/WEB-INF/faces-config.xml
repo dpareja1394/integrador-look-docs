@@ -625,4 +625,21 @@
 			<redirect />
 		</navigation-case>
 	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/PantallasLector/RSSLector.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>guardar</from-outcome>
+			<to-view-id>/PantallasLector/RSSLector.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>	
+	<navigation-rule>
+		<from-view-id>/PantallasLector/FeedPrincipalLector.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>visage</from-outcome>
+			<to-view-id>/PantallasLector/ViewRSSLector.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	
 </faces-config>

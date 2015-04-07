@@ -439,8 +439,7 @@ public class RssView implements Serializable {
 						.parseLong((String) somColeccionesRSSLector.getValue());
 				businessDelegatorView.guardarRSS(urlRss, idColeccion);
 				
-				FacesContext.getCurrentInstance().addMessage("",
-						new FacesMessage("Se ha guardado el RSS"));
+				
 				txtRSSBuscar.setValue("");
 				feedReaderMostrar.setValue("");
 			}
@@ -450,6 +449,12 @@ public class RssView implements Serializable {
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e
 							.getMessage(), e.getMessage()));
 		}
+		
+		
+	}
+	
+	public String mensajeGuardar(){
+		return "guardar";
 	}
 
 	public TimeZone getTimeZone() {

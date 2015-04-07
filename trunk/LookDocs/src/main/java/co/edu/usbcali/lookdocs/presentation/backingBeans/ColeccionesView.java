@@ -2,13 +2,16 @@ package co.edu.usbcali.lookdocs.presentation.backingBeans;
 
 import co.edu.usbcali.lookdocs.exceptions.*;
 import co.edu.usbcali.lookdocs.model.*;
+import co.edu.usbcali.lookdocs.model.dto.ArticulosDTO;
 import co.edu.usbcali.lookdocs.model.dto.ColeccionesDTO;
 import co.edu.usbcali.lookdocs.presentation.businessDelegate.*;
 import co.edu.usbcali.lookdocs.utilities.*;
 
 import org.primefaces.component.calendar.*;
 import org.primefaces.component.commandbutton.CommandButton;
+import org.primefaces.component.feedreader.FeedReader;
 import org.primefaces.component.inputtext.InputText;
+import org.primefaces.component.outputlabel.OutputLabel;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.model.DefaultTreeNode;
@@ -36,48 +39,58 @@ import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpSession;
 
-
 /**
  * @author Zathura Code Generator http://code.google.com/p/zathura
- * www.zathuracode.org
+ *         www.zathuracode.org
  *
  */
 @ManagedBean
 @ViewScoped
 public class ColeccionesView implements Serializable {
-    private static final long serialVersionUID = 1L;
-    private InputText txtNombre;
-    private InputText txtCodigoUsua_Usuarios;
-    private InputText txtCodigoCole;
-    private InputText txtModificarNombre;
-    private CommandButton btnSave;
-    private CommandButton btnModify;
-    private CommandButton btnDelete;
-    private CommandButton btnClear;
-    private List<ColeccionesDTO> data;
-    private ColeccionesDTO selectedColecciones;
-    private Colecciones entity;
-    private boolean showDialog;
-    private TreeNode raizArbol;
-    private TreeNode seleccionarNodo;
-    List<Colecciones> coleccionRaices;
-    List<Rss> coleccionHijos;
-    private Usuarios usuarioSecurity;
-    private String nameToSet;
-    private Usuarios usuarioAdmin;
-	
+	private static final long serialVersionUID = 1L;
+	private InputText txtNombre;
+	private InputText txtCodigoUsua_Usuarios;
+	private InputText txtCodigoCole;
+	private InputText txtModificarNombre;
+	private CommandButton btnSave;
+	private CommandButton btnModify;
+	private CommandButton btnDelete;
+	private CommandButton btnClear;
+	private List<ColeccionesDTO> data;
+	private ColeccionesDTO selectedColecciones;
+	private Colecciones entity;
+	private boolean showDialog;
+	private TreeNode raizArbol;
+	private TreeNode seleccionarNodo;
+	List<Colecciones> coleccionRaices;
+	List<Rss> coleccionHijos;
+	List<Rss> losHijos;
+	private Usuarios usuarioSecurity;
+	private String nameToSet;
+	private Usuarios usuarioAdmin;
+	private String urlRss;
+	private String nodoSeleccionado;
 	private SelectOneMenu somColeccionesLector;
 	private List<SelectItem> lasColeccionesItems;
 	private List<SelectItem> lasColeccionesItemsAdmin;
-    
-    @ManagedProperty(value = "#{BusinessDelegatorView}")
-    private IBusinessDelegatorView businessDelegatorView;
+	
+	
+	private List<Rss> rssPorColeccion;
 
-    public ColeccionesView() {
-        super();
-    }
-    
-    public void defaultModificar() {
+	private OutputLabel nombreColeccion;
+
+	private FeedReader feedReaderView;
+	
+	private CommandButton btnAbrirRss;
+
+	@ManagedProperty(value = "#{BusinessDelegatorView}")
+	private IBusinessDelegatorView businessDelegatorView;
+
+	public ColeccionesView() {
+		super();
+	}
+
+	public void defaultModificar() {
 		try {
 			Colecciones modificar = (Colecciones) seleccionarNodo.getData();
 			nameToSet = modificar.getNombre();
@@ -88,174 +101,178 @@ public class ColeccionesView implements Serializable {
 
 	}
 
+	public void rowEventListener(RowEditEvent e) {
+		try {
+			ColeccionesDTO coleccionesDTO = (ColeccionesDTO) e.getObject();
 
-    public void rowEventListener(RowEditEvent e) {
-        try {
-            ColeccionesDTO coleccionesDTO = (ColeccionesDTO) e.getObject();
+			if (txtNombre == null) {
+				txtNombre = new InputText();
+			}
 
-            if (txtNombre == null) {
-                txtNombre = new InputText();
-            }
+			txtNombre.setValue(coleccionesDTO.getNombre());
 
-            txtNombre.setValue(coleccionesDTO.getNombre());
+			if (txtCodigoUsua_Usuarios == null) {
+				txtCodigoUsua_Usuarios = new InputText();
+			}
 
-            if (txtCodigoUsua_Usuarios == null) {
-                txtCodigoUsua_Usuarios = new InputText();
-            }
+			txtCodigoUsua_Usuarios.setValue(coleccionesDTO
+					.getCodigoUsua_Usuarios());
 
-            txtCodigoUsua_Usuarios.setValue(coleccionesDTO.getCodigoUsua_Usuarios());
+			if (txtCodigoCole == null) {
+				txtCodigoCole = new InputText();
+			}
 
-            if (txtCodigoCole == null) {
-                txtCodigoCole = new InputText();
-            }
+			txtCodigoCole.setValue(coleccionesDTO.getCodigoCole());
 
-            txtCodigoCole.setValue(coleccionesDTO.getCodigoCole());
+			Long codigoCole = FacesUtils.checkLong(txtCodigoCole);
+			entity = businessDelegatorView.getColecciones(codigoCole);
 
-            Long codigoCole = FacesUtils.checkLong(txtCodigoCole);
-            entity = businessDelegatorView.getColecciones(codigoCole);
+			action_modify();
+		} catch (Exception ex) {
+		}
+	}
 
-            action_modify();
-        } catch (Exception ex) {
-        }
-    }
+	public String action_new() {
+		action_clear();
+		selectedColecciones = null;
+		setShowDialog(true);
 
-    public String action_new() {
-        action_clear();
-        selectedColecciones = null;
-        setShowDialog(true);
+		return "";
+	}
 
-        return "";
-    }
+	public String action_clear() {
+		entity = null;
+		selectedColecciones = null;
 
-    public String action_clear() {
-        entity = null;
-        selectedColecciones = null;
+		if (txtNombre != null) {
+			txtNombre.setValue(null);
+			txtNombre.setDisabled(true);
+		}
 
-        if (txtNombre != null) {
-            txtNombre.setValue(null);
-            txtNombre.setDisabled(true);
-        }
+		if (txtCodigoUsua_Usuarios != null) {
+			txtCodigoUsua_Usuarios.setValue(null);
+			txtCodigoUsua_Usuarios.setDisabled(true);
+		}
 
-        if (txtCodigoUsua_Usuarios != null) {
-            txtCodigoUsua_Usuarios.setValue(null);
-            txtCodigoUsua_Usuarios.setDisabled(true);
-        }
+		if (txtCodigoCole != null) {
+			txtCodigoCole.setValue(null);
+			txtCodigoCole.setDisabled(false);
+		}
 
-        if (txtCodigoCole != null) {
-            txtCodigoCole.setValue(null);
-            txtCodigoCole.setDisabled(false);
-        }
+		if (btnSave != null) {
+			btnSave.setDisabled(true);
+		}
 
-        if (btnSave != null) {
-            btnSave.setDisabled(true);
-        }
+		if (btnDelete != null) {
+			btnDelete.setDisabled(true);
+		}
 
-        if (btnDelete != null) {
-            btnDelete.setDisabled(true);
-        }
+		return "";
+	}
 
-        return "";
-    }
+	public void listener_txtId() {
+		try {
+			Long codigoCole = FacesUtils.checkLong(txtCodigoCole);
+			entity = (codigoCole != null) ? businessDelegatorView
+					.getColecciones(codigoCole) : null;
+		} catch (Exception e) {
+			entity = null;
+		}
 
-    public void listener_txtId() {
-        try {
-            Long codigoCole = FacesUtils.checkLong(txtCodigoCole);
-            entity = (codigoCole != null)
-                ? businessDelegatorView.getColecciones(codigoCole) : null;
-        } catch (Exception e) {
-            entity = null;
-        }
+		if (entity == null) {
+			txtNombre.setDisabled(false);
+			txtCodigoUsua_Usuarios.setDisabled(false);
+			txtCodigoCole.setDisabled(false);
+			btnSave.setDisabled(false);
+		} else {
+			txtNombre.setValue(entity.getNombre());
+			txtNombre.setDisabled(false);
+			txtCodigoUsua_Usuarios.setValue(entity.getUsuarios()
+					.getCodigoUsua());
+			txtCodigoUsua_Usuarios.setDisabled(false);
+			txtCodigoCole.setValue(entity.getCodigoCole());
+			txtCodigoCole.setDisabled(true);
+			btnSave.setDisabled(false);
 
-        if (entity == null) {
-            txtNombre.setDisabled(false);
-            txtCodigoUsua_Usuarios.setDisabled(false);
-            txtCodigoCole.setDisabled(false);
-            btnSave.setDisabled(false);
-        } else {
-            txtNombre.setValue(entity.getNombre());
-            txtNombre.setDisabled(false);
-            txtCodigoUsua_Usuarios.setValue(entity.getUsuarios().getCodigoUsua());
-            txtCodigoUsua_Usuarios.setDisabled(false);
-            txtCodigoCole.setValue(entity.getCodigoCole());
-            txtCodigoCole.setDisabled(true);
-            btnSave.setDisabled(false);
+			if (btnDelete != null) {
+				btnDelete.setDisabled(false);
+			}
+		}
+	}
 
-            if (btnDelete != null) {
-                btnDelete.setDisabled(false);
-            }
-        }
-    }
+	public String action_edit(ActionEvent evt) {
+		selectedColecciones = (ColeccionesDTO) (evt.getComponent()
+				.getAttributes().get("selectedColecciones"));
+		txtNombre.setValue(selectedColecciones.getNombre());
+		txtNombre.setDisabled(false);
+		txtCodigoUsua_Usuarios.setValue(selectedColecciones
+				.getCodigoUsua_Usuarios());
+		txtCodigoUsua_Usuarios.setDisabled(false);
+		txtCodigoCole.setValue(selectedColecciones.getCodigoCole());
+		txtCodigoCole.setDisabled(true);
+		btnSave.setDisabled(false);
+		setShowDialog(true);
 
-    public String action_edit(ActionEvent evt) {
-        selectedColecciones = (ColeccionesDTO) (evt.getComponent()
-                                                   .getAttributes()
-                                                   .get("selectedColecciones"));
-        txtNombre.setValue(selectedColecciones.getNombre());
-        txtNombre.setDisabled(false);
-        txtCodigoUsua_Usuarios.setValue(selectedColecciones.getCodigoUsua_Usuarios());
-        txtCodigoUsua_Usuarios.setDisabled(false);
-        txtCodigoCole.setValue(selectedColecciones.getCodigoCole());
-        txtCodigoCole.setDisabled(true);
-        btnSave.setDisabled(false);
-        setShowDialog(true);
+		return "";
+	}
 
-        return "";
-    }
-    
-    public void consultarArbolColecciones(){
-    	try {
-    		retornarUsuario();
-    		coleccionRaices =  getListaNodos();
-    		raizArbol = new DefaultTreeNode("Raiz", null);
-    		lasColeccionesItems = null;
-    		agregarNodos(coleccionRaices, raizArbol);
+	public void consultarArbolColecciones() {
+		try {
+			retornarUsuario();
+			coleccionRaices = getListaNodos();
+			raizArbol = new DefaultTreeNode("Raiz", null);
+			lasColeccionesItems = null;
+			agregarNodos(coleccionRaices, raizArbol);
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
-    }
-    
-    private void agregarNodos(List<Colecciones> colecciones, TreeNode padre){
-//    	for (Colecciones coleccion : colecciones) {
-//    		TreeNode no = new DefaultTreeNode(coleccion, padre);
-//		}
-    	
-    	try {
-			for(Colecciones coleccion : colecciones){
-				TreeNode padres = new DefaultTreeNode(coleccion.getNombre(), padre);
-				coleccionHijos = businessDelegatorView.getRssDadoIdColeccion(coleccion.getCodigoCole());
+	}
+
+	private void agregarNodos(List<Colecciones> colecciones, TreeNode padre) {
+
+		try {
+			for (Colecciones coleccion : colecciones) {
+				TreeNode padres = new DefaultTreeNode(coleccion.getNombre(),
+						padre);
+				coleccionHijos = businessDelegatorView
+						.getRssDadoIdColeccion(coleccion.getCodigoCole());
 				for (Rss rss : coleccionHijos) {
 					TreeNode hijos = new DefaultTreeNode(rss.getUrl(), padres);
-				}	
+				}
 			}
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
-    	
-    }
-    @PostConstruct
-    public void retornarUsuario(){
-//    	HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-//        usuario = (Usuarios) httpSession.getAttribute("usuarioLector");
-    	ServletRequestAttributes servletRequestAttributes=(ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-    	HttpSession session = servletRequestAttributes.getRequest().getSession();
-    	usuarioSecurity = (Usuarios) session.getAttribute("usuarioLector");
-    }
-    
-    public List<Colecciones> getListaNodos(){   	
-    	
-        
-    	if(coleccionRaices == null){
-    		try {
-    			return coleccionRaices = businessDelegatorView.consultarColeccionPorUsuario(usuarioSecurity);
+
+	}
+
+	@PostConstruct
+	public void retornarUsuario() {
+		// HttpSession httpSession = (HttpSession)
+		// FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+		// usuario = (Usuarios) httpSession.getAttribute("usuarioLector");
+		ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder
+				.currentRequestAttributes();
+		HttpSession session = servletRequestAttributes.getRequest()
+				.getSession();
+		usuarioSecurity = (Usuarios) session.getAttribute("usuarioLector");
+	}
+
+	public List<Colecciones> getListaNodos() {
+
+		if (coleccionRaices == null) {
+			try {
+				return coleccionRaices = businessDelegatorView
+						.consultarColeccionPorUsuario(usuarioSecurity);
 			} catch (Exception e) {
 				FacesUtils.addErrorMessage(e.getMessage());
 			}
-    	}
-    	return coleccionRaices;
-    	
-    }
-    
-    public void crearColeccionAdmin() {
+		}
+		return coleccionRaices;
+
+	}
+
+	public void crearColeccionAdmin() {
 		try {
 			Colecciones entity = new Colecciones();
 
@@ -281,8 +298,8 @@ public class ColeccionesView implements Serializable {
 		}
 
 	}
-    
-    public List<Rss> losRssPorColeccion(Long codigoColeccion){
+
+	public List<Rss> losRssPorColeccion(Long codigoColeccion) {
 		try {
 			return businessDelegatorView.getRssDadoIdColeccion(codigoColeccion);
 		} catch (Exception e) {
@@ -291,23 +308,23 @@ public class ColeccionesView implements Serializable {
 		return null;
 	}
 
-    public String action_save() {
-        try {
-            if ((selectedColecciones == null) && (entity == null)) {
-                action_create();
-            } else {
-                action_modify();
-            }
+	public String action_save() {
+		try {
+			if ((selectedColecciones == null) && (entity == null)) {
+				action_create();
+			} else {
+				action_modify();
+			}
 
-            data = null;
-        } catch (Exception e) {
-            FacesUtils.addErrorMessage(e.getMessage());
-        }
+			data = null;
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
 
-        return "";
-    }
-    
-    public void eliminarColeccionAdmin() throws Exception {
+		return "";
+	}
+
+	public void eliminarColeccionAdmin() throws Exception {
 		try {
 
 			Colecciones coleccionSeleccionada = (Colecciones) seleccionarNodo
@@ -322,21 +339,20 @@ public class ColeccionesView implements Serializable {
 			throw e;
 		}
 	}
-    
-    public void modificarColeccionAdmin() {
+
+	public void modificarColeccionAdmin() {
 		try {
 			Colecciones coleccionSeleccionada = (Colecciones) seleccionarNodo
-					.getData();			
+					.getData();
 
 			if (entity == null) {
-				Long codigoCole = coleccionSeleccionada.getCodigoCole();				
+				Long codigoCole = coleccionSeleccionada.getCodigoCole();
 				entity = businessDelegatorView.getColecciones(codigoCole);
 			}
 
-			
 			coleccionSeleccionada.setNombre(txtModificarNombre.getValue()
 					.toString());
-			
+
 			businessDelegatorView.updateColecciones(coleccionSeleccionada);
 			coleccionRaices = null;
 			entity = null;
@@ -348,45 +364,48 @@ public class ColeccionesView implements Serializable {
 			data = null;
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
-		
+
 	}
 
-    public String action_create() {
-        try {
-            Colecciones entity = new Colecciones();
+	public String action_create() {
+		try {
+			Colecciones entity = new Colecciones();
 
-            //Long codigoCole = FacesUtils.checkLong(txtCodigoCole);
-            //entity.setCodigoCole(codigoCole);
-            
-            HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-            Usuarios usuarios = (Usuarios) httpSession.getAttribute("usuarioLector");
-            
-                    
-            
-            //entity.setNombre(FacesUtils.checkString(txtNombre));
-            entity.setNombre(txtNombre.getValue().toString());
-            entity.setUsuarios(usuarios);
-            /*entity.setUsuarios((FacesUtils.checkLong(txtCodigoUsua_Usuarios) != null)
-                ? businessDelegatorView.getUsuarios(FacesUtils.checkLong(
-                        txtCodigoUsua_Usuarios)) : null);*/
-            
-            businessDelegatorView.saveColecciones(entity);
-            coleccionRaices = null;
-            entity = null;
-            consultarArbolColecciones();
-            FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYSAVED);
-            //action_clear();
-            txtNombre.setValue(null);
-            txtNombre.setValue("");
-        } catch (Exception e) {
-            entity = null;
-            FacesUtils.addErrorMessage(e.getMessage());
-        }
+			// Long codigoCole = FacesUtils.checkLong(txtCodigoCole);
+			// entity.setCodigoCole(codigoCole);
 
-        return "";
-    }
-    
-    public void consultarArbolColeccionesAdmin() {
+			HttpSession httpSession = (HttpSession) FacesContext
+					.getCurrentInstance().getExternalContext().getSession(true);
+			Usuarios usuarios = (Usuarios) httpSession
+					.getAttribute("usuarioLector");
+
+			// entity.setNombre(FacesUtils.checkString(txtNombre));
+			entity.setNombre(txtNombre.getValue().toString());
+			entity.setUsuarios(usuarios);
+			/*
+			 * entity.setUsuarios((FacesUtils.checkLong(txtCodigoUsua_Usuarios)
+			 * != null) ?
+			 * businessDelegatorView.getUsuarios(FacesUtils.checkLong(
+			 * txtCodigoUsua_Usuarios)) : null);
+			 */
+
+			businessDelegatorView.saveColecciones(entity);
+			coleccionRaices = null;
+			entity = null;
+			consultarArbolColecciones();
+			FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYSAVED);
+			// action_clear();
+			txtNombre.setValue(null);
+			txtNombre.setValue("");
+		} catch (Exception e) {
+			entity = null;
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
+
+		return "";
+	}
+
+	public void consultarArbolColeccionesAdmin() {
 		try {
 			retornarUsuarioAdmin();
 			coleccionRaices = getListaNodosAdmin();
@@ -397,71 +416,81 @@ public class ColeccionesView implements Serializable {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
 	}
-    
-    private void agregarNodosAdmin(List<Colecciones> colecciones, TreeNode padre) {
+
+	private void agregarNodosAdmin(List<Colecciones> colecciones, TreeNode padre) {
 		for (Colecciones coleccion : colecciones) {
 			TreeNode no = new DefaultTreeNode(coleccion, padre);
 		}
 	}
 
-    public String action_modify() {
-        try {
-        	Colecciones coleccionSeleccionada = (Colecciones) seleccionarNodo.getData();
-        	//HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-            //Usuarios usuarios = (Usuarios) httpSession.getAttribute("usuarioLector");
-        	
-            if (entity == null) {
-            	Long codigoCole = coleccionSeleccionada.getCodigoCole();
-                //Long codigoCole = new Long(selectedColecciones.getCodigoCole());
-                entity = businessDelegatorView.getColecciones(codigoCole);
-            }
-            
-            
-            //txtModificarNombre.setValue(coleccionSeleccionada.getNombre());
-            /*Usuarios usuarios = new Usuarios();
-            usuarios.setCodigoUsua(3L);
-            usuarios.setNombre("Benito Camelas");
-            usuarios.setClave("benito");
-            usuarios.setEmail("jaime@gmail.com");
-            usuarios.setFechaCreacion(new Date());
-            usuarios.setUsuCrea("Jaimito");
-            usuarios.setEstadoRegistro("A");*/
+	public String action_modify() {
+		try {
+			Colecciones coleccionSeleccionada = (Colecciones) seleccionarNodo
+					.getData();
+			// HttpSession httpSession = (HttpSession)
+			// FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+			// Usuarios usuarios = (Usuarios)
+			// httpSession.getAttribute("usuarioLector");
 
-            //entity.setNombre(txtModificarNombre.getValue().toString());
-            coleccionSeleccionada.setNombre(txtModificarNombre.getValue().toString());
-            //entity.setUsuarios(usuarios);
-            //entity.setNombre(FacesUtils.checkString(txtNombre));
-            /*entity.setUsuarios((FacesUtils.checkLong(txtCodigoUsua_Usuarios) != null)
-                ? businessDelegatorView.getUsuarios(FacesUtils.checkLong(
-                        txtCodigoUsua_Usuarios)) : null);*/
-            businessDelegatorView.updateColecciones(coleccionSeleccionada);
-            coleccionRaices = null;
-            entity = null;
-            consultarArbolColecciones();
-            FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYMODIFIED);
-            txtModificarNombre.setValue(null);
-            txtModificarNombre.setValue("");
-        } catch (Exception e) {
-            data = null;
-            FacesUtils.addErrorMessage(e.getMessage());
-        }
+			if (entity == null) {
+				Long codigoCole = coleccionSeleccionada.getCodigoCole();
+				// Long codigoCole = new
+				// Long(selectedColecciones.getCodigoCole());
+				entity = businessDelegatorView.getColecciones(codigoCole);
+			}
 
-        return "";
-    }
-    
-    @PostConstruct
-	public void retornarUsuarioAdmin() {
-		HttpSession httpSession = (HttpSession)
-		FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-		usuarioAdmin = (Usuarios) httpSession.getAttribute("usuarioAdministrador");
-		/*ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder
-				.currentRequestAttributes();
-		HttpSession session = servletRequestAttributes.getRequest()
-				.getSession();
-		usuarioSecurity = (Usuarios) session.getAttribute("usuarioAdministrador");*/
+			// txtModificarNombre.setValue(coleccionSeleccionada.getNombre());
+			/*
+			 * Usuarios usuarios = new Usuarios(); usuarios.setCodigoUsua(3L);
+			 * usuarios.setNombre("Benito Camelas");
+			 * usuarios.setClave("benito");
+			 * usuarios.setEmail("jaime@gmail.com");
+			 * usuarios.setFechaCreacion(new Date());
+			 * usuarios.setUsuCrea("Jaimito"); usuarios.setEstadoRegistro("A");
+			 */
+
+			// entity.setNombre(txtModificarNombre.getValue().toString());
+			coleccionSeleccionada.setNombre(txtModificarNombre.getValue()
+					.toString());
+			// entity.setUsuarios(usuarios);
+			// entity.setNombre(FacesUtils.checkString(txtNombre));
+			/*
+			 * entity.setUsuarios((FacesUtils.checkLong(txtCodigoUsua_Usuarios)
+			 * != null) ?
+			 * businessDelegatorView.getUsuarios(FacesUtils.checkLong(
+			 * txtCodigoUsua_Usuarios)) : null);
+			 */
+			businessDelegatorView.updateColecciones(coleccionSeleccionada);
+			coleccionRaices = null;
+			entity = null;
+			consultarArbolColecciones();
+			FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYMODIFIED);
+			txtModificarNombre.setValue(null);
+			txtModificarNombre.setValue("");
+		} catch (Exception e) {
+			data = null;
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
+
+		return "";
 	}
-    
-    public List<Colecciones> getListaNodosAdmin() {
+
+	@PostConstruct
+	public void retornarUsuarioAdmin() {
+		HttpSession httpSession = (HttpSession) FacesContext
+				.getCurrentInstance().getExternalContext().getSession(true);
+		usuarioAdmin = (Usuarios) httpSession
+				.getAttribute("usuarioAdministrador");
+		/*
+		 * ServletRequestAttributes servletRequestAttributes =
+		 * (ServletRequestAttributes) RequestContextHolder
+		 * .currentRequestAttributes(); HttpSession session =
+		 * servletRequestAttributes.getRequest() .getSession(); usuarioSecurity
+		 * = (Usuarios) session.getAttribute("usuarioAdministrador");
+		 */
+	}
+
+	public List<Colecciones> getListaNodosAdmin() {
 
 		if (coleccionRaices == null) {
 			try {
@@ -474,196 +503,213 @@ public class ColeccionesView implements Serializable {
 		return coleccionRaices;
 
 	}
-    
-    public void editarNombre(){
-    	Colecciones coleccionSeleccionada = (Colecciones) seleccionarNodo.getData();
-    	txtModificarNombre.setValue(coleccionSeleccionada.getNombre());
-    }
 
-    public String action_delete_datatable(ActionEvent evt) {
-        try {
-            selectedColecciones = (ColeccionesDTO) (evt.getComponent()
-                                                       .getAttributes()
-                                                       .get("selectedColecciones"));
+	public void editarNombre() {
+		Colecciones coleccionSeleccionada = (Colecciones) seleccionarNodo
+				.getData();
+		txtModificarNombre.setValue(coleccionSeleccionada.getNombre());
+	}
 
-            Long codigoCole = new Long(selectedColecciones.getCodigoCole());
-            entity = businessDelegatorView.getColecciones(codigoCole);
-            action_delete();
-        } catch (Exception e) {
-            FacesUtils.addErrorMessage(e.getMessage());
-        }
+	public String action_delete_datatable(ActionEvent evt) {
+		try {
+			selectedColecciones = (ColeccionesDTO) (evt.getComponent()
+					.getAttributes().get("selectedColecciones"));
 
-        return "";
-    }
+			Long codigoCole = new Long(selectedColecciones.getCodigoCole());
+			entity = businessDelegatorView.getColecciones(codigoCole);
+			action_delete();
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
 
-    public String action_delete_master() {
-        try {
-            Long codigoCole = FacesUtils.checkLong(txtCodigoCole);
-            entity = businessDelegatorView.getColecciones(codigoCole);
-            action_delete();
-        } catch (Exception e) {
-            FacesUtils.addErrorMessage(e.getMessage());
-        }
+		return "";
+	}
 
-        return "";
-    }
+	public String action_delete_master() {
+		try {
+			Long codigoCole = FacesUtils.checkLong(txtCodigoCole);
+			entity = businessDelegatorView.getColecciones(codigoCole);
+			action_delete();
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
 
-    public void action_delete() throws Exception {
-        try {
-        	
-        	Colecciones coleccionSeleccionada = (Colecciones) seleccionarNodo.getData();
-            businessDelegatorView.deleteColecciones(coleccionSeleccionada);
-            FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYDELETED);
-            //action_clear();
-            coleccionRaices=null;
-            consultarArbolColecciones();
-            data = null;
-        } catch (Exception e) {
-            throw e;
-        }
-    }
+		return "";
+	}
 
-    public String action_closeDialog() {
-        setShowDialog(false);
-        action_clear();
+	public void action_delete() throws Exception {
+		try {
 
-        return "";
-    }
+			Colecciones coleccionSeleccionada = (Colecciones) seleccionarNodo
+					.getData();
+			businessDelegatorView.deleteColecciones(coleccionSeleccionada);
+			FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYDELETED);
+			// action_clear();
+			coleccionRaices = null;
+			consultarArbolColecciones();
+			data = null;
+		} catch (Exception e) {
+			throw e;
+		}
+	}
 
-    public String actionDeleteDataTableEditable(ActionEvent evt) {
-        try {
-            selectedColecciones = (ColeccionesDTO) (evt.getComponent()
-                                                       .getAttributes()
-                                                       .get("selectedColecciones"));
+	public String action_closeDialog() {
+		setShowDialog(false);
+		action_clear();
 
-            Long codigoCole = new Long(selectedColecciones.getCodigoCole());
-            entity = businessDelegatorView.getColecciones(codigoCole);
-            businessDelegatorView.deleteColecciones(entity);
-            data.remove(selectedColecciones);
-            FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYDELETED);
-            action_clear();
-        } catch (Exception e) {
-            FacesUtils.addErrorMessage(e.getMessage());
-        }
+		return "";
+	}
 
-        return "";
-    }
+	public String actionDeleteDataTableEditable(ActionEvent evt) {
+		try {
+			selectedColecciones = (ColeccionesDTO) (evt.getComponent()
+					.getAttributes().get("selectedColecciones"));
 
-    public String action_modifyWitDTO(Long codigoCole, String nombre,
-        Long codigoUsua_Usuarios) throws Exception {
-        try {
-            entity.setNombre(FacesUtils.checkString(nombre));
-            businessDelegatorView.updateColecciones(entity);
-            FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYMODIFIED);
-        } catch (Exception e) {
-            //renderManager.getOnDemandRenderer("ColeccionesView").requestRender();
-            FacesUtils.addErrorMessage(e.getMessage());
-            throw e;
-        }
+			Long codigoCole = new Long(selectedColecciones.getCodigoCole());
+			entity = businessDelegatorView.getColecciones(codigoCole);
+			businessDelegatorView.deleteColecciones(entity);
+			data.remove(selectedColecciones);
+			FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYDELETED);
+			action_clear();
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
 
-        return "";
-    }
+		return "";
+	}
 
-    public InputText getTxtNombre() {
-        return txtNombre;
-    }
+	public String action_modifyWitDTO(Long codigoCole, String nombre,
+			Long codigoUsua_Usuarios) throws Exception {
+		try {
+			entity.setNombre(FacesUtils.checkString(nombre));
+			businessDelegatorView.updateColecciones(entity);
+			FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYMODIFIED);
+		} catch (Exception e) {
+			// renderManager.getOnDemandRenderer("ColeccionesView").requestRender();
+			FacesUtils.addErrorMessage(e.getMessage());
+			throw e;
+		}
 
-    public void setTxtNombre(InputText txtNombre) {
-        this.txtNombre = txtNombre;
-    }
+		return "";
+	}
 
-    public InputText getTxtCodigoUsua_Usuarios() {
-        return txtCodigoUsua_Usuarios;
-    }
+	public String obtenerSeleccionado() {
+	
+		try {
+			nodoSeleccionado = seleccionarNodo.getData().toString();
+			nombreColeccion = null;
+			ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder
+					.currentRequestAttributes();
+			HttpSession session = servletRequestAttributes.getRequest()
+					.getSession();
+			session.setAttribute("nodoSeleccionado", nodoSeleccionado);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		return "visage";
+	}
 
-    public void setTxtCodigoUsua_Usuarios(InputText txtCodigoUsua_Usuarios) {
-        this.txtCodigoUsua_Usuarios = txtCodigoUsua_Usuarios;
-    }
+	public InputText getTxtNombre() {
+		return txtNombre;
+	}
 
-    public InputText getTxtCodigoCole() {
-        return txtCodigoCole;
-    }
+	public void setTxtNombre(InputText txtNombre) {
+		this.txtNombre = txtNombre;
+	}
 
-    public void setTxtCodigoCole(InputText txtCodigoCole) {
-        this.txtCodigoCole = txtCodigoCole;
-    }
+	public InputText getTxtCodigoUsua_Usuarios() {
+		return txtCodigoUsua_Usuarios;
+	}
 
-    public List<ColeccionesDTO> getData() {
-        try {
-            if (data == null) {
-                data = businessDelegatorView.getDataColecciones();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+	public void setTxtCodigoUsua_Usuarios(InputText txtCodigoUsua_Usuarios) {
+		this.txtCodigoUsua_Usuarios = txtCodigoUsua_Usuarios;
+	}
 
-        return data;
-    }
+	public InputText getTxtCodigoCole() {
+		return txtCodigoCole;
+	}
 
-    public void setData(List<ColeccionesDTO> coleccionesDTO) {
-        this.data = coleccionesDTO;
-    }
+	public void setTxtCodigoCole(InputText txtCodigoCole) {
+		this.txtCodigoCole = txtCodigoCole;
+	}
 
-    public ColeccionesDTO getSelectedColecciones() {
-        return selectedColecciones;
-    }
+	public List<ColeccionesDTO> getData() {
+		try {
+			if (data == null) {
+				data = businessDelegatorView.getDataColecciones();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-    public void setSelectedColecciones(ColeccionesDTO colecciones) {
-        this.selectedColecciones = colecciones;
-    }
+		return data;
+	}
 
-    public CommandButton getBtnSave() {
-        return btnSave;
-    }
+	public void setData(List<ColeccionesDTO> coleccionesDTO) {
+		this.data = coleccionesDTO;
+	}
 
-    public void setBtnSave(CommandButton btnSave) {
-        this.btnSave = btnSave;
-    }
+	public ColeccionesDTO getSelectedColecciones() {
+		return selectedColecciones;
+	}
 
-    public CommandButton getBtnModify() {
-        return btnModify;
-    }
+	public void setSelectedColecciones(ColeccionesDTO colecciones) {
+		this.selectedColecciones = colecciones;
+	}
 
-    public void setBtnModify(CommandButton btnModify) {
-        this.btnModify = btnModify;
-    }
+	public CommandButton getBtnSave() {
+		return btnSave;
+	}
 
-    public CommandButton getBtnDelete() {
-        return btnDelete;
-    }
+	public void setBtnSave(CommandButton btnSave) {
+		this.btnSave = btnSave;
+	}
 
-    public void setBtnDelete(CommandButton btnDelete) {
-        this.btnDelete = btnDelete;
-    }
+	public CommandButton getBtnModify() {
+		return btnModify;
+	}
 
-    public CommandButton getBtnClear() {
-        return btnClear;
-    }
+	public void setBtnModify(CommandButton btnModify) {
+		this.btnModify = btnModify;
+	}
 
-    public void setBtnClear(CommandButton btnClear) {
-        this.btnClear = btnClear;
-    }
+	public CommandButton getBtnDelete() {
+		return btnDelete;
+	}
 
-    public TimeZone getTimeZone() {
-        return java.util.TimeZone.getDefault();
-    }
+	public void setBtnDelete(CommandButton btnDelete) {
+		this.btnDelete = btnDelete;
+	}
 
-    public IBusinessDelegatorView getBusinessDelegatorView() {
-        return businessDelegatorView;
-    }
+	public CommandButton getBtnClear() {
+		return btnClear;
+	}
 
-    public void setBusinessDelegatorView(
-        IBusinessDelegatorView businessDelegatorView) {
-        this.businessDelegatorView = businessDelegatorView;
-    }
+	public void setBtnClear(CommandButton btnClear) {
+		this.btnClear = btnClear;
+	}
 
-    public boolean isShowDialog() {
-        return showDialog;
-    }
+	public TimeZone getTimeZone() {
+		return java.util.TimeZone.getDefault();
+	}
 
-    public void setShowDialog(boolean showDialog) {
-        this.showDialog = showDialog;
-    }
+	public IBusinessDelegatorView getBusinessDelegatorView() {
+		return businessDelegatorView;
+	}
+
+	public void setBusinessDelegatorView(
+			IBusinessDelegatorView businessDelegatorView) {
+		this.businessDelegatorView = businessDelegatorView;
+	}
+
+	public boolean isShowDialog() {
+		return showDialog;
+	}
+
+	public void setShowDialog(boolean showDialog) {
+		this.showDialog = showDialog;
+	}
 
 	public TreeNode getRaizArbol() {
 		return raizArbol;
@@ -696,11 +742,11 @@ public class ColeccionesView implements Serializable {
 	public void setTxtModificarNombre(InputText txtModificarNombre) {
 		this.txtModificarNombre = txtModificarNombre;
 	}
-	
+
 	public void setLasColeccionesItems(List<SelectItem> lasColeccionesItems) {
 		this.lasColeccionesItems = lasColeccionesItems;
 	}
-	
+
 	public void setLasColeccionesItemsAdmin(
 			List<SelectItem> lasColeccionesItemsAdmin) {
 		this.lasColeccionesItemsAdmin = lasColeccionesItemsAdmin;
@@ -724,7 +770,6 @@ public class ColeccionesView implements Serializable {
 		return lasColeccionesItemsAdmin;
 	}
 
-	
 	public SelectOneMenu getSomColeccionesLector() {
 		return somColeccionesLector;
 	}
@@ -733,6 +778,11 @@ public class ColeccionesView implements Serializable {
 		this.somColeccionesLector = somColeccionesLector;
 	}
 
+	public void cargarRSSSelecciondo(){
+	
+	
+	}
+	
 	public List<SelectItem> getLasColeccionesItems() {
 		try {
 			if (lasColeccionesItems == null) {
@@ -750,6 +800,72 @@ public class ColeccionesView implements Serializable {
 		}
 		return lasColeccionesItems;
 	}
+	
+	
+
+	public OutputLabel getNombreColeccion() {
+		
+		try {		
+			
+			
+			if(nombreColeccion == null){
+				ServletRequestAttributes servletRequestAttributes=(ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		    	HttpSession session = servletRequestAttributes.getRequest().getSession();
+		    	nodoSeleccionado= session.getAttribute("nodoSeleccionado").toString();
+		    	
+				Colecciones colecciones = businessDelegatorView.consultarNodoSeleccionado(nodoSeleccionado);
+				if(colecciones==null){
+					mostrarRSS();
+				}else{
+					nombreColeccion = new OutputLabel();
+					nombreColeccion.setValue(nodoSeleccionado);
+					colecciones = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, nodoSeleccionado);
+					rssPorColeccion = businessDelegatorView.getRssDadoIdColeccion(colecciones.getCodigoCole());
+					
+				}
+			}else{
+				ServletRequestAttributes servletRequestAttributes=(ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		    	HttpSession session = servletRequestAttributes.getRequest().getSession();
+		    	nodoSeleccionado= session.getAttribute("nodoSeleccionado").toString();
+
+				Colecciones colecciones = businessDelegatorView.consultarNodoSeleccionado(nodoSeleccionado);
+				if(colecciones==null){
+					mostrarRSS();
+				}else{
+					nombreColeccion.setValue(nodoSeleccionado);
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		nodoSeleccionado = null;
+		return nombreColeccion;
+		
+	}
+	
+	public String actionMostrarFeed(ActionEvent evt) {
+		try {
+			Rss rss = (Rss) (evt.getComponent()
+					.getAttributes().get("selectedUrl"));
+			urlRss = rss.getUrl(); 
+
+			feedReaderView.setValue(urlRss);
+			
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
+
+		return "";
+	}
+			
+	public void mostrarRSS(){
+		feedReaderView = new FeedReader();
+		feedReaderView.setValue(nodoSeleccionado);
+	}
+
+	public void setNombreColeccion(OutputLabel nombreColeccion) {
+		this.nombreColeccion = nombreColeccion;
+	}
 
 	/**
 	 * @return the nameToSet
@@ -759,13 +875,43 @@ public class ColeccionesView implements Serializable {
 	}
 
 	/**
-	 * @param nameToSet the nameToSet to set
+	 * @param nameToSet
+	 *            the nameToSet to set
 	 */
 	public void setNameToSet(String nameToSet) {
 		this.nameToSet = nameToSet;
 	}
-	
-	
-    
-    
+
+	public FeedReader getFeedReaderView() {
+		return feedReaderView;
+	}
+
+	public void setFeedReaderView(FeedReader feedReaderView) {
+		this.feedReaderView = feedReaderView;
+	}
+
+	public List<Rss> getRssPorColeccion() {
+		return rssPorColeccion;
+	}
+
+	public void setRssPorColeccion(List<Rss> rssPorColeccion) {
+		this.rssPorColeccion = rssPorColeccion;
+	}
+
+	public CommandButton getBtnAbrirRss() {
+		return btnAbrirRss;
+	}
+
+	public void setBtnAbrirRss(CommandButton btnAbrirRss) {
+		this.btnAbrirRss = btnAbrirRss;
+	}
+
+	public String getUrlRss() {
+		return urlRss;
+	}
+
+	public void setUrlRss(String urlRss) {
+		this.urlRss = urlRss;
+	}
+
 }
