@@ -36,6 +36,8 @@
 						<f:facet name="right">
 							<p:commandButton id="btnModificarNombreColeccion" type="button"
 								title="Modificar Nombre" icon="ui-icon-arrowrefresh-1-w" />
+							<p:commandButton id="btnEliminarColeccion" type="button" 
+							title="Eliminar Coleccion" icon="ui-icon-trash" /> 	
 						</f:facet>
 
 
@@ -46,7 +48,7 @@
 							<p:column headerText="URL">
 								<p:outputLabel value="#{rss.url}" />
 							</p:column>
-							<p:column headerText="Opciones">
+							<p:column style="width:32px;text-align: center">
 
 								<p:tooltip for="btnMostrarFeed" value="Mostrar"
 									showEffect="fade" hideEffect="fade" />
@@ -58,7 +60,9 @@
 									<f:attribute name="selectedUrl" value="#{rss}" />
 									
 								</p:commandButton>
-
+								<p:commandButton id="btnEleminar" title="Eliminar Feed" icon="ui-icon-trash"  /> 
+									
+								
 
 							</p:column>
 						</p:dataTable>

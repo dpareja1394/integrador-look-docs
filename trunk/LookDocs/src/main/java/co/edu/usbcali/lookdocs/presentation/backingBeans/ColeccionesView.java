@@ -808,22 +808,22 @@ public class ColeccionesView implements Serializable {
 		try {		
 			
 			
-			if(nombreColeccion == null){
+			//if(nombreColeccion == null){
 				ServletRequestAttributes servletRequestAttributes=(ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 		    	HttpSession session = servletRequestAttributes.getRequest().getSession();
-		    	nodoSeleccionado= session.getAttribute("nodoSeleccionado").toString();
+		    	nodoSeleccionado = session.getAttribute("nodoSeleccionado").toString();
 		    	
-				Colecciones colecciones = businessDelegatorView.consultarNodoSeleccionado(nodoSeleccionado);
-				if(colecciones==null){
+				Colecciones coleccionNombre = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, nodoSeleccionado);
+				if(coleccionNombre==null){
 					mostrarRSS();
 				}else{
 					nombreColeccion = new OutputLabel();
 					nombreColeccion.setValue(nodoSeleccionado);
-					colecciones = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, nodoSeleccionado);
-					rssPorColeccion = businessDelegatorView.getRssDadoIdColeccion(colecciones.getCodigoCole());
-					
+					coleccionNombre = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, nodoSeleccionado);
+					rssPorColeccion = businessDelegatorView.getRssDadoIdColeccion(coleccionNombre.getCodigoCole());
 				}
-			}else{
+				
+			/*}else{
 				ServletRequestAttributes servletRequestAttributes=(ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 		    	HttpSession session = servletRequestAttributes.getRequest().getSession();
 		    	nodoSeleccionado= session.getAttribute("nodoSeleccionado").toString();
@@ -834,9 +834,9 @@ public class ColeccionesView implements Serializable {
 				}else{
 					nombreColeccion.setValue(nodoSeleccionado);
 				}
-			}
+			}*/
 		} catch (Exception e) {
-			// TODO: handle exception
+			FacesUtils.addErrorMessage(e.getMessage());
 		}
 		nodoSeleccionado = null;
 		return nombreColeccion;
