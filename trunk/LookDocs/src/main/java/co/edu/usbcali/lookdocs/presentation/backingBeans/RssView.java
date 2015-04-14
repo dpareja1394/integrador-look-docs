@@ -65,6 +65,8 @@ public class RssView implements Serializable {
 	private CommandButton btnBuscarRSS;
 	private FeedReader feedReaderMostrar;
 	private SelectOneMenu somColeccionesRSSLector;
+	private Usuarios usuarioSecurity;
+	private String urlSeleccionado;
 
 	@ManagedProperty(value = "#{BusinessDelegatorView}")
 	private IBusinessDelegatorView businessDelegatorView;
@@ -231,7 +233,7 @@ public class RssView implements Serializable {
 
 			Long codigoRss = new Long(selectedRss.getCodigoRss());
 			entity = businessDelegatorView.getRss(codigoRss);
-			action_delete();
+			//action_delete();
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
@@ -243,23 +245,57 @@ public class RssView implements Serializable {
 		try {
 			Long codigoRss = FacesUtils.checkLong(txtCodigoRss);
 			entity = businessDelegatorView.getRss(codigoRss);
-			action_delete();
+			//action_delete();
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
 
 		return "";
 	}
-
-	public void action_delete() throws Exception {
+	
+	public void consultarUrl(ActionEvent evt){
+		Rss rss = (Rss) (evt.getComponent()
+				.getAttributes().get("selectedUrl"));
+		urlSeleccionado = rss.getUrl(); 	
+		
+	}
+	
+	public String action_delete() throws Exception {
 		try {
-			businessDelegatorView.deleteRss(entity);
+			
+			
+			Rss codigo = businessDelegatorView.consultarCodigoRss(urlSeleccionado);
+			
+			ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder
+					.currentRequestAttributes();
+			HttpSession session = servletRequestAttributes.getRequest()
+					.getSession();
+			usuarioSecurity = (Usuarios) session.getAttribute("usuarioLector");
+			
+			Entradas laEntrada = businessDelegatorView.consultarEntradas(codigo);
+			if(laEntrada != null){
+				businessDelegatorView.deleteEntradas(laEntrada);
+			}
+			
+			String nombreColeccion = businessDelegatorView.nombreColeccionPorCodigoRss(codigo);
+			Colecciones laColeccion = new Colecciones();
+			laColeccion = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, nombreColeccion);
+			
+			ColeccionesRss laColeccionRss = businessDelegatorView.consultarColeccionesRss(codigo, laColeccion);
+			if(laColeccionRss != null){
+				businessDelegatorView.deleteColeccionesRss(laColeccionRss);
+			}
+			
+			businessDelegatorView.deleteRss(codigo);
 			FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYDELETED);
-			action_clear();
-			data = null;
+			//action_clear();
+			
 		} catch (Exception e) {
+			data = null;
 			throw e;
 		}
+		
+		return "rssEliminado";
 	}
 
 	public String action_closeDialog() {
@@ -455,7 +491,7 @@ public class RssView implements Serializable {
 		return "";
 		
 	}
-	
+
 	
 
 	public TimeZone getTimeZone() {
@@ -478,5 +514,7 @@ public class RssView implements Serializable {
 	public void setShowDialog(boolean showDialog) {
 		this.showDialog = showDialog;
 	}
+	
+	
 
 }
