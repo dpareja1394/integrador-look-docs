@@ -11,7 +11,7 @@
 <f:metadata>
 	<f:viewAction id="metadata" action="#{categoriasView.consultarArbol()}" />
 	<f:viewAction id="perfilUsuario" action="#{usuariosView.perfil()}" />
-	<f:viewAction action="#{coleccionesView.consultarArbolColeccionesAdmin()}" />
+	
 </f:metadata>
 
 <f:view contentType="text/html">
@@ -25,7 +25,7 @@
 			href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/iconLD.png" />
 		<link rel="stylesheet" type="text/css"
 			href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/style.css" />
-			
+
 	</h:head>
 
 	<h:body>
@@ -105,9 +105,10 @@
 									action="#{categoriasView.action_delete()}"
 									style=";font-size: 0.9em" ajax="false" />
 							</p:contextMenu>
-							
+
 							<!-- ARBOL CARGADO DINAMICAMENTE -->
-							<p:panel id="panelCategorias" header="Categorias" style="width:190px;border-style: none;border: none">
+							<p:panel id="panelCategorias" header="Categorias"
+								style="width:190px;border-style: none;border: none">
 								<p:tree id="arbolCategorias" value="#{categoriasView.raiz}"
 									var="categorias" selectionMode="single" style="width:198px;border-style: none;border: none"
 									selection="#{categoriasView.selectedNode}" dynamic="true">
@@ -118,61 +119,9 @@
 								</p:tree>
 							</p:panel>
 							<!-- FIN ARBOL CARGADO DINAMICAMENTE -->
+
+
 							
-
-							<p:dialog header="Crear Coleccion" widgetVar="dlg2Admin" 
-								height="100" resizable="true">
-								<h:panelGrid columns="2" cellpadding="10">
-									<p:outputLabel value="Nombre" />
-									<p:inputText id="txtNombrePAdmin"
-										binding="#{coleccionesView.txtNombre}" />
-
-									<p:commandButton id="btnCrearPAdmin" value="Aceptar" ajax="false"
-										binding="#{coleccionesView.btnSave}"
-										action="#{coleccionesView.crearColeccionAdmin()}" />
-								</h:panelGrid>
-							</p:dialog>
-
-							<p:dialog header="Modificar Coleecion" widgetVar="dlg4Admin"
-								height="100" resizable="true">
-								<h:panelGrid columns="2">
-									<p:outputLabel value="Nuevo Nombre" />
-									<p:inputText id="txtModificarNombrePAdmin"
-										binding="#{coleccionesView.txtModificarNombre}" />
-
-									<p:commandButton id="btnModificarPAdmin" value="Modificar"
-										ajax="false" binding="#{coleccionesView.btnModify}"
-										action="#{coleccionesView.modificarColeccionAdmin()}" />
-								</h:panelGrid>
-							</p:dialog>
-
-							<p:accordionPanel >
-								<p:tab title="Colecciones" style="width:211px;border-style: none;border: none">
-									<p:commandLink value="Crear Coleccion" type="button"
-										onclick="PF('dlg2Admin').show();" />
-									
-
-									<p:tree id="arbolColeccionesPAdmin"
-										value="#{coleccionesView.raizArbol}" var="colecciones"
-										selectionMode="single" style="width:196px;border-style: none;border: none"
-										selection="#{coleccionesView.seleccionarNodo}">
-										<p:treeNode icon="ui-icon-folder-collapsed" >
-											<h:outputText value="#{colecciones.nombre}" />
-											<p:contextMenu for="arbolColeccionesPAdmin">
-												<p:menuitem value="Modificar Nombre" icon="ui-icon-open"
-													onclick="PF('dlg4Admin').show();" />
-												<p:menuitem value="Eliminar" icon="ui-icon-close"
-													action="#{coleccionesView.eliminarColeccionAdmin()}" ajax="false" />
-												<p:menuitem value="Crear Coleccion" icon="ui-icon-add"
-													onclick="PF('dlg2Admin').show();" />
-											</p:contextMenu>
-										</p:treeNode>
-
-									</p:tree>
-
-
-								</p:tab>
-							</p:accordionPanel>
 						</p:layoutUnit>
 					</p:layout>
 
