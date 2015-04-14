@@ -3,6 +3,7 @@ package co.edu.usbcali.lookdocs.dataaccess.dao;
 import co.edu.usbcali.lookdocs.dataaccess.api.HibernateDaoImpl;
 import co.edu.usbcali.lookdocs.model.Colecciones;
 import co.edu.usbcali.lookdocs.model.ColeccionesRss;
+import co.edu.usbcali.lookdocs.model.Rss;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -77,5 +78,13 @@ public class ColeccionesRssDAO extends HibernateDaoImpl<ColeccionesRss, Long>
     	ColeccionesRss coleccionesRss = (ColeccionesRss) query.uniqueResult();
     	return coleccionesRss;
 		
+	}
+	
+	@Override
+	public ColeccionesRss consultarColeccionesRss(Rss rss, Colecciones coleccion){
+		String hql = "SELECT colrss FROM ColeccionesRss colrss, Rss WHERE colrss.rss.codigoRss = "+rss.getCodigoRss()+"AND colrss.colecciones.codigoCole ="+coleccion.getCodigoCole();
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		ColeccionesRss coleccionesRss = (ColeccionesRss) query.uniqueResult();
+		return coleccionesRss;
 	}
 }

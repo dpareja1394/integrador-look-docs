@@ -649,4 +649,28 @@
 			<redirect />
 		</navigation-case>
 	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/PantallasLector/ViewRSSLector.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>coleccion Eliminada</from-outcome>
+			<to-view-id>/PantallasLector/FeedPrincipalLector.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/PantallasLector/ViewRSSLector.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>modificado</from-outcome>
+			<to-view-id>/PantallasLector/ViewRSSLector.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/PantallasLector/ViewRSSLector.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>rssEliminado</from-outcome>
+			<to-view-id>/PantallasLector/FeedPrincipalLector.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
 	</faces-config>

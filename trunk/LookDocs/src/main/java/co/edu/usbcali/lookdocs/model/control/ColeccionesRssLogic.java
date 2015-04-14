@@ -404,7 +404,7 @@ public class ColeccionesRssLogic implements IColeccionesRssLogic {
 	public void guardarColeccionesRSS(ColeccionesRss coleccionesRss)
 			throws Exception {
 		if(coleccionesRss.getColecciones()==null){
-			throw new Exception("No ha llegado la colección");
+			throw new Exception("No ha llegado la colecciï¿½n");
 		}
 		if(coleccionesRss.getRss()==null){
 			throw new Exception("No ha llegado el RSS");
@@ -420,8 +420,16 @@ public class ColeccionesRssLogic implements IColeccionesRssLogic {
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	public Long getConsecutivo(String sqlName) throws Exception {
 		if (sqlName.trim().equals("")) {
-			throw new Exception("El nombre del Sql no debe estar vacío");
+			throw new Exception("El nombre del Sql no debe estar vacï¿½o");
 		}
 		return coleccionesRssDAO.getConsecutivo(sqlName);
+	}	
+	
+	@Override
+	@Transactional(readOnly = true)
+	public ColeccionesRss consultarColeccionesRss(Rss rss, Colecciones coleccion){
+		return coleccionesRssDAO.consultarColeccionesRss(rss, coleccion);
 	}
+	
+	
 }

@@ -1,14 +1,11 @@
 package co.edu.usbcali.lookdocs.model.control;
 
 import co.edu.usbcali.lookdocs.model.Entradas;
+import co.edu.usbcali.lookdocs.model.Rss;
 import co.edu.usbcali.lookdocs.model.dto.EntradasDTO;
 
 import java.math.BigDecimal;
-
 import java.util.*;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -53,4 +50,6 @@ public interface IEntradasLogic {
     public Long findTotalNumberEntradas() throws Exception;
 
     public List<EntradasDTO> getDataEntradas() throws Exception;
+    
+    public Entradas consultarEntradas(Rss rss);
 }

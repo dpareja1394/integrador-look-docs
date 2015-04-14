@@ -2,6 +2,7 @@ package co.edu.usbcali.lookdocs.dataaccess.dao;
 
 import co.edu.usbcali.lookdocs.dataaccess.api.HibernateDaoImpl;
 import co.edu.usbcali.lookdocs.model.Colecciones;
+import co.edu.usbcali.lookdocs.model.Rss;
 import co.edu.usbcali.lookdocs.model.Usuarios;
 
 import org.hibernate.Query;
@@ -94,5 +95,30 @@ public class ColeccionesDAO extends HibernateDaoImpl<Colecciones, Long>
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		Colecciones colecciones = (Colecciones) query.uniqueResult();
 		return colecciones;
+	}
+	
+	@Override
+	public Rss consultarCodigoRss(String url){
+		String hql = "SELECT rss FROM Rss rss WHERE rss.url = '"+url+"'" ;
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		Rss elrss = (Rss) query.uniqueResult();
+		return elrss;
+	}
+	
+	/*select c.nombre
+	from colecciones c, colecciones_rss cr, rss r 
+	where r.codigo_rss = cr.rss_codigo_rss AND c.codigo_cole = cr.colecciones_codigo_cole*/ 
+	
+	@Override
+	public String nombreColeccionPorCodigoRss(Rss rss){
+		
+//		select c.nombre
+//		from colecciones c, colecciones_rss cr, rss r 
+//		where '1' = cr.rss_codigo_rss AND c.codigo_cole = cr.colecciones_codigo_cole
+		
+		String hql = "SELECT col.nombre FROM Colecciones col, ColeccionesRss colrss, Rss rss WHERE col.codigoCole = colrss.colecciones.codigoCole AND colrss.rss.codigoRss = "+rss.getCodigoRss();		
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		String elNombreColeccion = (String) query.uniqueResult();
+		return elNombreColeccion;
 	}
 }

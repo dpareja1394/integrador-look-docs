@@ -56,6 +56,9 @@ public class ColeccionesView implements Serializable {
 	private CommandButton btnModify;
 	private CommandButton btnDelete;
 	private CommandButton btnClear;
+	private CommandButton btnMostrarFD;
+	private CommandButton btnEleminarUrl;
+	private CommandButton btnEliminarColeccion;
 	private List<ColeccionesDTO> data;
 	private ColeccionesDTO selectedColecciones;
 	private Colecciones entity;
@@ -70,6 +73,7 @@ public class ColeccionesView implements Serializable {
 	private Usuarios usuarioAdmin;
 	private String urlRss;
 	private String nodoSeleccionado;
+	private String nuevoNombre;
 	private SelectOneMenu somColeccionesLector;
 	private List<SelectItem> lasColeccionesItems;
 	private List<SelectItem> lasColeccionesItemsAdmin;
@@ -425,19 +429,28 @@ public class ColeccionesView implements Serializable {
 
 	public String action_modify() {
 		try {
-			Colecciones coleccionSeleccionada = (Colecciones) seleccionarNodo
-					.getData();
+			Colecciones coleccionSeleccionada = new Colecciones();
+			
+			String newName = txtModificarNombre.getValue().toString();
+			String coleccionAModificar = (String) nombreColeccion.getValue();
+			setNuevoNombre(newName);
+			nodoSeleccionado = newName;
+			ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder
+					.currentRequestAttributes();
+			HttpSession session = servletRequestAttributes.getRequest()
+					.getSession();
+			session.setAttribute("nodoSeleccionado", nodoSeleccionado);
 			// HttpSession httpSession = (HttpSession)
 			// FacesContext.getCurrentInstance().getExternalContext().getSession(true);
 			// Usuarios usuarios = (Usuarios)
 			// httpSession.getAttribute("usuarioLector");
 
-			if (entity == null) {
+			/*if (entity == null) {
 				Long codigoCole = coleccionSeleccionada.getCodigoCole();
 				// Long codigoCole = new
 				// Long(selectedColecciones.getCodigoCole());
 				entity = businessDelegatorView.getColecciones(codigoCole);
-			}
+			}*/
 
 			// txtModificarNombre.setValue(coleccionSeleccionada.getNombre());
 			/*
@@ -450,8 +463,11 @@ public class ColeccionesView implements Serializable {
 			 */
 
 			// entity.setNombre(txtModificarNombre.getValue().toString());
-			coleccionSeleccionada.setNombre(txtModificarNombre.getValue()
-					.toString());
+			
+						
+			coleccionSeleccionada = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, coleccionAModificar);
+			coleccionSeleccionada.setNombre(newName);
+			
 			// entity.setUsuarios(usuarios);
 			// entity.setNombre(FacesUtils.checkString(txtNombre));
 			/*
@@ -461,9 +477,13 @@ public class ColeccionesView implements Serializable {
 			 * txtCodigoUsua_Usuarios)) : null);
 			 */
 			businessDelegatorView.updateColecciones(coleccionSeleccionada);
+			
+			nombreColeccion = new OutputLabel();
+			nombreColeccion.setValue(newName);
+			
 			coleccionRaices = null;
 			entity = null;
-			consultarArbolColecciones();
+			consultarArbolColecciones();			
 			FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYMODIFIED);
 			txtModificarNombre.setValue(null);
 			txtModificarNombre.setValue("");
@@ -471,9 +491,11 @@ public class ColeccionesView implements Serializable {
 			data = null;
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
-
-		return "";
+		
+		return "modificado";
 	}
+	
+	
 
 	@PostConstruct
 	public void retornarUsuarioAdmin() {
@@ -537,11 +559,15 @@ public class ColeccionesView implements Serializable {
 		return "";
 	}
 
-	public void action_delete() throws Exception {
+	public String action_delete() throws Exception {
 		try {
 
-			Colecciones coleccionSeleccionada = (Colecciones) seleccionarNodo
-					.getData();
+			Colecciones coleccionSeleccionada = new Colecciones();
+			
+			String coleccionSelect = (String) nombreColeccion.getValue();
+			
+			coleccionSeleccionada = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, coleccionSelect);
+			
 			businessDelegatorView.deleteColecciones(coleccionSeleccionada);
 			FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYDELETED);
 			// action_clear();
@@ -551,6 +577,8 @@ public class ColeccionesView implements Serializable {
 		} catch (Exception e) {
 			throw e;
 		}
+		
+	return "coleccion Eliminada";
 	}
 
 	public String action_closeDialog() {
@@ -808,33 +836,52 @@ public class ColeccionesView implements Serializable {
 		try {		
 			
 			
-			//if(nombreColeccion == null){
+			if(nombreColeccion == null){
+				
 				ServletRequestAttributes servletRequestAttributes=(ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 		    	HttpSession session = servletRequestAttributes.getRequest().getSession();
 		    	nodoSeleccionado = session.getAttribute("nodoSeleccionado").toString();
 		    	
+		    	
+		    	
 				Colecciones coleccionNombre = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, nodoSeleccionado);
 				if(coleccionNombre==null){
-					mostrarRSS();
+					btnMostrarFD = new CommandButton();
+					btnMostrarFD.setDisabled(true);
+					mostrarRSS(nodoSeleccionado);
 				}else{
 					nombreColeccion = new OutputLabel();
 					nombreColeccion.setValue(nodoSeleccionado);
 					coleccionNombre = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, nodoSeleccionado);
 					rssPorColeccion = businessDelegatorView.getRssDadoIdColeccion(coleccionNombre.getCodigoCole());
+					if (rssPorColeccion.size()>0){
+						btnEliminarColeccion = new CommandButton();
+			    		btnEliminarColeccion.setDisabled(true);
+			    	}
 				}
 				
-			/*}else{
+			}else{
 				ServletRequestAttributes servletRequestAttributes=(ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 		    	HttpSession session = servletRequestAttributes.getRequest().getSession();
-		    	nodoSeleccionado= session.getAttribute("nodoSeleccionado").toString();
-
-				Colecciones colecciones = businessDelegatorView.consultarNodoSeleccionado(nodoSeleccionado);
-				if(colecciones==null){
-					mostrarRSS();
+		    	nodoSeleccionado = session.getAttribute("nodoSeleccionado").toString();		    	
+		    	
+		    	
+				Colecciones coleccionNombre = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, nodoSeleccionado);
+				if(coleccionNombre==null){
+					btnMostrarFD = new CommandButton();
+					btnMostrarFD.setDisabled(true);
+					mostrarRSS(nodoSeleccionado);
 				}else{
+					nombreColeccion = new OutputLabel();
 					nombreColeccion.setValue(nodoSeleccionado);
+					coleccionNombre = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, nodoSeleccionado);
+					rssPorColeccion = businessDelegatorView.getRssDadoIdColeccion(coleccionNombre.getCodigoCole());
+					if (rssPorColeccion.size()>0){
+						btnEliminarColeccion = new CommandButton();
+			    		btnEliminarColeccion.setDisabled(true);
+			    	}
 				}
-			}*/
+			}
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
@@ -858,9 +905,27 @@ public class ColeccionesView implements Serializable {
 		return "";
 	}
 			
-	public void mostrarRSS(){
-		feedReaderView = new FeedReader();
-		feedReaderView.setValue(nodoSeleccionado);
+	public void mostrarRSS(String url){
+		
+		try {
+			
+			Rss codigoRss = businessDelegatorView.consultarCodigoRss(url);
+			String elNombreColeccion = businessDelegatorView.nombreColeccionPorCodigoRss(codigoRss);
+			nombreColeccion = new OutputLabel();
+			nombreColeccion.setValue(elNombreColeccion);
+			Colecciones coleccionNombre = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, elNombreColeccion);
+			rssPorColeccion = businessDelegatorView.getRssDadoIdColeccion(coleccionNombre.getCodigoCole());
+			if (rssPorColeccion.size()>0){
+				btnEliminarColeccion = new CommandButton();
+	    		btnEliminarColeccion.setDisabled(true);
+	    	}
+			feedReaderView = new FeedReader();
+			feedReaderView.setValue(nodoSeleccionado);
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
+		
+		
 	}
 
 	public void setNombreColeccion(OutputLabel nombreColeccion) {
@@ -913,5 +978,40 @@ public class ColeccionesView implements Serializable {
 	public void setUrlRss(String urlRss) {
 		this.urlRss = urlRss;
 	}
+
+	public CommandButton getBtnMostrarFD() {
+		return btnMostrarFD;
+	}
+
+	public void setBtnMostrarFD(CommandButton btnMostrarFD) {
+		this.btnMostrarFD = btnMostrarFD;
+	}
+
+	public CommandButton getBtnEleminarUrl() {
+		return btnEleminarUrl;
+	}
+
+	public void setBtnEleminarUrl(CommandButton btnEleminarUrl) {
+		this.btnEleminarUrl = btnEleminarUrl;
+	}
+
+	public CommandButton getBtnEliminarColeccion() {
+		return btnEliminarColeccion;
+	}
+
+	public void setBtnEliminarColeccion(CommandButton btnEliminarColeccion) {
+		this.btnEliminarColeccion = btnEliminarColeccion;
+	}
+
+	public String getNuevoNombre() {
+		return nuevoNombre;
+	}
+
+	public void setNuevoNombre(String nuevoNombre) {
+		this.nuevoNombre = nuevoNombre;
+	}
+	
+	
+	
 
 }

@@ -363,8 +363,16 @@ public interface IBusinessDelegatorView {
     
     public List<Articulos> consultaArticulosPorCategoria(Long idCate) throws Exception;
     
- public Colecciones consultarNodoSeleccionado(String nodoSeleccionado) throws Exception;
+    public Colecciones consultarNodoSeleccionado(String nodoSeleccionado) throws Exception;
     
     public Colecciones consultarColeccionPorNombreYUsuario(Usuarios usuarios, String nombreColeccion) throws Exception;
+    
+    public Rss consultarCodigoRss(String url);
+    
+    public String nombreColeccionPorCodigoRss(Rss rss);
+    
+    public Entradas consultarEntradas(Rss rss);
+    
+    public ColeccionesRss consultarColeccionesRss(Rss rss, Colecciones coleccion);
     
 }

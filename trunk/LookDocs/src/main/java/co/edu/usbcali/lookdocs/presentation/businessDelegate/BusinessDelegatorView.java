@@ -810,4 +810,24 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
 			String nombreColeccion) throws Exception {
 		return coleccionesLogic.consultarColeccionPorNombreYUsuario(usuarios, nombreColeccion);
 	}
+	
+	@Override
+	public Rss consultarCodigoRss(String url){
+		return coleccionesLogic.consultarCodigoRss(url);
+	}
+	
+	@Override
+	public String nombreColeccionPorCodigoRss(Rss rss){
+		return coleccionesLogic.nombreColeccionPorCodigoRss(rss);
+	}
+	
+	@Override
+	public Entradas consultarEntradas(Rss rss){
+		return entradasLogic.consultarEntradas(rss);
+	}
+	
+	@Override
+	public ColeccionesRss consultarColeccionesRss(Rss rss, Colecciones coleccion){
+		return coleccionesRssLogic.consultarColeccionesRss(rss, coleccion);
+	}
 }

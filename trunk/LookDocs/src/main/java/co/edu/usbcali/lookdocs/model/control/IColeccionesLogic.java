@@ -1,6 +1,7 @@
 package co.edu.usbcali.lookdocs.model.control;
 
 import co.edu.usbcali.lookdocs.model.Colecciones;
+import co.edu.usbcali.lookdocs.model.Rss;
 import co.edu.usbcali.lookdocs.model.Usuarios;
 import co.edu.usbcali.lookdocs.model.dto.ColeccionesDTO;
 
@@ -57,4 +58,8 @@ public interface IColeccionesLogic {
     public Colecciones consultarNodoSeleccionado(String nodoSeleccionado) throws Exception;
     
     public Colecciones consultarColeccionPorNombreYUsuario(Usuarios usuarios, String nombreColeccion) throws Exception;
+    
+    public Rss consultarCodigoRss(String url);
+    
+    public String nombreColeccionPorCodigoRss(Rss rss);
 }

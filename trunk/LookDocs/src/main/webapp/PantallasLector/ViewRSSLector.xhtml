@@ -34,33 +34,51 @@
 
 						</f:facet>
 						<f:facet name="right">
-							<p:commandButton id="btnModificarNombreColeccion" type="button"
+							<p:commandButton id="btnModificarNombreColeccion" type="button" onclick="PF('dlgMNC').show();"
 								title="Modificar Nombre" icon="ui-icon-arrowrefresh-1-w" />
-							<p:commandButton id="btnEliminarColeccion" type="button" 
-							title="Eliminar Coleccion" icon="ui-icon-trash" /> 	
+								
+							<p:commandButton id="btnEliminarColeccion" binding="#{coleccionesView.btnEliminarColeccion}" 
+							 action="#{coleccionesView.action_delete}" title="Eliminar Coleccion" icon="ui-icon-trash" onclick="#{coleccionesView.consultarArbolColecciones()}" /> 	
 						</f:facet>
 
 
 					</p:toolbar>
+					
+					<p:dialog header="Modificar Nombre" widgetVar="dlgMNC"  resizable="true" >
+						
+						<p:panelGrid  >
+							<p:outputLabel value="Nuevo Nombre  " />
+							<p:inputText id="txtModificarColeccion" binding="#{coleccionesView.txtModificarNombre}"/>
+							
+							<p:separator/>
+							<p:commandButton id="btnModificarColeccion" value="Modificar" onclick="#{coleccionesView.consultarArbolColecciones()}" 
+							action="#{coleccionesView.action_modify}" update="@([id$=idform])" />
+						</p:panelGrid>
+						
+					</p:dialog>
+					
 					<p:panel id="panelRssColeccion" header="Lista de RSS">
 						<p:dataTable id="tablaRss"
 							value="#{coleccionesView.rssPorColeccion}" var="rss">
 							<p:column headerText="URL">
 								<p:outputLabel value="#{rss.url}" />
 							</p:column>
-							<p:column style="width:32px;text-align: center">
+							<p:column style="width:70px;text-align: center">
 
 								<p:tooltip for="btnMostrarFeed" value="Mostrar"
 									showEffect="fade" hideEffect="fade" />
 
-								<p:commandButton id="btnMostrarFeed" ajax="false"
+								<p:commandButton id="btnMostrarFeed" ajax="false" binding="#{coleccionesView.btnMostrarFD}" 
 									actionListener="#{coleccionesView.actionMostrarFeed}"
 									title="Mostrar Feed" icon="ui-icon-search"
-									style="width: 1.5em;height: 1.5em;" update="panelRssColeccion, feedReader, @([id$=tablaRss])">
-									<f:attribute name="selectedUrl" value="#{rss}" />
-									
+									update="panelRssColeccion, feedReader, @([id$=tablaRss])">
+									<f:attribute name="selectedUrl" value="#{rss}" />									
 								</p:commandButton>
-								<p:commandButton id="btnEleminar" title="Eliminar Feed" icon="ui-icon-trash"  /> 
+								
+								<p:commandButton id="btnEleminar" binding="#{coleccionesView.btnEleminarUrl}" title="Eliminar" icon="ui-icon-trash" 
+								actionListener="#{rssView.consultarUrl}" action="#{rssView.action_delete}" update="@([id$=panelRssColeccion]), @([id$=feedReader]) , @([id$=tablaRss])" >
+									<f:attribute name="selectedUrl" value="#{rss}" />
+								</p:commandButton> 
 									
 								
 

@@ -1,6 +1,9 @@
 package co.edu.usbcali.lookdocs.model.control;
 
+import co.edu.usbcali.lookdocs.model.Colecciones;
 import co.edu.usbcali.lookdocs.model.ColeccionesRss;
+import co.edu.usbcali.lookdocs.model.Entradas;
+import co.edu.usbcali.lookdocs.model.Rss;
 import co.edu.usbcali.lookdocs.model.dto.ColeccionesRssDTO;
 
 import java.math.BigDecimal;
@@ -58,4 +61,8 @@ public interface IColeccionesRssLogic {
     public void guardarColeccionesRSS(ColeccionesRss coleccionesRss) throws Exception;
     
     public Long getConsecutivo(String sqlName) throws Exception;
+    
+    public ColeccionesRss consultarColeccionesRss(Rss rss, Colecciones coleccion);
+    
+    
 }

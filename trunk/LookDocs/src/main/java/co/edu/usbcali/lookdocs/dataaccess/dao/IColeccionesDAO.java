@@ -4,6 +4,7 @@ import java.util.List;
 
 import co.edu.usbcali.lookdocs.dataaccess.api.Dao;
 import co.edu.usbcali.lookdocs.model.Colecciones;
+import co.edu.usbcali.lookdocs.model.Rss;
 import co.edu.usbcali.lookdocs.model.Usuarios;
 
 
@@ -17,4 +18,6 @@ public interface IColeccionesDAO extends Dao<Colecciones, Long> {
 	public List<Colecciones> consultarColeccionPorUsuario(Usuarios usuarios) throws Exception;
 	public Colecciones consultarColeccionPorNombreYUsuario(Usuarios usuarios, String nombreColeccion) throws Exception;
 	public Colecciones consultarNodoSeleccionado(String nodoSeleccionado) throws Exception; 
+	public Rss consultarCodigoRss(String url);
+	public String nombreColeccionPorCodigoRss(Rss rss);
 }
