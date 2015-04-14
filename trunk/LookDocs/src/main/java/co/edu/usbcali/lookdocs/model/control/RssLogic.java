@@ -407,17 +407,22 @@ public class RssLogic implements IRssLogic {
 		if(urlRss.trim().equals("")==true){
 			throw new Exception("Debe ingresar el url del sitio");
 		}
+		
+		if(urlRss.length()>500){
+    		throw new Exception("El url tiene mas de 500 caracteres");
+    	}
+		
 		if(idColeccion<=0){
-			throw new Exception("Debe seleccionar una colección para agregar el RSS");
+			throw new Exception("Debe seleccionar una colecciï¿½n para agregar el RSS");
 		}
 		
 		Colecciones colecciones = coleccionesDAO.findById(idColeccion);
 		if(colecciones==null){
-			throw new Exception("No existe la colección");
+			throw new Exception("No existe la colecciï¿½n");
 		}
 		ColeccionesRss consulta = coleccionesRssDAO.consultarSiExisteRssEnLaColeccion(idColeccion, urlRss);
 		if(consulta!=null){
-			throw new Exception("Ya existe este Rss en esta colección");
+			throw new Exception("Ya existe este Rss en esta colecciï¿½n");
 		}
 		Long codigoRss = getConsecutivo("rss_codigo_rss_seq");
 		Rss rss = new Rss();
@@ -437,7 +442,7 @@ public class RssLogic implements IRssLogic {
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	public Long getConsecutivo(String sqlName) throws Exception {
 		if (sqlName.trim().equals("")) {
-			throw new Exception("El nombre del Sql no debe estar vacío");
+			throw new Exception("El nombre del Sql no debe estar vacï¿½o");
 		}
 		return rssDAO.getConsecutivo(sqlName);
 	}

@@ -601,14 +601,19 @@ public class UsuariosLogic implements IUsuariosLogic {
 		
 		boolean mailCorrecto = validateEmailAddress(email);
 		if (mailCorrecto == false) {
-			throw new Exception("Dirección de Email es incorrecta");
+			throw new Exception("Direcciï¿½n de Email es incorrecta");
 		}
+		
+		if(email.length()>150 || password.length()>150){
+    		throw new Exception("Email o contraseï¿½a incorrectos");
+    	}
+		
 		Usuarios usuarios = usuariosDAO.obtenerPorMail(email);
 		if (usuarios == null) {
-			throw new Exception("Email o contraseña incorrectos");
+			throw new Exception("Email o contraseï¿½a incorrectos");
 		}
 		if (usuarios.getClave().equals(password) == false) {
-			throw new Exception("Email o contraseña incorrectos");
+			throw new Exception("Email o contraseï¿½a incorrectos");
 		}
 		if (usuarios.getRoles().getCodigoRol() != 2) {
 			throw new Exception("El usuario no es lector");
@@ -629,14 +634,19 @@ public class UsuariosLogic implements IUsuariosLogic {
 		
 		boolean mailCorrecto = validateEmailAddress(email);
 		if (mailCorrecto == false) {
-			throw new Exception("Dirección de Email es incorrecta");
+			throw new Exception("Direcciï¿½n de Email es incorrecta");
 		}
+		
+		if(email.length()>150 || password.length()>150){
+    		throw new Exception("Email o contraseï¿½a incorrectos");
+    	}
+		
 		Usuarios usuarios = usuariosDAO.obtenerPorMail(email);
 		if (usuarios == null) {
-			throw new Exception("Email o contraseña incorrectos");
+			throw new Exception("Email o contraseï¿½a incorrectos");
 		}
 		if (usuarios.getClave().equals(password) == false) {
-			throw new Exception("Email o contraseña incorrectos");
+			throw new Exception("Email o contraseï¿½a incorrectos");
 		}
 		if (usuarios.getRoles().getCodigoRol() != 1) {
 			throw new Exception("El usuario no es Administrador");
@@ -655,19 +665,24 @@ public class UsuariosLogic implements IUsuariosLogic {
 			throw new Exception("Debe ingresar el Mail para registrar");
 		}
 		if (usuarios.getClave().trim().equals("") == true) {
-			throw new Exception("Debe ingresar la contraseña");
+			throw new Exception("Debe ingresar la contraseï¿½a");
 		}
 		if (usuarios.getNombre().trim().equals("") == true) {
 			throw new Exception("Debe ingresar su nombre");
 		}
 		boolean mailCorrecto = validateEmailAddress(usuarios.getEmail());
 		if (mailCorrecto == false) {
-			throw new Exception("Dirección de Email es incorrecta");
+			throw new Exception("Direcciï¿½n de Email es incorrecta");
 		}
+		
+		if(usuarios.getEmail().length()>150 || usuarios.getClave().length()>150){
+    		throw new Exception("Email o Password han superado lÃ­mite de caracteres");
+    	}
+		
 		Usuarios entidad = usuariosDAO.obtenerPorMail(usuarios.getEmail());
 		if (entidad != null) {
 			throw new Exception(
-					"La dirección de correo ya está asociada a otra cuenta");
+					"La direcciï¿½n de correo ya estï¿½ asociada a otra cuenta");
 		}
 
 		Roles roles = rolesDAO.findById(2L);
@@ -687,7 +702,7 @@ public class UsuariosLogic implements IUsuariosLogic {
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	public Long getConsecutivo(String sqlName) throws Exception {
 		if (sqlName.trim().equals("")) {
-			throw new Exception("El nombre del Sql no debe estar vacío");
+			throw new Exception("El nombre del Sql no debe estar vacï¿½o");
 		}
 		return usuariosDAO.getConsecutivo(sqlName);
 	}
@@ -697,9 +712,9 @@ public class UsuariosLogic implements IUsuariosLogic {
 		String mensajeAEnviar = "Hola "
 				+ usuarios.getNombre()
 				+ "\n"
-				+ "Bienvenido a Look Docs, tus datos para iniciar sesión son: \n"
+				+ "Bienvenido a Look Docs, tus datos para iniciar sesiï¿½n son: \n"
 				+ "Nombre de Usuario: " + usuarios.getEmail() + " \n"
-				+ "Contraseña: " + usuarios.getClave() + " \n"
+				+ "Contraseï¿½a: " + usuarios.getClave() + " \n"
 				+ "Ya puedes disfrutar de los servicios de LookDocs.";
 
 		SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage);
@@ -716,6 +731,9 @@ public class UsuariosLogic implements IUsuariosLogic {
 
 	@Override
 	public Usuarios obtenerPorMail(String email) throws Exception {
+		if(email.length()>150){
+    		throw new Exception("Email supera el lÃ­mite de caracteres");
+    	}
 		// TODO Auto-generated method stub
 		return usuariosDAO.obtenerPorMail(email);
 	}
@@ -726,14 +744,19 @@ public class UsuariosLogic implements IUsuariosLogic {
 			String claveActual, String nuevaClave, String confirmaClave)
 			throws Exception {
 		if(usuarios==null){
-			throw new Exception("No ha iniciado Sesión");
+			throw new Exception("No ha iniciado Sesiï¿½n");
 		}
 		if(usuarios.getClave().equals(claveActual)==false){
-			throw new Exception("Contraseña actual errónea");
+			throw new Exception("Contraseï¿½a actual errï¿½nea");
 		}
 		if(nuevaClave.equals(confirmaClave)==false){
-			throw new Exception("Las contraseñas no coinciden");
+			throw new Exception("Las contraseï¿½as no coinciden");
 		}
+		
+		if(nuevaClave.length()>150){
+			throw new Exception("La nueva contraseÃ±a ha superado el lÃ­mite de caracteres");
+		}
+		
 		Usuarios entidad = usuariosDAO.consultarPorId(usuarios.getCodigoUsua());
 		if(entidad == null){
 			throw new Exception("El usuario no existe");
@@ -748,7 +771,7 @@ public class UsuariosLogic implements IUsuariosLogic {
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	public void modificarNombreDeUsuario(Usuarios usuarios, String nombre) throws Exception{
 		if(usuarios==null){
-			throw new Exception("No ha iniciado Sesión");
+			throw new Exception("No ha iniciado Sesiï¿½n");
 		}
 		if(usuarios.getNombre().equals(nombre)==true){
 			throw new Exception("No ha puesto un nuevo nombre");
@@ -757,6 +780,11 @@ public class UsuariosLogic implements IUsuariosLogic {
 		if(entidad == null){
 			throw new Exception("El usuario no existe");
 		}
+		
+		if(nombre.length()>150){
+			throw new Exception("El nuevo nombre de usuario supera el lÃ­mite de caracteres");
+		}
+		
 		entidad.setNombre(nombre);
 		entidad.setFechaModifcacion(new Date());
 		entidad.setUsuModifica(usuarios.getEmail());
@@ -768,11 +796,16 @@ public class UsuariosLogic implements IUsuariosLogic {
 	public void recuperarClave(String email) throws Exception {
 		boolean mailCorrecto = validateEmailAddress(email);
 		if (mailCorrecto == false) {
-			throw new Exception("Dirección de Email es incorrecta");
+			throw new Exception("Direcciï¿½n de Email es incorrecta");
 		}
+		
+		if(email.length()>150 ){
+			throw new Exception("El email ingresado supera el lÃ­mite de caracteres permitido");
+		}
+		
 		Usuarios usuarios = usuariosDAO.obtenerPorMail(email);
 		if(usuarios==null){
-			throw new Exception("El usuario no está registrado en la base de datos");
+			throw new Exception("El usuario no estï¿½ registrado en la base de datos");
 		}
 		String nuevaClave = "lOoKdoCs"+usuarios.getNombre().trim()+""+usuarios.getCodigoUsua();
 		usuarios.setClave(nuevaClave);
@@ -787,13 +820,13 @@ public class UsuariosLogic implements IUsuariosLogic {
 		String mensajeAEnviar = "Hola "
 				+ usuarios.getNombre()
 				+ "\n"
-				+ "Has solicitado recuperar tu contraseña, tu nueva contraseña es: \n"
-				+ "Contraseña: " + usuarios.getClave() + " \n"
+				+ "Has solicitado recuperar tu contraseï¿½a, tu nueva contraseï¿½a es: \n"
+				+ "Contraseï¿½a: " + usuarios.getClave() + " \n"
 				+ "Recuerda que puedes modificarla en el Feed de tu cuenta en LookDocs";
 
 		SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage);
 		msg.setTo(usuarios.getEmail());
-		msg.setSubject("Recuperar Contraseña");
+		msg.setSubject("Recuperar Contraseï¿½a");
 		msg.setText(mensajeAEnviar);
 
 		try {

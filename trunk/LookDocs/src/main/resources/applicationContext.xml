@@ -25,8 +25,8 @@
 	<!-- configuracion para enviar correos por gmail usando el puerto 465 -->
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <property name="host" value="smtp.gmail.com"/>
-        <property name="username" value="dpareja1394@gmail.com"/>
-        <property name="password" value="1115423940913"/>
+        <property name="username" value="noreply.lookdocs@gmail.com"/>
+        <property name="password" value="asdasdusbcali"/>
         <property name="port" value="465"/>
         <property name="javaMailProperties">
                 <value>
@@ -41,7 +41,7 @@
  
     <!-- Este template se carga por defecto pero en el codigo se pueden cambiar los valores -->
     <bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage">
-      <property name="from" value="dpareja1394@gmail.com"/>
+      <property name="from" value="noreply.lookdocs@gmail.com"/>
       <property name="to" value="recibe@gmail.com"/>
       <property name="subject" value="Bienvenido a LookDocs"/>
     </bean>  

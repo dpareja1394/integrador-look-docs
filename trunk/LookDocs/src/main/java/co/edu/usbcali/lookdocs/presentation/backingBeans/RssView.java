@@ -426,7 +426,7 @@ public class RssView implements Serializable {
 		}
 	}
 
-	public void actionGuardarRss() {
+	public String actionGuardarRss() {
 		try {
 			if (txtRSSBuscar.getValue().toString().trim().equals("") == true) {
 				FacesContext.getCurrentInstance().addMessage(
@@ -437,11 +437,14 @@ public class RssView implements Serializable {
 				String urlRss = txtRSSBuscar.getValue().toString();
 				Long idColeccion = Long
 						.parseLong((String) somColeccionesRSSLector.getValue());
-				businessDelegatorView.guardarRSS(urlRss, idColeccion);
 				
+				businessDelegatorView.guardarRSS(urlRss, idColeccion);
+				FacesContext.getCurrentInstance().addMessage("",
+						new FacesMessage("Se ha guardado el RSS"));
 				
 				txtRSSBuscar.setValue("");
 				feedReaderMostrar.setValue("");
+				return "guardar";
 			}
 		} catch (Exception e) {
 			FacesContext.getCurrentInstance().addMessage(
@@ -449,13 +452,11 @@ public class RssView implements Serializable {
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e
 							.getMessage(), e.getMessage()));
 		}
-		
+		return "";
 		
 	}
 	
-	public String mensajeGuardar(){
-		return "guardar";
-	}
+	
 
 	public TimeZone getTimeZone() {
 		return java.util.TimeZone.getDefault();

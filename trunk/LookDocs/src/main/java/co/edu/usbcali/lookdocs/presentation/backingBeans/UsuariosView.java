@@ -1058,6 +1058,7 @@ public class UsuariosView implements Serializable {
 				httpSession.removeAttribute("usuarioLector");
 				Usuarios nuevoUsua = businessDelegatorView.getUsuarios(usuarios.getCodigoUsua());
 				httpSession.setAttribute("usuarioLector", nuevoUsua);
+				txtNombre.setValue("");
 				//Lineas para actualizar nombre de usuario en la vista y en la sesion
 				FacesContext.getCurrentInstance().addMessage(
 						"",

@@ -69,7 +69,10 @@ public class ColeccionesLogic implements IColeccionesLogic {
         	
         	long codigoColeccion = coleccionesDAO.getConsecutivo("COLECCIONES_CODIGO_COLE_SEQ");
         	entity.setCodigoCole(codigoColeccion);
-
+        	
+        	if(entity.getNombre().length()>150){
+        		throw new Exception("El nombre de la colección tiene mas de 150 caracteres");
+        	}
         	Colecciones compararNombre = coleccionesDAO.consultarColeccionPorNombreYUsuario(entity.getUsuarios(), entity.getNombre());
         	
         	if (compararNombre != null){
@@ -157,6 +160,10 @@ public class ColeccionesLogic implements IColeccionesLogic {
                 throw new ZMessManager().new EmptyFieldException("nombre");
             }
 
+            if(entity.getNombre().length()>150){
+        		throw new Exception("El nombre de la colección tiene mas de 150 caracteres");
+        	}
+            
             if ((entity.getNombre() != null) &&
                     (Utilities.checkWordAndCheckWithlength(entity.getNombre(),
                         150) == false)) {

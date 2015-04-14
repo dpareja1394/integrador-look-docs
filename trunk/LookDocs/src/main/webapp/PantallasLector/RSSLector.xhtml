@@ -52,7 +52,7 @@
 						<p:panelGrid columns="1">
 							<p:commandButton id="btnAgregarRSS" value="Guardar RSS"
 								action="#{rssView.actionGuardarRss}"
-								onclick="PF('dlgMensaje').show();" />
+								onclick="#{coleccionesView.consultarArbolColecciones()}" update="panelBusquedaRSS" />
 
 						</p:panelGrid>
 						<p:dialog widgetVar="statusDescarga" header="Buscando RSS"
@@ -61,13 +61,7 @@
 								url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
 						</p:dialog>
 
-						<p:dialog header="Guardar RSS" widgetVar="dlgMensaje" height="100"
-							resizable="true">
-							<h:outputText value="Se Ha Guardado El RSS" />
-							<p:separator />
-							<p:commandButton id="btnDialog" value="Aceptar" onclick="#{coleccionesView.consultarArbolColecciones()}"
-								action="#{rssView.mensajeGuardar}" update="panelBusquedaRSS" />
-						</p:dialog>
+						
 					</p:panel>
 					<p:panel id="panelBusquedaRSS" header="Busqueda RSS">
 						<p:feedReader id="feedReaderMostrar" var="feed"
