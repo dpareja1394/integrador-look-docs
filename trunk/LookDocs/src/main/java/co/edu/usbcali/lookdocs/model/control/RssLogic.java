@@ -56,6 +56,9 @@ public class RssLogic implements IRssLogic {
 	@Autowired
 	private IColeccionesRssLogic coleccionesRssLogic;
 	
+	@Autowired
+	private IEntradasLogic enwtradasLogic;
+	
 	private static Logger logger = LoggerFactory.getLogger(RssLogic.class);
 
 	@Transactional(readOnly = true)
@@ -407,7 +410,7 @@ public class RssLogic implements IRssLogic {
 		if(urlRss.trim().equals("")==true){
 			throw new Exception("Debe ingresar el url del sitio");
 		}
-		
+
 		if(urlRss.length()>500){
     		throw new Exception("El url tiene mas de 500 caracteres");
     	}
