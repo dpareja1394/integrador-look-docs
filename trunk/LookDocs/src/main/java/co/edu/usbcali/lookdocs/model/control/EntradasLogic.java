@@ -59,6 +59,10 @@ public class EntradasLogic implements IEntradasLogic {
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
     public void saveEntradas(Entradas entity) throws Exception {
         try {
+        	
+        	long codigoEntrada = entradasDAO.getConsecutivo("ENTRADAS_CODIGO_ENTRA_SEQ");
+        	entity.setCodigoEntra(codigoEntrada);
+        	
             if (entity.getRss() == null) {
                 throw new ZMessManager().new ForeignException("rss");
             }
@@ -411,5 +415,26 @@ public class EntradasLogic implements IEntradasLogic {
 	@Transactional(readOnly = true)
     public Entradas consultarEntradas(Rss rss){
     	return entradasDAO.consultarEntradas(rss);
+    }
+    
+    @Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public Long getConsecutivo(String sqlName)  throws Exception {
+    	if (sqlName.trim().equals("")) {
+			throw new Exception("El nombre del Sql no debe estar vac�o");
+		}
+		return entradasDAO.getConsecutivo(sqlName);
+    }
+    
+    @Override
+	@Transactional(readOnly = true)
+    public Entradas consultarEntradaPorRss(Rss rss){
+    	return entradasDAO.consultarEntradaPorRss(rss);
+    }
+    
+    @Override
+	@Transactional(readOnly = true)
+    public List<Entradas> consultarEntradasPorCole(Colecciones coleccion){
+    	return entradasDAO.consultarEntradasPorCole(coleccion);
     }
 }

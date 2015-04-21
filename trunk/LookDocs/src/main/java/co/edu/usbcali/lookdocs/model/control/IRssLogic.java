@@ -1,5 +1,6 @@
 package co.edu.usbcali.lookdocs.model.control;
 
+import co.edu.usbcali.lookdocs.model.Colecciones;
 import co.edu.usbcali.lookdocs.model.Rss;
 import co.edu.usbcali.lookdocs.model.dto.RssDTO;
 
@@ -54,4 +55,16 @@ public interface IRssLogic {
     public Long getConsecutivo(String sqlName) throws Exception;
     
     public List<Rss> getRssDadoIdColeccion(Long codigoCole) throws Exception;
+    
+    public List<Colecciones> consultarColeccionesPorURL(String url);
+    
+    public Rss consultarRssPorURl(String url);
+    
+    public Rss consultarRssPorUrlCole(String rss, Colecciones coleccion);
+    
+    public List<RssDTO> getDataRssPorColeccion(Colecciones coleccion) throws Exception; 
+    
+    public List<Colecciones> consultarColePorURL(String url);
+    
+    public List<Rss> consultarRssPorURlList(String url);
 }

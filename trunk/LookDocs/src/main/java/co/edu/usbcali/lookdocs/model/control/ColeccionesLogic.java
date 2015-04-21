@@ -445,7 +445,7 @@ public class ColeccionesLogic implements IColeccionesLogic {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Rss consultarCodigoRss(String url){
+	public List<Rss> consultarCodigoRss(String url){
 		return coleccionesDAO.consultarCodigoRss(url);
 	}
 	
@@ -453,5 +453,11 @@ public class ColeccionesLogic implements IColeccionesLogic {
 	@Transactional(readOnly = true)
 	public String nombreColeccionPorCodigoRss(Rss rss){
 		return coleccionesDAO.nombreColeccionPorCodigoRss(rss);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public String findColeccionPorId(Long idColeccion){
+		return coleccionesDAO.findColeccionPorId(idColeccion);
 	}
 }

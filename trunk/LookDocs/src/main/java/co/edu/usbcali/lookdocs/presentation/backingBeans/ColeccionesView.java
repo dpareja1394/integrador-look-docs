@@ -4,9 +4,12 @@ import co.edu.usbcali.lookdocs.exceptions.*;
 import co.edu.usbcali.lookdocs.model.*;
 import co.edu.usbcali.lookdocs.model.dto.ArticulosDTO;
 import co.edu.usbcali.lookdocs.model.dto.ColeccionesDTO;
+import co.edu.usbcali.lookdocs.model.dto.NoticiasDTO;
+import co.edu.usbcali.lookdocs.model.dto.RssDTO;
 import co.edu.usbcali.lookdocs.presentation.businessDelegate.*;
 import co.edu.usbcali.lookdocs.utilities.*;
 
+import org.apache.commons.httpclient.HttpConnection;
 import org.primefaces.component.calendar.*;
 import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.component.feedreader.FeedReader;
@@ -19,13 +22,21 @@ import org.primefaces.model.TreeNode;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.sun.syndication.feed.synd.SyndEntry;
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.io.SyndFeedInput;
+import com.sun.syndication.io.XmlReader;
+
 import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
@@ -34,9 +45,11 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -77,15 +90,30 @@ public class ColeccionesView implements Serializable {
 	private SelectOneMenu somColeccionesLector;
 	private List<SelectItem> lasColeccionesItems;
 	private List<SelectItem> lasColeccionesItemsAdmin;
-	
-	
+	private SelectOneMenu somColeccionesModify;
+	private SelectOneMenu somColeccionesDelete;
+	private String titulo;
+	private String link;
+
 	private List<Rss> rssPorColeccion;
+	private List<FeedReader> feedNoticia;
 
 	private OutputLabel nombreColeccion;
 
 	private FeedReader feedReaderView;
-	
+
 	private CommandButton btnAbrirRss;
+	private List<NoticiasDTO> lasNoticias;
+	private String linkNoticia;
+	private OutputLabel lblFavorito;
+	private OutputLabel lblLeido;
+	private List<Entradas> lasEntradas;
+	private List<OutputLabel> losLabel;
+	private List<RssDTO> rssPorColeccionDto;
+	private Colecciones nombreColeccionEntrada;
+	private List<Colecciones> listaUnicaColeccion;
+	private Colecciones unicaColeccion;
+	
 
 	@ManagedProperty(value = "#{BusinessDelegatorView}")
 	private IBusinessDelegatorView businessDelegatorView;
@@ -430,60 +458,22 @@ public class ColeccionesView implements Serializable {
 	public String action_modify() {
 		try {
 			Colecciones coleccionSeleccionada = new Colecciones();
-			
+
+			Long codigoCole = Long.parseLong((String) somColeccionesModify
+					.getValue());
+			String coleccionAModificar = businessDelegatorView
+					.findColeccionPorId(codigoCole);
+
 			String newName = txtModificarNombre.getValue().toString();
-			String coleccionAModificar = (String) nombreColeccion.getValue();
-			setNuevoNombre(newName);
-			nodoSeleccionado = newName;
-			ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder
-					.currentRequestAttributes();
-			HttpSession session = servletRequestAttributes.getRequest()
-					.getSession();
-			session.setAttribute("nodoSeleccionado", nodoSeleccionado);
-			// HttpSession httpSession = (HttpSession)
-			// FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-			// Usuarios usuarios = (Usuarios)
-			// httpSession.getAttribute("usuarioLector");
-
-			/*if (entity == null) {
-				Long codigoCole = coleccionSeleccionada.getCodigoCole();
-				// Long codigoCole = new
-				// Long(selectedColecciones.getCodigoCole());
-				entity = businessDelegatorView.getColecciones(codigoCole);
-			}*/
-
-			// txtModificarNombre.setValue(coleccionSeleccionada.getNombre());
-			/*
-			 * Usuarios usuarios = new Usuarios(); usuarios.setCodigoUsua(3L);
-			 * usuarios.setNombre("Benito Camelas");
-			 * usuarios.setClave("benito");
-			 * usuarios.setEmail("jaime@gmail.com");
-			 * usuarios.setFechaCreacion(new Date());
-			 * usuarios.setUsuCrea("Jaimito"); usuarios.setEstadoRegistro("A");
-			 */
-
-			// entity.setNombre(txtModificarNombre.getValue().toString());
-			
-						
-			coleccionSeleccionada = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, coleccionAModificar);
+			coleccionSeleccionada = businessDelegatorView
+					.consultarColeccionPorNombreYUsuario(usuarioSecurity,
+							coleccionAModificar);
 			coleccionSeleccionada.setNombre(newName);
-			
-			// entity.setUsuarios(usuarios);
-			// entity.setNombre(FacesUtils.checkString(txtNombre));
-			/*
-			 * entity.setUsuarios((FacesUtils.checkLong(txtCodigoUsua_Usuarios)
-			 * != null) ?
-			 * businessDelegatorView.getUsuarios(FacesUtils.checkLong(
-			 * txtCodigoUsua_Usuarios)) : null);
-			 */
+
 			businessDelegatorView.updateColecciones(coleccionSeleccionada);
-			
-			nombreColeccion = new OutputLabel();
-			nombreColeccion.setValue(newName);
-			
 			coleccionRaices = null;
-			entity = null;
-			consultarArbolColecciones();			
+			coleccionSeleccionada = null;
+			consultarArbolColecciones();
 			FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYMODIFIED);
 			txtModificarNombre.setValue(null);
 			txtModificarNombre.setValue("");
@@ -491,11 +481,9 @@ public class ColeccionesView implements Serializable {
 			data = null;
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
-		
+
 		return "modificado";
 	}
-	
-	
 
 	@PostConstruct
 	public void retornarUsuarioAdmin() {
@@ -561,25 +549,82 @@ public class ColeccionesView implements Serializable {
 
 	public String action_delete() throws Exception {
 		try {
-
 			Colecciones coleccionSeleccionada = new Colecciones();
-			
-			String coleccionSelect = (String) nombreColeccion.getValue();
-			
-			coleccionSeleccionada = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, coleccionSelect);
-			
-			businessDelegatorView.deleteColecciones(coleccionSeleccionada);
-			FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYDELETED);
-			// action_clear();
-			coleccionRaices = null;
-			consultarArbolColecciones();
-			data = null;
+
+			Long codigoCole = Long.parseLong((String) somColeccionesDelete
+					.getValue());
+			String coleccionAEliminar = businessDelegatorView
+					.findColeccionPorId(codigoCole);
+
+			coleccionSeleccionada = businessDelegatorView
+					.consultarColeccionPorNombreYUsuario(usuarioSecurity,
+							coleccionAEliminar);
+
+			rssPorColeccion = businessDelegatorView
+					.getRssDadoIdColeccion(coleccionSeleccionada
+							.getCodigoCole());
+			if (rssPorColeccion.size() > 0) {
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								"",
+								new FacesMessage(
+										"No se puede eliminar esta Coleccion Porq Tiene 1 o mas RSS"));
+			} else {
+				businessDelegatorView.deleteColecciones(coleccionSeleccionada);
+				coleccionRaices = null;
+				coleccionSeleccionada = null;
+				somColeccionesDelete = null;
+				consultarArbolColecciones();
+				FacesUtils
+						.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYDELETED);
+				return "coleccion Eliminada";
+
+			}
+
 		} catch (Exception e) {
+			data = null;
 			throw e;
 		}
-		
-	return "coleccion Eliminada";
+
+		return "";
+
 	}
+	
+	public void consultarUrl(ActionEvent evt){
+		
+		try {
+			Rss rss = (Rss) (evt.getComponent()
+					.getAttributes().get("selectedUrl"));
+			urlRss = rss.getUrl();	
+			
+			Rss elRss = new Rss();
+			Entradas entrada = new Entradas();
+			Date fechaMeGusta = new Date();
+			
+			elRss = businessDelegatorView.consultarRssPorURl(urlRss);
+			entrada = businessDelegatorView.consultarEntradaPorRss(elRss);
+			
+			for(Rss losRss : rssPorColeccion){
+				if((losRss.getCodigoRss() == entrada.getRss().getCodigoRss()) && (entrada.getFavorito().equals("N"))){
+					lblFavorito.setValue("Te Gusta");
+					entrada.setFavorito("S");
+					entrada.setFechaFavorito(fechaMeGusta);
+					businessDelegatorView.updateEntradas(entrada);
+				}else
+					if((losRss.getCodigoRss() == entrada.getRss().getCodigoRss()) && (entrada.getFavorito().equals("S"))){
+						lblFavorito.setValue("Me Gusta");
+						entrada.setFavorito("N");
+						businessDelegatorView.updateEntradas(entrada);
+					}
+				
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+	}	
 
 	public String action_closeDialog() {
 		setShowDialog(false);
@@ -622,7 +667,7 @@ public class ColeccionesView implements Serializable {
 	}
 
 	public String obtenerSeleccionado() {
-	
+
 		try {
 			nodoSeleccionado = seleccionarNodo.getData().toString();
 			nombreColeccion = null;
@@ -631,12 +676,114 @@ public class ColeccionesView implements Serializable {
 			HttpSession session = servletRequestAttributes.getRequest()
 					.getSession();
 			session.setAttribute("nodoSeleccionado", nodoSeleccionado);
+			
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
+		seleccionarNodo = null;
 		return "visage";
 	}
+	
+
+	public void cargar() {  
+
+		try {			
+
+				ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder
+						.currentRequestAttributes();
+				HttpSession session = servletRequestAttributes.getRequest()
+						.getSession();
+				nodoSeleccionado = session.getAttribute("nodoSeleccionado")
+						.toString();
+
+				Colecciones coleccionNombre = businessDelegatorView
+						.consultarColeccionPorNombreYUsuario(usuarioSecurity,
+								nodoSeleccionado);
+				if (coleccionNombre == null) {
+					btnMostrarFD = new CommandButton();
+					btnMostrarFD.setDisabled(true);
+					
+					/* */
+					//Rss elRss = new Rss();
+					//Entradas entrada = new Entradas();			
+					
+					
+					String url = (String) nodoSeleccionado;
+					URL feedUrl = new URL(url) ;
+					
+					SyndFeedInput input = new SyndFeedInput();
+					SyndFeed feed = input.build(new XmlReader(feedUrl));
+					
+					List<SyndEntry> losFeed = feed.getEntries();
+					lasNoticias = new ArrayList<NoticiasDTO>();
+					for (SyndEntry syndEntry : losFeed) {
+						NoticiasDTO noticiasDto = new NoticiasDTO();
+						noticiasDto.setTitulo((String) syndEntry.getTitle());
+						noticiasDto.setDescripcion((String) syndEntry.getDescription().getValue());
+						noticiasDto.setLink((String) syndEntry.getLink());
+						lasNoticias.add(noticiasDto);
+					}				
+					
+					/* */
+					//mostrarRSS(nodoSeleccionado);
+					/*List<Rss> listaRss = businessDelegatorView.consultarCodigoRss(nodoSeleccionado);
+					Rss rss = (Rss) listaRss.get(0);
+					rssPorColeccion = new ArrayList<Rss>();
+					rssPorColeccion.add(rss);*/					
+					//feedReaderView = new FeedReader();
+					//feedReaderView.setValue(nodoSeleccionado);
+					
+					Rss elRss2 = new Rss();
+					Entradas entrada2 = new Entradas();
+					
+					List<Rss> losRss2 = businessDelegatorView.consultarRssPorURlList(url);
+					elRss2 = (Rss) losRss2.get(0);
+					entrada2 = businessDelegatorView.consultarEntradaPorRss(elRss2);
+					
+					if(entrada2.getLeido().equals("N")){
+						entrada2.setLeido("S");
+						entrada2.setFechaLeido(new Date());						
+						businessDelegatorView.updateEntradas(entrada2);
+					}					
+					
+					//unicaColeccion = new Colecciones(); 
+					//listaUnicaColeccion = new ArrayList<Colecciones>(); 
+					listaUnicaColeccion = businessDelegatorView.consultarColePorURL(url);
+					unicaColeccion = (Colecciones) listaUnicaColeccion.get(0);
+					
+//					for (Colecciones col : listaUnicaColeccion) {
+//						unicaColeccion = col;
+//					}
+					//unicaColeccion = (Colecciones) listaUnicaColeccion.get(0);
+					
+					
+					rssPorColeccionDto = businessDelegatorView.getDataRssPorColeccion(unicaColeccion);
+					
+					
+					
+				} else {
+					
+					coleccionNombre = businessDelegatorView
+							.consultarColeccionPorNombreYUsuario(
+									usuarioSecurity, nodoSeleccionado);
+					rssPorColeccionDto = businessDelegatorView
+							.getDataRssPorColeccion(coleccionNombre);
+					nombreColeccionEntrada = coleccionNombre;
+					//lasEntradas = businessDelegatorView.consultarEntradasPorCole(coleccionNombre);			
+										
+					
+					}
+
+						
+		} catch (Exception e) {
+			FacesUtils.addErrorMessage(e.getMessage());
+		}
+		nodoSeleccionado = null;
+		
+
+	}
+
 
 	public InputText getTxtNombre() {
 		return txtNombre;
@@ -806,11 +953,10 @@ public class ColeccionesView implements Serializable {
 		this.somColeccionesLector = somColeccionesLector;
 	}
 
-	public void cargarRSSSelecciondo(){
-	
-	
+	public void cargarRSSSelecciondo() {
+
 	}
-	
+
 	public List<SelectItem> getLasColeccionesItems() {
 		try {
 			if (lasColeccionesItems == null) {
@@ -828,58 +974,70 @@ public class ColeccionesView implements Serializable {
 		}
 		return lasColeccionesItems;
 	}
-	
-	
 
-	public OutputLabel getNombreColeccion() {
-		
-		try {		
-			
-			
-			if(nombreColeccion == null){
-				
-				ServletRequestAttributes servletRequestAttributes=(ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-		    	HttpSession session = servletRequestAttributes.getRequest().getSession();
-		    	nodoSeleccionado = session.getAttribute("nodoSeleccionado").toString();
-		    	
-		    	
-		    	
-				Colecciones coleccionNombre = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, nodoSeleccionado);
-				if(coleccionNombre==null){
+	/*public OutputLabel getNombreColeccion() {
+
+		try {
+
+			if (nombreColeccion == null) {
+
+				ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder
+						.currentRequestAttributes();
+				HttpSession session = servletRequestAttributes.getRequest()
+						.getSession();
+				nodoSeleccionado = session.getAttribute("nodoSeleccionado")
+						.toString();
+
+				Colecciones coleccionNombre = businessDelegatorView
+						.consultarColeccionPorNombreYUsuario(usuarioSecurity,
+								nodoSeleccionado);
+				if (coleccionNombre == null) {
 					btnMostrarFD = new CommandButton();
 					btnMostrarFD.setDisabled(true);
 					mostrarRSS(nodoSeleccionado);
-				}else{
+				} else {
 					nombreColeccion = new OutputLabel();
 					nombreColeccion.setValue(nodoSeleccionado);
-					coleccionNombre = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, nodoSeleccionado);
-					rssPorColeccion = businessDelegatorView.getRssDadoIdColeccion(coleccionNombre.getCodigoCole());
-					if (rssPorColeccion.size()>0){
+					coleccionNombre = businessDelegatorView
+							.consultarColeccionPorNombreYUsuario(
+									usuarioSecurity, nodoSeleccionado);
+					rssPorColeccion = businessDelegatorView
+							.getRssDadoIdColeccion(coleccionNombre
+									.getCodigoCole());
+					if (rssPorColeccion.size() > 0) {
 						btnEliminarColeccion = new CommandButton();
-			    		btnEliminarColeccion.setDisabled(true);
-			    	}
+						btnEliminarColeccion.setDisabled(true);
+					}
 				}
-				
-			}else{
-				ServletRequestAttributes servletRequestAttributes=(ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-		    	HttpSession session = servletRequestAttributes.getRequest().getSession();
-		    	nodoSeleccionado = session.getAttribute("nodoSeleccionado").toString();		    	
-		    	
-		    	
-				Colecciones coleccionNombre = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, nodoSeleccionado);
-				if(coleccionNombre==null){
+
+			} else {
+				ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder
+						.currentRequestAttributes();
+				HttpSession session = servletRequestAttributes.getRequest()
+						.getSession();
+				nodoSeleccionado = session.getAttribute("nodoSeleccionado")
+						.toString();
+
+				Colecciones coleccionNombre = businessDelegatorView
+						.consultarColeccionPorNombreYUsuario(usuarioSecurity,
+								nodoSeleccionado);
+				if (coleccionNombre == null) {
 					btnMostrarFD = new CommandButton();
 					btnMostrarFD.setDisabled(true);
 					mostrarRSS(nodoSeleccionado);
-				}else{
+				} else {
 					nombreColeccion = new OutputLabel();
 					nombreColeccion.setValue(nodoSeleccionado);
-					coleccionNombre = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, nodoSeleccionado);
-					rssPorColeccion = businessDelegatorView.getRssDadoIdColeccion(coleccionNombre.getCodigoCole());
-					if (rssPorColeccion.size()>0){
+					coleccionNombre = businessDelegatorView
+							.consultarColeccionPorNombreYUsuario(
+									usuarioSecurity, nodoSeleccionado);
+					rssPorColeccion = businessDelegatorView
+							.getRssDadoIdColeccion(coleccionNombre
+									.getCodigoCole());
+					if (rssPorColeccion.size() > 0) {
 						btnEliminarColeccion = new CommandButton();
-			    		btnEliminarColeccion.setDisabled(true);
-			    	}
+						btnEliminarColeccion.setDisabled(true);
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -887,46 +1045,89 @@ public class ColeccionesView implements Serializable {
 		}
 		nodoSeleccionado = null;
 		return nombreColeccion;
+
+	}*/
+	
+	public void cargarFavoritos(){
 		
 	}
 	
-	public String actionMostrarFeed(ActionEvent evt) {
+	public void cargarLeidos(){
+		
+	}
+	
+	public String actionMostrarFeedDTO(ActionEvent evt) {
 		try {
-			Rss rss = (Rss) (evt.getComponent()
-					.getAttributes().get("selectedUrl"));
-			urlRss = rss.getUrl(); 
-
-			feedReaderView.setValue(urlRss);
+						
+			RssDTO rss = (RssDTO) (evt.getComponent().getAttributes()
+					.get("selectedUrl"));
+			urlRss = rss.getUrl();
 			
+
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
 
 		return "";
 	}
-			
-	public void mostrarRSS(String url){
-		
+	
+
+	public void actionMostrarFeed() {
 		try {
+			Rss elRss = new Rss();
+			Entradas entrada = new Entradas();
 			
-			Rss codigoRss = businessDelegatorView.consultarCodigoRss(url);
-			String elNombreColeccion = businessDelegatorView.nombreColeccionPorCodigoRss(codigoRss);
-			nombreColeccion = new OutputLabel();
-			nombreColeccion.setValue(elNombreColeccion);
-			Colecciones coleccionNombre = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, elNombreColeccion);
-			rssPorColeccion = businessDelegatorView.getRssDadoIdColeccion(coleccionNombre.getCodigoCole());
-			if (rssPorColeccion.size()>0){
-				btnEliminarColeccion = new CommandButton();
-	    		btnEliminarColeccion.setDisabled(true);
-	    	}
-			feedReaderView = new FeedReader();
-			feedReaderView.setValue(nodoSeleccionado);
+			String url = (String) urlRss;
+			URL feedUrl = new URL(url) ;
+			
+			SyndFeedInput input = new SyndFeedInput();
+			SyndFeed feed = input.build(new XmlReader(feedUrl));
+			
+			List<SyndEntry> losFeed = feed.getEntries();
+			lasNoticias = new ArrayList<NoticiasDTO>();
+			for (SyndEntry syndEntry : losFeed) {
+				NoticiasDTO noticiasDto = new NoticiasDTO();
+				noticiasDto.setTitulo((String) syndEntry.getTitle());
+				noticiasDto.setDescripcion((String) syndEntry.getDescription().getValue());
+				noticiasDto.setLink((String) syndEntry.getLink());
+				lasNoticias.add(noticiasDto);
+			}
+			
+			elRss = businessDelegatorView.consultarRssPorURl(urlRss);
+			entrada = businessDelegatorView.consultarEntradaPorRss(elRss);
+			
+			if(entrada.getLeido().equals("N")){
+				entrada.setLeido("S");
+				entrada.setFechaLeido(new Date());
+				businessDelegatorView.updateEntradas(entrada);
+				rssPorColeccionDto = businessDelegatorView.getDataRssPorColeccion(nombreColeccionEntrada);
+			}			
+
 		} catch (Exception e) {
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
-		
+
 		
 	}
+	
+	public void actionMostrarNoticia(ActionEvent evt){
+		
+		try {
+			NoticiasDTO noticia = (NoticiasDTO) (evt.getComponent().getAttributes()
+					.get("selectedNoticia"));
+			linkNoticia = (String) noticia.getLink();
+			
+			/*HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+			response.sendRedirect(linkNoticia);*/
+			
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			externalContext.redirect(linkNoticia);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+	}	
 
 	public void setNombreColeccion(OutputLabel nombreColeccion) {
 		this.nombreColeccion = nombreColeccion;
@@ -1010,6 +1211,129 @@ public class ColeccionesView implements Serializable {
 	public void setNuevoNombre(String nuevoNombre) {
 		this.nuevoNombre = nuevoNombre;
 	}
+
+	public SelectOneMenu getSomColeccionesModify() {
+		return somColeccionesModify;
+	}
+
+	public void setSomColeccionesModify(SelectOneMenu somColeccionesModify) {
+		this.somColeccionesModify = somColeccionesModify;
+	}
+
+	public SelectOneMenu getSomColeccionesDelete() {
+		return somColeccionesDelete;
+	}
+
+	public void setSomColeccionesDelete(SelectOneMenu somColeccionesDelete) {
+		this.somColeccionesDelete = somColeccionesDelete;
+	}
+
+	public List<FeedReader> getFeedNoticia() {
+		return feedNoticia;
+	}
+
+	public void setFeedNoticia(List<FeedReader> feedNoticia) {
+		this.feedNoticia = feedNoticia;
+	}
+
+	public String getTitulo() {
+		return titulo;
+	}
+
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+
+	public String getLink() {
+		return link;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
+	}
+
+	public List<NoticiasDTO> getLasNoticias() {
+		return lasNoticias;
+	}
+
+	public void setLasNoticias(List<NoticiasDTO> lasNoticias) {
+		this.lasNoticias = lasNoticias;
+	}
+
+	public String getLinkNoticia() {
+		return linkNoticia;
+	}
+
+	public void setLinkNoticia(String linkNoticia) {
+		this.linkNoticia = linkNoticia;
+	}
+
+	public OutputLabel getLblFavorito() {
+		return lblFavorito;
+	}
+
+	public void setLblFavorito(OutputLabel lblFavorito) {
+		this.lblFavorito = lblFavorito;
+	}
+
+	public OutputLabel getLblLeido() {
+		return lblLeido;
+	}
+
+	public void setLblLeido(OutputLabel lblLeido) {
+		this.lblLeido = lblLeido;
+	}
+
+	public List<Entradas> getLasEntradas() {
+		return lasEntradas;
+	}
+
+	public void setLasEntradas(List<Entradas> lasEntradas) {
+		this.lasEntradas = lasEntradas;
+	}
+
+	public List<OutputLabel> getLosLabel() {
+		return losLabel;
+	}
+
+	public void setLosLabel(List<OutputLabel> losLabel) {
+		this.losLabel = losLabel;
+	}
+
+	public List<RssDTO> getRssPorColeccionDto() {
+		return rssPorColeccionDto;
+	}
+
+	public void setRssPorColeccionDto(List<RssDTO> rssPorColeccionDto) {
+		this.rssPorColeccionDto = rssPorColeccionDto;
+	}
+
+	public Colecciones getNombreColeccionEntrada() {
+		return nombreColeccionEntrada;
+	}
+
+	public void setNombreColeccionEntrada(Colecciones nombreColeccionEntrada) {
+		this.nombreColeccionEntrada = nombreColeccionEntrada;
+	}
+
+	public List<Colecciones> getListaUnicaColeccion() {
+		return listaUnicaColeccion;
+	}
+
+	public void setListaUnicaColeccion(List<Colecciones> listaUnicaColeccion) {
+		this.listaUnicaColeccion = listaUnicaColeccion;
+	}
+
+	public Colecciones getUnicaColeccion() {
+		return unicaColeccion;
+	}
+
+	public void setUnicaColeccion(Colecciones unicaColeccion) {
+		this.unicaColeccion = unicaColeccion;
+	}
+
+	
+
 	
 	
 	

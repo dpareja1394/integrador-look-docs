@@ -17,14 +17,8 @@ public class RssDTO implements Serializable {
     private static final long serialVersionUID = 1L;
     private Long codigoRss;
     private String url;
-
-    public Long getCodigoRss() {
-        return codigoRss;
-    }
-
-    public void setCodigoRss(Long codigoRss) {
-        this.codigoRss = codigoRss;
-    }
+    private String favorito;
+    private String leido;  
 
     public String getUrl() {
         return url;
@@ -33,4 +27,28 @@ public class RssDTO implements Serializable {
     public void setUrl(String url) {
         this.url = url;
     }
+
+	public String getFavorito() {
+		return favorito;
+	}
+
+	public void setFavorito(String favorito) {
+		this.favorito = favorito;
+	}
+
+	public String getLeido() {
+		return leido;
+	}
+
+	public void setLeido(String leido) {
+		this.leido = leido;
+	}
+
+	public Long getCodigoRss() {
+		return codigoRss;
+	}
+
+	public void setCodigoRss(Long codigoRss) {
+		this.codigoRss = codigoRss;
+	}
 }

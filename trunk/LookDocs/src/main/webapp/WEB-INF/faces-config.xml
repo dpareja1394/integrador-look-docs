@@ -650,7 +650,7 @@
 		</navigation-case>
 	</navigation-rule>
 	<navigation-rule>
-		<from-view-id>/PantallasLector/ViewRSSLector.xhtml</from-view-id>
+		<from-view-id>/PantallasLector/FeedPrincipalLector.xhtml</from-view-id>
 		<navigation-case>
 			<from-outcome>coleccion Eliminada</from-outcome>
 			<to-view-id>/PantallasLector/FeedPrincipalLector.xhtml</to-view-id>
@@ -673,4 +673,13 @@
 			<redirect />
 		</navigation-case>
 	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>/PantallasLector/ViewRSSLector.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>favorito</from-outcome>
+			<to-view-id>/PantallasLector/ViewRSSLector.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	
 	</faces-config>

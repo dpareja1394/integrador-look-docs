@@ -110,7 +110,7 @@
 					</p:accordionPanel>
 					
 					<p:accordionPanel style="width:235px;border-style: none;border: none">
-						<p:tab title="Colecciones" >
+						<p:tab title="Tus Colecciones" >
 							<p:commandLink value="Crear Coleccion" type="button"
 								onclick="PF('dlg2').show();" />
 							
@@ -118,12 +118,12 @@
 								<f:viewAction id="metadata"
 									action="#{coleccionesView.consultarArbol()}" />
 							</f:metadata>
-							<p:tree id="arbolColecciones"
+							<p:tree  id="arbolColecciones"
 								value="#{coleccionesView.raizArbol}" var="colecciones" animate="true"
 								selectionMode="single" style="width:199px;border-style: none;border: none"
 								selection="#{coleccionesView.seleccionarNodo}">
-								<p:treeNode icon="ui-icon-folder-collapsed">
-									<h:outputLabel  value="#{colecciones}"  />
+								<p:treeNode icon="ui-icon-folder-collapsed"  >
+									<h:outputLabel  value="#{colecciones}"   />
 									
 									<p:contextMenu for="arbolColecciones" >
 										<p:menuitem  value="Ver" icon="ui-icon-search"
@@ -140,7 +140,11 @@
 					</p:accordionPanel>
 					<p:separator />
 					<!-- onclick="location.href = '../j_spring_security_logout';" -->
+					
 					<p:menu toggleable="true" style="width:235px;border-style: none;border: none">
+						<p:submenu label="Colecciones">
+							<p:menuitem value="Gestionar Colecciones " icon="ui-icon-arrowrefresh-1-w" onclick="PF('dlgGC').show();" />
+						</p:submenu>						
 						<p:submenu label="Cuenta">
 							<p:menuitem value="Editar Cuenta" icon="ui-icon-disk"
 								update="messages"
@@ -155,6 +159,50 @@
 
 						</p:submenu>
 					</p:menu>
+					
+					<p:dialog id="dialogoGestionarColecciones" header="Gestionar Colecciones" widgetVar="dlgGC" resizable="true">
+						<p:tabView>
+							<p:tab title="Modificar Coleccion" >
+							
+								<p:panelGrid columns="1">
+									<p:outputLabel id="txtSelectColeModifiy"
+									value="Seleccione La Coleccion Que Desea Re-Nombrar" />
+								
+									<p:selectOneMenu id="somColeccionesLectorModify"
+									binding="#{coleccionesView.somColeccionesModify}">
+									<f:selectItem itemValue="-1"
+									itemLabel="Seleccione una Colección" />
+									<f:selectItems value="#{coleccionesView.lasColeccionesItems}" />							
+									</p:selectOneMenu>
+									
+									<p:outputLabel value="¿Cual es el nuevo nombre?" />
+									<p:inputText id="txtModificarColeccion" binding="#{coleccionesView.txtModificarNombre}" />
+							
+									<p:commandButton id="btnModifyColeccion" value="Modificar" binding="#{coleccionesView.btnModify}" action="#{coleccionesView.action_modify}" onclick="#{coleccionesView.consultarArbolColecciones()}" />
+								</p:panelGrid>
+								
+							
+							</p:tab>
+							<p:tab title="Eleminar Coleccion" >
+							
+								<p:panelGrid columns="1" >
+									<p:outputLabel id="txtSelectColeDelete"
+									value="Seleccione La Coleccion Que Desea Eliminar" />
+								
+									<p:selectOneMenu id="somColeccionesLectorDelete"
+									binding="#{coleccionesView.somColeccionesDelete}">
+									<f:selectItem itemValue="-1"
+									itemLabel="Seleccione una Colección" />
+									<f:selectItems value="#{coleccionesView.lasColeccionesItems}" />
+									</p:selectOneMenu>
+							
+									<p:commandButton id="btnDeleteColeccion" value="Eliminar" binding="#{coleccionesView.btnDelete}" action="#{coleccionesView.action_delete}" onclick="#{coleccionesView.consultarArbolColecciones()}" />
+								</p:panelGrid>
+								
+							
+							</p:tab>
+						</p:tabView>
+					</p:dialog>
 
 				</pe:layoutPane>
 			</pe:layout>

@@ -18,6 +18,7 @@ public interface IColeccionesDAO extends Dao<Colecciones, Long> {
 	public List<Colecciones> consultarColeccionPorUsuario(Usuarios usuarios) throws Exception;
 	public Colecciones consultarColeccionPorNombreYUsuario(Usuarios usuarios, String nombreColeccion) throws Exception;
 	public Colecciones consultarNodoSeleccionado(String nodoSeleccionado) throws Exception; 
-	public Rss consultarCodigoRss(String url);
+	public List<Rss> consultarCodigoRss(String url);
 	public String nombreColeccionPorCodigoRss(Rss rss);
+	public String findColeccionPorId(Long idColeccion);
 }

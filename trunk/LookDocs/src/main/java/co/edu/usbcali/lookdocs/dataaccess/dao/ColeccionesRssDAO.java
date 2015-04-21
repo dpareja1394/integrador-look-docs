@@ -87,4 +87,17 @@ public class ColeccionesRssDAO extends HibernateDaoImpl<ColeccionesRss, Long>
 		ColeccionesRss coleccionesRss = (ColeccionesRss) query.uniqueResult();
 		return coleccionesRss;
 	}
+	
+	/* 	select cr
+		from colecciones c, rss r, colecciones_rss cr
+		where c.codigo_cole = cr.colecciones_codigo_cole AND c.codigo_cole = 81 and r.codigo_rss = cr.rss_codigo_rss AND r.codigo_rss = 9 */
+	
+	@Override
+	public ColeccionesRss consultarColeccionRssPorColeRss(Rss rss, Colecciones coleccion){
+		String hql = "SELECT colrss FROM ColeccionesRss colrss, Rss rss, Colecciones col WHERE col.codigoCole = colrss.colecciones.codigoCole AND"
+				+ " col.codigoCole = "+coleccion.getCodigoCole()+" AND rss.codigoRss = colrss.rss.codigoRss AND rss.codigoRss = "+rss.getCodigoRss();
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		ColeccionesRss coleccionRss = (ColeccionesRss) query.uniqueResult();
+		return coleccionRss;
+	}
 }

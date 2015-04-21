@@ -812,7 +812,7 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
 	}
 	
 	@Override
-	public Rss consultarCodigoRss(String url){
+	public List<Rss> consultarCodigoRss(String url){
 		return coleccionesLogic.consultarCodigoRss(url);
 	}
 	
@@ -829,5 +829,56 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
 	@Override
 	public ColeccionesRss consultarColeccionesRss(Rss rss, Colecciones coleccion){
 		return coleccionesRssLogic.consultarColeccionesRss(rss, coleccion);
+	}
+	
+	@Override
+	public String findColeccionPorId(Long idColeccion){
+		return coleccionesLogic.findColeccionPorId(idColeccion);
+	}
+	
+	@Override
+	public List<Colecciones> consultarColeccionesPorURL(String url){
+		return rssLogic.consultarColeccionesPorURL(url);
+	}
+	
+	@Override
+	public Rss consultarRssPorURl(String url){
+		return rssLogic.consultarRssPorURl(url);
+	}
+	
+	@Override
+	public ColeccionesRss consultarColeccionRssPorColeRss(Rss rss, Colecciones coleccion){
+		return coleccionesRssLogic.consultarColeccionRssPorColeRss(rss, coleccion);
+	}
+	
+	@Override
+	public Rss consultarRssPorUrlCole(String rss, Colecciones coleccion){
+		return rssLogic.consultarRssPorUrlCole(rss, coleccion);
+	}
+	
+	@Override
+	public Entradas consultarEntradaPorRss(Rss rss){
+		return entradasLogic.consultarEntradaPorRss(rss);
+	}
+	
+	@Override
+	public List<Entradas> consultarEntradasPorCole(Colecciones coleccion){
+		return entradasLogic.consultarEntradasPorCole(coleccion);
+	}
+	
+	//rssDTO por Coleccion
+	@Override
+	public List<RssDTO> getDataRssPorColeccion(Colecciones coleccion) throws Exception{
+		return rssLogic.getDataRssPorColeccion(coleccion);
+	}
+	
+	@Override
+	public List<Colecciones> consultarColePorURL(String url) {
+		return rssLogic.consultarColePorURL(url);
+	}
+	
+	@Override
+	public List<Rss> consultarRssPorURlList(String url){
+		return rssLogic.consultarRssPorURlList(url);
 	}
 }

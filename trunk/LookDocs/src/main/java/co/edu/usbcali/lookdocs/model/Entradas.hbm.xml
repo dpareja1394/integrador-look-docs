@@ -24,4 +24,10 @@
             <column name="fecha_leido" length="13" />
         </property>
     </class>
+    <sql-query name="ENTRADAS_CODIGO_ENTRA_SEQ">
+		<return-scalar column="nextval" type="java.lang.Long" />
+	  <![CDATA[
+	    SELECT nextval('ENTRADAS_CODIGO_ENTRA_SEQ');
+	  ]]>
+    </sql-query>
 </hibernate-mapping>

@@ -64,5 +64,7 @@ public interface IColeccionesRssLogic {
     
     public ColeccionesRss consultarColeccionesRss(Rss rss, Colecciones coleccion);
     
+    public ColeccionesRss consultarColeccionRssPorColeRss(Rss rss, Colecciones coleccion);
+    
     
 }

@@ -431,5 +431,11 @@ public class ColeccionesRssLogic implements IColeccionesRssLogic {
 		return coleccionesRssDAO.consultarColeccionesRss(rss, coleccion);
 	}
 	
+	@Override
+	@Transactional(readOnly = true)
+	public ColeccionesRss consultarColeccionRssPorColeRss(Rss rss, Colecciones coleccion){
+		return coleccionesRssDAO.consultarColeccionRssPorColeRss(rss, coleccion);
+	}
+	
 	
 }

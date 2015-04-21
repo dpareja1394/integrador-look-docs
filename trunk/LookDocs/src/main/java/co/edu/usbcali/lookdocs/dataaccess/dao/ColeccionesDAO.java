@@ -98,10 +98,10 @@ public class ColeccionesDAO extends HibernateDaoImpl<Colecciones, Long>
 	}
 	
 	@Override
-	public Rss consultarCodigoRss(String url){
+	public List<Rss> consultarCodigoRss(String url){
 		String hql = "SELECT rss FROM Rss rss WHERE rss.url = '"+url+"'" ;
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
-		Rss elrss = (Rss) query.uniqueResult();
+		List<Rss> elrss = query.list();
 		return elrss;
 	}
 	
@@ -114,11 +114,20 @@ public class ColeccionesDAO extends HibernateDaoImpl<Colecciones, Long>
 		
 //		select c.nombre
 //		from colecciones c, colecciones_rss cr, rss r 
-//		where '1' = cr.rss_codigo_rss AND c.codigo_cole = cr.colecciones_codigo_cole
+//		where r.codigo_rss = cr.rss_codigo_rss AND r.codigo_rss = 9 AND c.codigo_cole = cr.colecciones_codigo_cole 
 		
-		String hql = "SELECT col.nombre FROM Colecciones col, ColeccionesRss colrss, Rss rss WHERE col.codigoCole = colrss.colecciones.codigoCole AND colrss.rss.codigoRss = "+rss.getCodigoRss();		
+		String hql = "SELECT col.nombre FROM Colecciones col, ColeccionesRss colrss, Rss rss WHERE col.codigoCole = colrss.colecciones.codigoCole AND "
+				+ "rss.codigoRss = colrss.rss.codigoRss AND rss.codigoRss = "+rss.getCodigoRss();		
 		Query query = sessionFactory.getCurrentSession().createQuery(hql);
 		String elNombreColeccion = (String) query.uniqueResult();
 		return elNombreColeccion;
+	}
+	
+	@Override
+	public String findColeccionPorId(Long idColeccion){
+		String hql = "SELECT col.nombre FROM Colecciones col WHERE col.codigoCole = "+idColeccion;
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		String nombre = (String) query.uniqueResult();
+		return nombre;
 	}
 }

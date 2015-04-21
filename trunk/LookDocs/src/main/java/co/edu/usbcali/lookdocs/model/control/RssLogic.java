@@ -175,12 +175,37 @@ public class RssLogic implements IRssLogic {
 
 			List<RssDTO> rssDTO = new ArrayList<RssDTO>();
 
-			for (Rss rssTmp : rss) {
-				RssDTO rssDTO2 = new RssDTO();
+//			for (Rss rssTmp : rss) {
+//				RssDTO rssDTO2 = new RssDTO();
+//
+//				rssDTO2.setCodigoRss(rssTmp.getCodigoRss());
+//				rssDTO2.setUrl((rssTmp.getUrl() != null) ? rssTmp.getUrl()
+//						: null);
+//				rssDTO.add(rssDTO2);
+//			}
 
-				rssDTO2.setCodigoRss(rssTmp.getCodigoRss());
-				rssDTO2.setUrl((rssTmp.getUrl() != null) ? rssTmp.getUrl()
-						: null);
+			return rssDTO;
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+	@Transactional(readOnly = true)
+	public List<RssDTO> getDataRssPorColeccion(Colecciones coleccion) throws Exception {
+		try {
+			
+			List<Object> rss = rssDAO.consultarRssPorCole(coleccion);
+			//List<Rss> rss = rssDAO.findAll();
+
+			List<RssDTO> rssDTO = new ArrayList<RssDTO>();
+
+			for (Object rssTmp : rss) {
+				RssDTO rssDTO2 = new RssDTO();
+				Object[] objTmp = (Object[]) rssTmp;
+				
+				rssDTO2.setUrl((objTmp[0] != null) ? (String) objTmp[0] : null);
+				rssDTO2.setFavorito((objTmp[1] != null) ? (((String) objTmp[1]).equals("S")) ? "Te gusta" : "No te gusta" : null);
+				rssDTO2.setLeido((objTmp[2] != null) ? (((String) objTmp[2]).equals("S")) ? "Leido" : "No leido" : null);
 				rssDTO.add(rssDTO2);
 			}
 
@@ -432,10 +457,19 @@ public class RssLogic implements IRssLogic {
 		rss.setCodigoRss(codigoRss);
 		rss.setUrl(urlRss);
 		rssDAO.save(rss);
+		
 		ColeccionesRss coleccionesRss = new ColeccionesRss();
 		coleccionesRss.setColecciones(colecciones);
 		coleccionesRss.setRss(rss);
 		coleccionesRssLogic.guardarColeccionesRSS(coleccionesRss);
+		
+		long codigoEntrada = getConsecutivo("ENTRADAS_CODIGO_ENTRA_SEQ");
+		Entradas entrada = new Entradas();
+		entrada.setCodigoEntra(codigoEntrada);
+		entrada.setFavorito("N");
+		entrada.setLeido("N");
+		entrada.setRss(rss);
+		enwtradasLogic.saveEntradas(entrada);
 		
 		
 		
@@ -454,5 +488,35 @@ public class RssLogic implements IRssLogic {
 	@Transactional(readOnly = true)
 	public List<Rss> getRssDadoIdColeccion(Long codigoCole) throws Exception {
 		return rssDAO.getRssDadoIdColeccion(codigoCole);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<Colecciones> consultarColeccionesPorURL(String url){
+		return rssDAO.consultarColeccionesPorURL(url);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Rss consultarRssPorURl(String url){
+		return rssDAO.consultarRssPorURl(url);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Rss consultarRssPorUrlCole(String rss, Colecciones coleccion){
+		return rssDAO.consultarRssPorUrlCole(rss, coleccion);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<Colecciones> consultarColePorURL(String url) {
+		return rssDAO.consultarColePorURL(url);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<Rss> consultarRssPorURlList(String url){
+		return rssDAO.consultarRssPorURlList(url);
 	}
 }

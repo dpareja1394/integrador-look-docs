@@ -1,5 +1,6 @@
 package co.edu.usbcali.lookdocs.model.control;
 
+import co.edu.usbcali.lookdocs.model.Colecciones;
 import co.edu.usbcali.lookdocs.model.Entradas;
 import co.edu.usbcali.lookdocs.model.Rss;
 import co.edu.usbcali.lookdocs.model.dto.EntradasDTO;
@@ -52,4 +53,10 @@ public interface IEntradasLogic {
     public List<EntradasDTO> getDataEntradas() throws Exception;
     
     public Entradas consultarEntradas(Rss rss);
+    
+    public Long getConsecutivo(String sqlName) throws Exception;
+    
+    public Entradas consultarEntradaPorRss(Rss rss);
+    
+    public List<Entradas> consultarEntradasPorCole(Colecciones coleccion);
 }

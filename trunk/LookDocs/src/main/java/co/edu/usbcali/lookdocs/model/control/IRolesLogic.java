@@ -1,14 +1,11 @@
 package co.edu.usbcali.lookdocs.model.control;
 
 import co.edu.usbcali.lookdocs.model.Roles;
+import co.edu.usbcali.lookdocs.model.Rss;
 import co.edu.usbcali.lookdocs.model.dto.RolesDTO;
 
 import java.math.BigDecimal;
-
 import java.util.*;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -53,4 +50,6 @@ public interface IRolesLogic {
     public Long findTotalNumberRoles() throws Exception;
 
     public List<RolesDTO> getDataRoles() throws Exception;
+    
+    
 }

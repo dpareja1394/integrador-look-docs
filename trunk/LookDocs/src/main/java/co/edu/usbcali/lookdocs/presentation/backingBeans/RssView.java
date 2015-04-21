@@ -2,6 +2,7 @@ package co.edu.usbcali.lookdocs.presentation.backingBeans;
 
 import co.edu.usbcali.lookdocs.exceptions.*;
 import co.edu.usbcali.lookdocs.model.*;
+import co.edu.usbcali.lookdocs.model.control.ColeccionesRssLogic;
 import co.edu.usbcali.lookdocs.model.control.RssLogic;
 import co.edu.usbcali.lookdocs.model.dto.RssDTO;
 import co.edu.usbcali.lookdocs.presentation.businessDelegate.*;
@@ -11,6 +12,8 @@ import org.primefaces.component.calendar.*;
 import org.primefaces.component.commandbutton.CommandButton;
 import org.primefaces.component.feedreader.FeedReader;
 import org.primefaces.component.inputtext.InputText;
+import org.primefaces.component.outputlabel.OutputLabel;
+import org.primefaces.component.panel.Panel;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.model.DefaultTreeNode;
@@ -67,6 +70,16 @@ public class RssView implements Serializable {
 	private SelectOneMenu somColeccionesRSSLector;
 	private Usuarios usuarioSecurity;
 	private String urlSeleccionado;
+	private Panel panelSolo;
+	private Panel panelVarios;
+	private List<Colecciones> lasColeccionesUrl;
+	private SelectOneMenu somColeccionesUrl;
+	private OutputLabel lblUrlEliminar;
+	private InputText txtUrlEliminar;
+	private String coleccionSeleSOM;
+	private CommandButton btnFavorito;
+	private List<Rss> rssColeccion;
+	private String rssSeleccionado;
 
 	@ManagedProperty(value = "#{BusinessDelegatorView}")
 	private IBusinessDelegatorView businessDelegatorView;
@@ -256,15 +269,40 @@ public class RssView implements Serializable {
 	public void consultarUrl(ActionEvent evt){
 		Rss rss = (Rss) (evt.getComponent()
 				.getAttributes().get("selectedUrl"));
-		urlSeleccionado = rss.getUrl(); 	
+		urlSeleccionado = rss.getUrl();		
+	}
+	
+	public void consultarRss(ActionEvent evt){
+		RssDTO rssDto = (RssDTO) (evt.getComponent()
+				.getAttributes().get("selectedUrl"));
+		urlSeleccionado = rssDto.getUrl();
+	}
+
+	public void consultarPanel(){
 		
+		lasColeccionesUrl = businessDelegatorView.consultarColeccionesPorURL(urlSeleccionado);
+		
+		if(lasColeccionesUrl.size()==1){
+			//panelSolo = new Panel(); 
+			panelSolo.setVisible(true);
+			//panelVarios = new Panel();
+			panelVarios.setVisible(false);
+			txtUrlEliminar.setValue(urlSeleccionado);
+			
+		}else{
+			//panelSolo = new Panel(); 
+			panelSolo.setVisible(false);
+			//panelVarios = new Panel();
+			panelVarios.setVisible(true);
+		}
 	}
 	
 	public String action_delete() throws Exception {
 		try {
-			
-			
-			Rss codigo = businessDelegatorView.consultarCodigoRss(urlSeleccionado);
+			Rss rss = new Rss();
+			Colecciones laColeccion = new Colecciones();
+			ColeccionesRss colrss = new ColeccionesRss();
+			Entradas entrada = new Entradas();
 			
 			ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder
 					.currentRequestAttributes();
@@ -272,23 +310,48 @@ public class RssView implements Serializable {
 					.getSession();
 			usuarioSecurity = (Usuarios) session.getAttribute("usuarioLector");
 			
-			Entradas laEntrada = businessDelegatorView.consultarEntradas(codigo);
-			if(laEntrada != null){
-				businessDelegatorView.deleteEntradas(laEntrada);
-			}
-			
-			String nombreColeccion = businessDelegatorView.nombreColeccionPorCodigoRss(codigo);
-			Colecciones laColeccion = new Colecciones();
-			laColeccion = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, nombreColeccion);
-			
-			ColeccionesRss laColeccionRss = businessDelegatorView.consultarColeccionesRss(codigo, laColeccion);
-			if(laColeccionRss != null){
-				businessDelegatorView.deleteColeccionesRss(laColeccionRss);
-			}
-			
-			businessDelegatorView.deleteRss(codigo);
-			FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYDELETED);
-			//action_clear();
+			if(lasColeccionesUrl.size()==1){
+				
+				rss = businessDelegatorView.consultarRssPorURl(urlSeleccionado);
+				
+				String nombreColeccion = businessDelegatorView.nombreColeccionPorCodigoRss(rss);
+				laColeccion = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, nombreColeccion);
+				colrss = businessDelegatorView.consultarColeccionRssPorColeRss(rss, laColeccion);						
+				businessDelegatorView.deleteColeccionesRss(colrss);
+				
+				Entradas laEntrada = businessDelegatorView.consultarEntradas(rss);
+				if(laEntrada != null){
+					businessDelegatorView.deleteEntradas(laEntrada);
+				}
+												
+								
+				businessDelegatorView.deleteRss(rss);
+				txtUrlEliminar.setValue("");
+				FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYDELETED);
+			}else{
+				
+				lasColeccionesUrl = businessDelegatorView.consultarColeccionesPorURL(urlSeleccionado);
+				
+				coleccionSeleSOM =  (String) somColeccionesUrl.getValue();
+				
+				laColeccion = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarioSecurity, coleccionSeleSOM);
+				
+				rss = businessDelegatorView.consultarRssPorUrlCole(urlSeleccionado, laColeccion);
+				
+				colrss = businessDelegatorView.consultarColeccionRssPorColeRss(rss, laColeccion);
+				businessDelegatorView.deleteColeccionesRss(colrss);
+				
+				Entradas laEntrada = businessDelegatorView.consultarEntradas(rss);
+				if(laEntrada != null){
+					businessDelegatorView.deleteEntradas(laEntrada);
+				}
+				
+				businessDelegatorView.deleteRss(rss);
+				lasColeccionesUrl = null;
+				coleccionSeleSOM = null;
+				FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYDELETED);				
+				//action_clear();
+			}		
 			
 		} catch (Exception e) {
 			data = null;
@@ -296,6 +359,47 @@ public class RssView implements Serializable {
 		}
 		
 		return "rssEliminado";
+	}
+	
+	/*public void cargarBtn(){
+		btnFavorito = new CommandButton();
+		btnFavorito.setValue("Me Gusta");
+	}*/
+	
+	public void consultarRssFavorito(ActionEvent evt){
+		RssDTO rssDto = (RssDTO) (evt.getComponent()
+				.getAttributes().get("selectedUrl"));
+		rssSeleccionado = rssDto.getUrl();
+	}
+	
+	public String favorito() throws Exception {
+		
+		try {
+			Rss rss = new Rss();
+			Entradas entrada = new Entradas();
+			Date fechaMeGusta = new Date();			
+			
+			rss = businessDelegatorView.consultarRssPorURl(rssSeleccionado);
+			entrada = businessDelegatorView.consultarEntradaPorRss(rss);
+			
+			if(entrada.getFavorito().equals("N")){
+				entrada.setFavorito("S");
+				entrada.setFechaFavorito(fechaMeGusta);
+				businessDelegatorView.updateEntradas(entrada);
+			}else
+				if(entrada.getFavorito().equals("S")){
+					entrada.setFavorito("N");
+					businessDelegatorView.updateEntradas(entrada);
+				}			
+			
+			rssSeleccionado = null;
+			//urlSeleccionado = null;
+			
+		} catch (Exception e) {
+			throw e;
+		}
+		
+		return "favorito";
 	}
 
 	public String action_closeDialog() {
@@ -513,6 +617,78 @@ public class RssView implements Serializable {
 
 	public void setShowDialog(boolean showDialog) {
 		this.showDialog = showDialog;
+	}
+
+	public Panel getPanelSolo() {
+		return panelSolo;
+	}
+
+	public void setPanelSolo(Panel panelSolo) {
+		this.panelSolo = panelSolo;
+	}
+
+	public Panel getPanelVarios() {
+		return panelVarios;
+	}
+
+	public void setPanelVarios(Panel panelVarios) {
+		this.panelVarios = panelVarios;
+	}
+
+	public List<Colecciones> getLasColeccionesUrl() {
+		return lasColeccionesUrl;
+	}
+
+	public void setLasColeccionesUrl(List<Colecciones> lasColeccionesUrl) {
+		this.lasColeccionesUrl = lasColeccionesUrl;
+	}
+
+	public SelectOneMenu getSomColeccionesUrl() {
+		return somColeccionesUrl;
+	}
+
+	public void setSomColeccionesUrl(SelectOneMenu somColeccionesUrl) {
+		this.somColeccionesUrl = somColeccionesUrl;
+	}
+
+	public OutputLabel getLblUrlEliminar() {
+		return lblUrlEliminar;
+	}
+
+	public void setLblUrlEliminar(OutputLabel lblUrlEliminar) {
+		this.lblUrlEliminar = lblUrlEliminar;
+	}
+
+	public InputText getTxtUrlEliminar() {
+		return txtUrlEliminar;
+	}
+
+	public void setTxtUrlEliminar(InputText txtUrlEliminar) {
+		this.txtUrlEliminar = txtUrlEliminar;
+	}
+
+	public CommandButton getBtnFavorito() {
+		return btnFavorito;
+	}
+
+	public void setBtnFavorito(CommandButton btnFavorito) {
+		this.btnFavorito = btnFavorito;
+	}
+
+	public List<Rss> getRssColeccion() {
+		return rssColeccion;
+	}
+
+	public void setRssColeccion(List<Rss> rssColeccion) {
+		this.rssColeccion = rssColeccion;
+	}
+
+	public String getRssSeleccionado() {
+		return rssSeleccionado;
+	}
+
+	public void setRssSeleccionado(String rssSeleccionado) {
+		this.rssSeleccionado = rssSeleccionado;
 	}
 	
 	

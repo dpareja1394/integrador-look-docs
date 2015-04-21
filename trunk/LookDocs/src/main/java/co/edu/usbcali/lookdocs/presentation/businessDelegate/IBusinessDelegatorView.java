@@ -367,12 +367,33 @@ public interface IBusinessDelegatorView {
     
     public Colecciones consultarColeccionPorNombreYUsuario(Usuarios usuarios, String nombreColeccion) throws Exception;
     
-    public Rss consultarCodigoRss(String url);
+    public List<Rss> consultarCodigoRss(String url);
     
     public String nombreColeccionPorCodigoRss(Rss rss);
     
     public Entradas consultarEntradas(Rss rss);
     
     public ColeccionesRss consultarColeccionesRss(Rss rss, Colecciones coleccion);
+    
+    public String findColeccionPorId(Long idColeccion);
+    
+    public List<Colecciones> consultarColeccionesPorURL(String url);
+    
+    public Rss consultarRssPorURl(String url);
+    
+    public ColeccionesRss consultarColeccionRssPorColeRss(Rss rss, Colecciones coleccion);
+    
+    public Rss consultarRssPorUrlCole(String rss, Colecciones coleccion);
+    
+    public Entradas consultarEntradaPorRss(Rss rss);
+    
+    public List<Entradas> consultarEntradasPorCole(Colecciones coleccion);
+    
+    //rssDTO por coleccion
+    public List<RssDTO> getDataRssPorColeccion(Colecciones coleccion) throws Exception;
+    
+    public List<Colecciones> consultarColePorURL(String url);
+    
+    public List<Rss> consultarRssPorURlList(String url);
     
 }

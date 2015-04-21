@@ -17,4 +17,6 @@ public interface IColeccionesRssDAO extends Dao<ColeccionesRss, Long> {
 	public ColeccionesRss consultarSiExisteRssEnLaColeccion(Long idColeccion, String urlRss);
 	
 	public ColeccionesRss consultarColeccionesRss(Rss rss, Colecciones coleccion);
+	
+	public ColeccionesRss consultarColeccionRssPorColeRss(Rss rss, Colecciones coleccion);
 }

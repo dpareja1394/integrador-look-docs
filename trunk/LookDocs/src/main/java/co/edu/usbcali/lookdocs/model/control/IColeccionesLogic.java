@@ -59,7 +59,9 @@ public interface IColeccionesLogic {
     
     public Colecciones consultarColeccionPorNombreYUsuario(Usuarios usuarios, String nombreColeccion) throws Exception;
     
-    public Rss consultarCodigoRss(String url);
+    public List<Rss> consultarCodigoRss(String url);
     
     public String nombreColeccionPorCodigoRss(Rss rss);
+    
+    public String findColeccionPorId(Long idColeccion);
 }
