@@ -1,0 +1,134 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	</h:head>
+
+	<h:body>
+		  <ui:composition template="/WEB-INF/facelets/template.xhtml">	
+		 
+		 	<ui:define name="body">	
+				<f:view>
+					<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"/>               
+					<p:dialog modal="true" widgetVar="statusDialog" header="Loading"  draggable="false" closable="false">  
+   						<p:graphicImage value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />   
+					</p:dialog>
+		  			<h:form id="frm">								  		
+						
+						<p:panel id="panelDataTableEntradas" header="EntradasData">
+							<p:growl id="men"/>				
+							<p:dataTable value="#{entradasView.data}" var="entradas"
+								paginator="true" rows="5">
+																										<p:column filterBy="#{entradas.codigoEntra}" sortBy="#{entradas.codigoEntra}" >
+										 <f:facet name="header">
+										<h:outputText value="codigoEntra"/>
+										</f:facet>
+										 <h:outputText value="#{entradas.codigoEntra}"/>
+										 </p:column>
+			                    																									
+										<p:column filterBy="#{entradas.favorito}" sortBy="#{entradas.favorito}" >
+										 <f:facet name="header">
+										<h:outputText value="Favorito"/>
+										</f:facet>
+										 <h:outputText value="#{entradas.favorito}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{entradas.fechaFavorito}" sortBy="#{entradas.fechaFavorito}" >
+										 <f:facet name="header">
+										<h:outputText value="FechaFavorito"/>
+										</f:facet>
+										 <h:outputText value="#{entradas.fechaFavorito}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{entradas.fechaLeido}" sortBy="#{entradas.fechaLeido}" >
+										 <f:facet name="header">
+										<h:outputText value="FechaLeido"/>
+										</f:facet>
+										 <h:outputText value="#{entradas.fechaLeido}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{entradas.leido}" sortBy="#{entradas.leido}" >
+										 <f:facet name="header">
+										<h:outputText value="Leido"/>
+										</f:facet>
+										 <h:outputText value="#{entradas.leido}"/>
+										</p:column>   
+			                    									
+										<p:column filterBy="#{entradas.codigoRss_Rss}" sortBy="#{entradas.codigoRss_Rss}" >
+										 <f:facet name="header">
+										<h:outputText value="CodigoRss_Rss"/>
+										</f:facet>
+										 <h:outputText value="#{entradas.codigoRss_Rss}"/>
+										</p:column>   
+			                    			                    
+								<p:column headerText="Options">
+									<p:commandButton id="btnEdit" icon="ui-icon-pencil"
+										update=":dialogEntradas"
+										actionListener="#{entradasView.action_edit}">
+										<f:attribute name="selectedEntradas" value="#{entradas}" />
+									</p:commandButton>
+									<p:commandButton id="btnDelete"									
+										title="Delete" actionListener="#{entradasView.action_delete_datatable}"
+										onclick="if(!confirm('Do you really want to delete this Entry?')){return false;}"
+										icon="ui-icon-trash" update="@form">
+										<f:attribute name="selectedEntradas" value="#{entradas}" />
+									</p:commandButton>
+								</p:column>									                    
+							</p:dataTable>	
+						</p:panel>
+						<p:panel id="panelBoton">
+							<div align="center">
+								<p:commandButton id="btnNew" value="New"
+									action="#{entradasView.action_new()}" update=":dialogEntradas" />
+							</div>
+						</p:panel>						
+		   			</h:form>
+					<p:dialog id="dialogEntradas" appendTo="@(body)" draggable="true"
+						closable="false" visible="#{entradasView.showDialog}" resizable="false"
+						modal="true" width="500">
+						<h:form id="formDialog">
+							<p:messages id="msg" />
+							<p:panel id="panelEntradas" header="Entradas">							
+							    <h:panelGrid columns="2" id="panelGrid" >
+																		 <h:outputText id="msgCodigoEntra" value="CodigoEntra"/>
+									 <p:inputText id="txtCodigoEntra" binding="#{entradasView.txtCodigoEntra}">
+									 <p:ajax update=":dialogEntradas" listener="#{entradasView.listener_txtId}"/>
+									 </p:inputText>	
+																											
+																		<h:outputText id="msgFavorito" value=" Favorito"/>
+									<p:inputText id="txtFavorito" disabled="true" binding="#{entradasView.txtFavorito}"/>
+																		<h:outputText id="msgLeido" value=" Leido"/>
+									<p:inputText id="txtLeido" disabled="true" binding="#{entradasView.txtLeido}"/>
+																		<h:outputText id="msgCodigoRss_Rss" value=" CodigoRss_Rss"/>
+									<p:inputText id="txtCodigoRss_Rss" disabled="true" binding="#{entradasView.txtCodigoRss_Rss}"/>
+																		
+																													<h:outputText id="msgFechaFavorito" value=" FechaFavorito"/>
+																				<p:calendar showOn="button" navigator="true" locale="en" 
+										binding="#{entradasView.txtFechaFavorito}" >
+										<p:ajax event="dateSelect" listener="#{entradasView.listener_txtFechaFavorito}" />
+										</p:calendar>
+																				<h:outputText id="msgFechaLeido" value=" FechaLeido"/>
+																				<p:calendar showOn="button" navigator="true" locale="en" 
+										binding="#{entradasView.txtFechaLeido}" >
+										<p:ajax event="dateSelect" listener="#{entradasView.listener_txtFechaLeido}" />
+										</p:calendar>
+																										    </h:panelGrid>
+							</p:panel>						   
+							<p:panel id="panelBotones">
+								<div align="center">					
+									<p:commandButton id="btnSave" binding="#{entradasView.btnSave}" value="Save" action="#{entradasView.action_save()}" update=":dialogEntradas :frm:panelDataTableEntradas" />
+									<p:commandButton id="btnClear" value="Clear" action="#{entradasView.action_clear()}" update=":dialogEntradas" />
+									<p:commandButton id="btnExit" value="Exit" action="#{entradasView.action_closeDialog()}" update=":dialogEntradas" />
+								</div>
+							</p:panel>					
+						</h:form>
+					</p:dialog>
+				</f:view>
+			</ui:define>		
+		</ui:composition>	
+	</h:body>	
+</html>	

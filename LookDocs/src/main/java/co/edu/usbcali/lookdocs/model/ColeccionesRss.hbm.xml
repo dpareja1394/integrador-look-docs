@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 27-feb-2015 15:10:55 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.edu.usbcali.lookdocs.model.ColeccionesRss" table="colecciones_rss" schema="public">
+        <id name="codigoColRss" type="java.lang.Long">
+            <column name="codigo_col_rss" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="rss" class="co.edu.usbcali.lookdocs.model.Rss" fetch="select">
+            <column name="rss_codigo_rss" not-null="true" />
+        </many-to-one>
+        <many-to-one name="colecciones" class="co.edu.usbcali.lookdocs.model.Colecciones" fetch="select">
+            <column name="colecciones_codigo_cole" not-null="true" />
+        </many-to-one>
+    </class>
+    <sql-query name="colecciones_rss_codigo_col_rss_seq">
+        <return-scalar column="nextval" type="java.lang.Long" />
+	  <![CDATA[
+	    SELECT nextval('COLECCIONES_RSS_CODIGO_COL_RSS_SEQ');
+	  ]]>
+    </sql-query>
+</hibernate-mapping>

@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	<ui:composition
+		template="/WEB-INF/facelets/templateLector.xhtml">
+		<ui:define name="body">
+<h:head>
+	<f:facet name="first">
+		<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
+		<title>Bievenido a LookDoocs</title>
+	</f:facet>
+</h:head>
+<f:metadata>
+	<f:viewAction id="metadata" action="#{categoriasView.consultarArbol()}" />
+	<f:viewAction action="#{coleccionesView.consultarArbolColecciones()}" />
+	<f:viewAction id="perfilUsuario" action="#{usuariosView.perfilLector()}" />
+</f:metadata>
+
+<h:body>
+
+			<f:view contentType="text/html">
+				<p:ajaxStatus onstart="PF('statusDialog').show()"
+					onsuccess="PF('statusDialog').hide()" />
+				<p:dialog widgetVar="statusDialog" header="Espere porfavor..."
+					closable="false">
+					<p:graphicImage
+						value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
+				</p:dialog>
+				<p:growl id="msjRSSAdmin" showDetail="false" autoUpdate="true" />
+				<h:form>
+					<p:panel id="panelDataArticulos" header="Articulos">
+						<p:dataTable id="tabla" value="#{articulosView.dataByCateg}" emptyMessage="Esta categoria aun no tiene articulos"
+							var="articulos" paginator="true" rows="5" editable="true">
+
+							<p:ajax event="rowEdit" update="tabla"
+								listener="#{articulosView.rowEventListener}" />
+							<p:column filterBy="#{articulos.nombre}"
+								sortBy="#{articulos.nombre}" headerText="Nombre">
+
+								<p:cellEditor>
+
+									<f:facet name="output">
+										<h:outputText value="#{articulos.nombre}" />
+									</f:facet>
+
+									<f:facet name="input">
+										<p:inputText value="#{articulos.nombre}" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column filterBy="#{articulos.descripcion}"
+								sortBy="#{articulos.descripcion}" headerText="Descripcion">
+
+								<p:cellEditor>
+
+									<f:facet name="output">
+										<h:outputText value="#{articulos.descripcion}" />
+									</f:facet>
+
+									<f:facet name="input">
+										<p:inputTextarea value="#{articulos.descripcion}" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column filterBy="#{articulos.autor}"
+								sortBy="#{articulos.autor}" headerText="Autor">
+
+								<p:cellEditor>
+
+									<f:facet name="output">
+										<h:outputText value="#{articulos.autor}" />
+									</f:facet>
+
+									<f:facet name="input">
+										<h:outputText value="#{articulos.autor}" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+
+							<p:column filterBy="#{articulos.fechaCreacion}"
+								sortBy="#{articulos.fechaCreacion}"
+								headerText="Fecha de Creacion">
+
+								<p:cellEditor>
+
+									<f:facet name="output">
+										<h:outputText value="#{articulos.fechaCreacion}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</f:facet>
+
+									<f:facet name="input">
+										<h:outputText value="#{articulos.fechaCreacion}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</h:outputText>
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column filterBy="#{articulos.categoria}"
+								sortBy="#{articulos.categoria}" headerText="Categoria">
+
+								<p:cellEditor>
+
+									<f:facet name="output">
+										<h:outputText value="#{articulos.categoria}" />
+									</f:facet>
+
+									<f:facet name="input">
+										<h:outputText value="#{articulos.categoria}" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column headerText="Opciones">
+								<p:tooltip for="btnDescargarArticulo" value="Descargar Articulo"
+									showEffect="fade" hideEffect="fade" />
+								<p:tooltip for="btnVerArticulo" value="Ver Articulo"
+									showEffect="fade" hideEffect="fade" />								
+								<p:commandButton id="btnDescargarArticulo"
+									actionListener="#{articulosView.download}"
+									title="Descargar Articulo" icon="ui-icon-arrowstop-1-s"
+									style="width: 1.5em;height: 1.5em;">
+									<f:attribute name="selectedArticulos" value="#{articulos}" />
+								</p:commandButton>
+								<p:commandButton id="btnVerArticulo"
+									actionListener="#{articulosView.visualizarArticuloLector}"
+									title="Descargar Articulo" icon="ui-icon-search"
+									style="width: 1.5em;height: 1.5em;">
+									<f:attribute name="selectedArticulos" value="#{articulos}" />
+								</p:commandButton>
+
+							</p:column>
+
+						</p:dataTable>
+
+
+					</p:panel>
+
+
+
+				</h:form>
+			</f:view>
+		
+</h:body>
+</ui:define>
+	</ui:composition>
+</html>

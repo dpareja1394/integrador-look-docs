@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 27-feb-2015 15:10:55 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.edu.usbcali.lookdocs.model.CategoriasArticulos" table="categorias_articulos" schema="public">
+        <id name="codigoCateArti" type="java.lang.Long">
+            <column name="codigo_cate_arti" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="categorias" class="co.edu.usbcali.lookdocs.model.Categorias" fetch="select">
+            <column name="codigo_cate" not-null="true" />
+        </many-to-one>
+        <many-to-one name="articulos" class="co.edu.usbcali.lookdocs.model.Articulos" fetch="select">
+            <column name="codigo_arti" not-null="true" />
+        </many-to-one>
+        <property name="fechaCreacion" type="java.util.Date">
+            <column name="fecha_creacion" length="13" />
+        </property>
+        <property name="fechaModifcacion" type="java.util.Date">
+            <column name="fecha_modifcacion" length="13" />
+        </property>
+        <property name="usuCrea" type="java.lang.String">
+            <column name="usu_crea" length="150" not-null="true" />
+        </property>
+        <property name="usuModifica" type="java.lang.String">
+            <column name="usu_modifica" length="150" />
+        </property>
+        <property name="estadoRegistro" type="java.lang.String">
+            <column name="estado_registro" length="1" not-null="true" />
+        </property>
+    </class>
+    <sql-query name="CATEGORIAS_ARTICULOS_CODIGO_CATE_ARTI_SEQ">
+        <return-scalar column="nextval" type="java.lang.Long" />
+	  <![CDATA[
+	    SELECT nextval('CATEGORIAS_ARTICULOS_CODIGO_CATE_ARTI_SEQ');
+	  ]]>
+    </sql-query>
+</hibernate-mapping>
