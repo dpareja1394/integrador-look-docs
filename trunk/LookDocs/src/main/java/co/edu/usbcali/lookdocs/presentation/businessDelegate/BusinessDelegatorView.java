@@ -832,6 +832,18 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
 	}
 	
 	@Override
+	public Rss consultarRssPorUrlYColeccion(String url, Colecciones coleccion){
+		return consultarRssPorUrlYColeccion(url, coleccion);
+	}
+	
+	//
+	@Override
+	public List<ArticulosDTO> getDataArticulosByCateg(Long codigoCate) throws Exception {
+		return articulosLogic.getDataArticulosByCateg(codigoCate);
+	}
+	
+
+	@Override
 	public String findColeccionPorId(Long idColeccion){
 		return coleccionesLogic.findColeccionPorId(idColeccion);
 	}
@@ -880,5 +892,11 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
 	@Override
 	public List<Rss> consultarRssPorURlList(String url){
 		return rssLogic.consultarRssPorURlList(url);
+	}
+	
+	@Override
+	public EventosArticulos consultareEventosPorArticulos(Long codigoArti, Long codigoUsua)
+			throws Exception{
+		return eventosArticulosLogic.consultareEventosPorArticulos(codigoArti, codigoUsua);
 	}
 }

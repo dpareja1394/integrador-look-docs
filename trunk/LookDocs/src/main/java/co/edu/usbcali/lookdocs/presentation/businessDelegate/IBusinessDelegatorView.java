@@ -375,6 +375,10 @@ public interface IBusinessDelegatorView {
     
     public ColeccionesRss consultarColeccionesRss(Rss rss, Colecciones coleccion);
     
+    public Rss consultarRssPorUrlYColeccion(String url, Colecciones coleccion);
+    
+    public List<ArticulosDTO> getDataArticulosByCateg(Long codigoCate) throws Exception;
+    
     public String findColeccionPorId(Long idColeccion);
     
     public List<Colecciones> consultarColeccionesPorURL(String url);
@@ -395,5 +399,8 @@ public interface IBusinessDelegatorView {
     public List<Colecciones> consultarColePorURL(String url);
     
     public List<Rss> consultarRssPorURlList(String url);
+    
+    public EventosArticulos consultareEventosPorArticulos(Long codigoArti, Long codigoUsua)
+    		throws Exception;
     
 }
