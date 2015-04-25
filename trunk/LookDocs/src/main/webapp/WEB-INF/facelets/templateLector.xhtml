@@ -1,0 +1,25 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>.::Look Docs::.</title>
+	<link rel="SHORTCUT ICON"
+			href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/iconLD.png" />
+	<link rel="stylesheet" type="text/css"
+		href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/style.css" />
+</h:head>
+
+
+<h:body>
+
+	<div id="menuContainer" style="float: left;">
+		<ui:insert name="menu">
+			<ui:include src="/WEB-INF/facelets/menuLector.jspx" />
+		</ui:insert>
+	</div>
+	<div id="container">
+		<ui:insert name="body" />
+	</div>
+</h:body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<ui:composition
+	template="/WEB-INF/facelets/templateLector.xhtml">
+	<ui:define name="body">
+<h:head>
+	<f:facet name="first">
+		<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
+		<title>Bievenido a LookDoocs</title>
+		<style type="text/css">
+			.Fullscreen {
+				width: 100%;
+				height: 650px;
+			}
+		</style>
+	</f:facet>
+</h:head>
+<f:metadata>
+	<f:viewAction action="#{categoriasView.consultarArbol()}" />
+	<f:viewAction action="#{coleccionesView.consultarArbolColecciones()}" />
+	<f:viewAction id="perfilUsuario" action="#{usuariosView.perfilLector()}" />
+</f:metadata>
+<h:body>
+	<p:media id="pdfViewer" player="pdf" value="#{articulosView.verPDF()}"
+		styleClass="Fullscreen" />
+</h:body>
+</ui:define>
+		</ui:composition>	
+</html>

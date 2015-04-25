@@ -1,0 +1,207 @@
+<jsp:root jsfc="f:view" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<html>
+<body>
+	<f:view>
+		<ui:composition>
+			<f:metadata>
+				<f:viewAction id="metadata"
+					action="#{categoriasView.consultarArbol()}" />
+				<f:viewAction id="perfilUsuario" action="#{usuariosView.perfil()}" />
+			</f:metadata>
+			<h:head>
+				<f:facet name="first">
+					<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
+					<title>LookDocs</title>
+				</f:facet>
+				<link rel="SHORTCUT ICON"
+					href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/iconLD.png" />
+				<link rel="stylesheet" type="text/css"
+					href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/style.css" />
+
+			</h:head>
+
+			
+			<!-- Beging Menu -->
+
+			<h:form id="formMenu" enctype="multipart/form-data">
+			<p:growl id="messages" showDetail="false" />
+			
+				
+				
+							<p:panel id="perfil" style="border-style: none;border: none">
+								<h:panelGrid columns="2" cellpadding="10">
+									<p:graphicImage
+										value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/avatar.jpg" />
+									<p:outputLabel value="#{usuariosView.txtNombreUsuario}" />
+								</h:panelGrid>
+							</p:panel>
+							
+							<p:menu toggleable="true"
+								style="width:210px;border-style: none;border: none">
+								<p:menuitem value="Gestion de Documentos" update="messages"
+									icon="ui-icon-disk"
+									url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/PantallasAdministrador/PrincipalAdministrador.xhtml" />
+								<p:menuitem value="Inicio" update="messages" icon="ui-icon-disk"
+									url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/PantallasAdministrador/FeedPrincipalAdministrador.xhtml" />
+							</p:menu>
+							
+							<p:contextMenu for="arbolCategorias">
+								<p:menuitem value="Crear Categoria"
+									onclick="PF('dlgCrear').show();" update="messages"
+									icon="ui-icon-disk" style="font-size: 0.9em" />
+								<p:menuitem value="Actualizar Categoria"
+									update="messages, panelModificar"
+									onclick="PF('dlgModificar').show();"
+									action="#{categoriasView.defaultModificar()}"
+									icon="ui-icon-arrowrefresh-1-w" style="font-size: 0.9em" />
+								<p:menuitem value="Eliminar Categoria" icon="ui-icon-close"
+									action="#{categoriasView.action_delete()}"
+									style=";font-size: 0.9em" ajax="false" />
+							</p:contextMenu>
+
+							<!-- ARBOL CARGADO DINAMICAMENTE -->
+							<p:panel id="panelCategorias" header="Categorias"
+								style="width:205px;border-style: none;border: none">
+								<p:tree id="arbolCategorias" value="#{categoriasView.raiz}"
+									var="categorias" selectionMode="single"
+									style="width:190px;border-style: none;border: none"
+									selection="#{categoriasView.selectedNode}" dynamic="true">
+									<p:treeNode expandedIcon="ui-icon-folder-open"
+										collapsedIcon="ui-icon-folder-collapsed">
+										<h:outputText value="#{categorias.nombre}" />
+									</p:treeNode>
+									<p:ajax event="select" listener="#{categoriasView.visualizarArticulo()}" update="@([id$=panelCategorias]), @([id$=arbolCategorias])" />
+								</p:tree>
+							</p:panel>
+							<!-- FIN ARBOL CARGADO DINAMICAMENTE -->
+						
+						
+							<p:menu toggleable="true"
+								style="width:210px; height: 151px;border-style: none;border: none;">
+								<p:submenu label="Cuenta">
+									<p:menuitem value="Cambiar Contrasena" icon="ui-icon-disk"
+										onclick="PF('dlgEditPswAdmin').show();" update="messages" />
+									<p:menuitem value="Modificar Nombre de Usuario"
+										icon="ui-icon-disk"
+										onclick="PF('dlgEditNombreUsuarioAdmin').show();"
+										update="messages" />
+								</p:submenu>
+								<p:submenu label="Sesion">
+									<p:menuitem value="Cerrar Sesion" icon="ui-icon-home"
+										action="#{usuariosView.cerrarSesionAdministrador}"
+										url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/j_spring_security_logout" />
+								</p:submenu>
+							</p:menu>
+						
+
+							
+
+
+
+						
+
+				
+
+			<p:dialog header="Cambiar Contrasena" widgetVar="dlgEditPswAdmin"
+				style="font-size: 0.9em;height: 225px;width: 317px;"
+				resizable="true">
+				<h:panelGrid columns="2" cellpadding="10">
+					<p:outputLabel value="Contrasena Actual: *" />
+					<p:password id="pswClaveAdminActual"
+						binding="#{usuariosView.pswClaveAdmin}" />
+					<p:outputLabel value="Nueva Contrasena: *" />
+					<p:password id="pswClaveAdminNueva"
+						binding="#{usuariosView.pswClave}" />
+					<p:outputLabel value="Confirmar Nueva Contrasena: *" />
+					<p:password id="pswClaveAdminNuevaConfirmacion"
+						binding="#{usuariosView.pswClaveConfirmacion}" />
+					<p:commandButton id="btnCambiarClave" value="Cambiar Clave"
+						binding="#{usuariosView.btnCambiarClaveAdministrador}"
+						ajax="false" action="#{usuariosView.cambiarClaveAdministrador}"
+						update="messages" />
+				</h:panelGrid>
+			</p:dialog>
+
+			<p:dialog header="Cambiar Nombre de Usuario"
+				widgetVar="dlgEditNombreUsuarioAdmin"
+				style="font-size: 0.9em;height: 225px;width: 317px;"
+				resizable="true">
+				<h:panelGrid columns="2" cellpadding="10">
+					<p:outputLabel value="Nuevo Nombre de Usuario: " />
+					<p:inputText id="txtNombreUsuario"
+						binding="#{usuariosView.txtNombre}" />
+					<p:commandButton id="btnCambiarNombreUsuario"
+						value="Cambiar Nombre de Usuario"
+						binding="#{usuariosView.btnCambiarNombreUsuarioAdministrador}"
+						ajax="false"
+						action="#{usuariosView.cambiarNombreDeUsuarioAdministrador}"
+						update="messages,@([id$=perfil])" />
+				</h:panelGrid>
+			</p:dialog>
+
+			<p:dialog header="Crear Categoria" widgetVar="dlgCrear" modal="true"
+				style="font-size: 0.9em;height: 225px;width: 317px;"
+				resizable="true">
+				<h:panelGrid columns="2" cellpadding="10">
+					<p:outputLabel value="Nombre" />
+					<p:inputText id="txtNombreCate"
+						binding="#{categoriasView.txtNombre}" />
+					<h:outputText value="Estado: " />
+					<h:selectOneMenu id="estadoCate" label="Text 3"
+						value="#{categoriasView.estadoReg}">
+						<f:selectItem itemLabel="Tipo" noSelectionOption="true" />
+						<f:selectItem itemLabel="Activa" itemValue="1" />
+						<f:selectItem itemLabel="Inactiva" itemValue="2" />
+					</h:selectOneMenu>
+					<p:commandButton id="btnCrearCat" value="Crear"
+						binding="#{categoriasView.btnSave}" ajax="false"
+						action="#{categoriasView.action_create()}"
+						update="prueba,metadata,panelCategorias" />
+
+				</h:panelGrid>
+			</p:dialog>
+
+			<p:dialog id="dlgModificar" header="Modifcar Categoria"
+				widgetVar="dlgModificar"
+				style="font-size: 0.9em;height: 225px;width: 317px;"
+				resizable="true">
+				<p:panel id="panelModificar" style="border-style: none;border: none">
+					<h:panelGrid columns="2" cellpadding="10">
+						<p:outputLabel value="Nombre" />
+						<p:inputText id="txtNombreModify"
+							binding="#{categoriasView.txtNombreModify}">
+						</p:inputText>
+						<h:outputText value="Estado: " />
+						<p:selectOneMenu id="txt5Modifi" label="Estado de la Categoria"
+							value="#{categoriasView.estadoRegistro}">
+							<f:selectItem itemLabel="#{categoriasView.somToSet}"
+								itemValue="1" />
+							<f:selectItem itemLabel="#{categoriasView.somToSet2}"
+								itemValue="2" />
+						</p:selectOneMenu>
+						<p:commandButton id="btnCategModifi" value="Modificar"
+							binding="#{categoriasView.btnModify}" ajax="false"
+							action="#{categoriasView.action_modify()}"
+							update="prueba,metadata,panelModificar" />
+
+					</h:panelGrid>
+				</p:panel>
+
+			</p:dialog>
+
+
+		</h:form>
+	
+			<!-- end menu -->
+		</ui:composition>
+	</f:view>
+</body>
+	</html>
+</jsp:root>

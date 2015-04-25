@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 27-feb-2015 15:10:55 by Hibernate Tools 4.0.0 -->
+<hibernate-mapping>
+    <class name="co.edu.usbcali.lookdocs.model.Entradas" table="entradas" schema="public">
+        <id name="codigoEntra" type="java.lang.Long">
+            <column name="codigo_entra" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="rss" class="co.edu.usbcali.lookdocs.model.Rss" fetch="select">
+            <column name="rss_codigo_rss" not-null="true" />
+        </many-to-one>
+        <property name="favorito" type="java.lang.String">
+            <column name="favorito" length="1" not-null="true" />
+        </property>
+        <property name="fechaFavorito" type="java.util.Date">
+            <column name="fecha_favorito" length="13" />
+        </property>
+        <property name="leido" type="java.lang.String">
+            <column name="leido" length="1" not-null="true" />
+        </property>
+        <property name="fechaLeido" type="java.util.Date">
+            <column name="fecha_leido" length="13" />
+        </property>
+    </class>
+    <sql-query name="ENTRADAS_CODIGO_ENTRA_SEQ">
+		<return-scalar column="nextval" type="java.lang.Long" />
+	  <![CDATA[
+	    SELECT nextval('ENTRADAS_CODIGO_ENTRA_SEQ');
+	  ]]>
+    </sql-query>
+</hibernate-mapping>

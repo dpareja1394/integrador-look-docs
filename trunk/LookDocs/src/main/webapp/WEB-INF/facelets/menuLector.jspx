@@ -1,0 +1,212 @@
+<jsp:root jsfc="f:view" xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<html>
+<body>
+	<f:view>
+		<ui:composition>
+			<f:metadata>
+				<f:viewAction action="#{categoriasView.consultarArbol()}" />
+				<f:viewAction
+					action="#{coleccionesView.consultarArbolColecciones()}" />
+				<f:viewAction id="perfilUsuario"
+					action="#{usuariosView.perfilLector()}" />
+			</f:metadata>
+			<!-- Beging Menu -->
+
+			<h:head>
+				<f:facet name="first">
+					<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
+					<title>LookDocs</title>
+				</f:facet>
+
+				<link rel="SHORTCUT ICON"
+					href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/iconLD.png" />
+				<link rel="stylesheet" type="text/css"
+					href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/style.css" />
+			</h:head>
+
+
+			<h:form id="formLector">
+				<p:growl id="mensajesLector" showDetail="false" autoUpdate="true" />
+
+
+				<p:dialog header="Crear Coleccion" widgetVar="dlg2" modal="true"
+					height="100" resizable="true">
+					<h:panelGrid columns="2" cellpadding="10">
+						<p:outputLabel value="Nombre" />
+						<p:inputText id="txtNombre" binding="#{coleccionesView.txtNombre}" />
+
+						<p:commandButton id="btnCrear" value="Aceptar" ajax="false"
+							binding="#{coleccionesView.btnSave}"
+							action="#{coleccionesView.action_save()}" />
+					</h:panelGrid>
+				</p:dialog>
+
+				<p:dialog id="dialogoModificar" header="Modificar Coleccion"
+					widgetVar="dlg4" modal="true" height="100" resizable="true">
+					<p:panel id="panelM" style="border-style: none;border: none">
+						<h:panelGrid columns="2">
+							<p:outputLabel value="Nuevo Nombre" />
+							<p:inputText id="txtModificarNombre"
+								binding="#{coleccionesView.txtModificarNombre}" />
+
+							<p:commandButton id="btnModificar" value="Modificar" ajax="false"
+								binding="#{coleccionesView.btnModify}"
+								action="#{coleccionesView.action_modify()}" />
+						</h:panelGrid>
+					</p:panel>
+				</p:dialog>
+				
+				<p:panel id="perfil"
+					style="size: 100;border-style: none;border: none">
+					<h:panelGrid columns="2" cellpadding="10">
+						<p:graphicImage
+							value="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/avatar.jpg" />
+						<p:outputLabel value="#{usuariosView.txtNombreUsuarioLector}" />
+					</h:panelGrid>
+				</p:panel>
+				<p:menu toggleable="true"
+					style="width:235px;border-style: none;border: none">
+					<p:menuitem value="Buscar Articulo" update="mensajesLector"
+						icon="ui-icon-disk"
+						url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/PantallasLector/Buscar.xhtml" />
+					<p:menuitem value="Agregar RSS" update="mensajesLector"
+						icon="ui-icon-disk"
+						url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/PantallasLector/RSSLector.xhtml" />
+
+					<p:menuitem value="Inicio" update="mensajesLector"
+						icon="ui-icon-disk"
+						url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/PantallasLector/FeedPrincipalLector.xhtml" />
+				</p:menu>
+				
+				<p:accordionPanel
+					style="width:235px;border-style: none;border: none">
+					<!-- ARBOL CARGADO DINAMICAMENTE -->
+					<p:tab title="Categorias">
+						<p:tree value="#{categoriasView.raiz}" var="categorias"
+							selectionMode="single"
+							style="width:199px;border-style: none;border: none"
+							selection="#{categoriasView.selectedNode}" dynamic="true">
+							<p:treeNode expandedIcon="ui-icon-folder-open"
+								collapsedIcon="ui-icon-folder-collapsed">
+								<h:outputText value="#{categorias.nombre}" />
+							</p:treeNode>
+							<p:ajax event="select"
+								listener="#{categoriasView.visualizarArticuloLector()}" />
+						</p:tree>
+					</p:tab>
+					<!-- FIN ARBOL CARGADO DINAMICAMENTE -->
+				</p:accordionPanel>
+				<p:accordionPanel
+					style="width:235px;border-style: none;border: none">
+					<p:tab title="Tus Colecciones">
+						<p:commandLink value="Crear Coleccion" type="button"
+							onclick="PF('dlg2').show();" />
+						<p:tree id="arbolColecciones" value="#{coleccionesView.raizArbol}"
+							var="colecciones" animate="true" selectionMode="single"
+							style="width:199px;border-style: none;border: none"
+							selection="#{coleccionesView.seleccionarNodo}">
+							<p:treeNode icon="ui-icon-folder-collapsed">
+								<h:outputLabel value="#{colecciones}" />
+
+								
+							</p:treeNode>
+							<p:ajax event="select" listener="#{coleccionesView.obtenerSeleccionado()}"  />
+						</p:tree>
+						
+						
+						<!-- para buscar un componente  se utiliza @([id$=idDelComponente]) -->
+
+					</p:tab>
+				</p:accordionPanel>
+				
+				<!-- onclick="location.href = '../j_spring_security_logout';" -->
+				<p:menu toggleable="true"
+					style="width:235px;border-style: none;border: none">
+					<p:submenu label="Colecciones">
+						<p:menuitem value="Gestionar Colecciones "
+							icon="ui-icon-arrowrefresh-1-w" onclick="PF('dlgGC').show();" />
+					</p:submenu>
+					<p:submenu label="Cuenta">
+						<p:menuitem value="Editar Cuenta" icon="ui-icon-disk"
+							update="mensajesLector"
+							url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/PantallasLector/EditarCuentas.xhtml" />
+
+					</p:submenu>
+					<p:submenu label="Sesion">
+
+						<p:menuitem value="Cerrar Sesion" icon="ui-icon-home"
+							action="#{usuariosView.cerrarSesionLector}"
+							url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/j_spring_security_logout" />
+
+					</p:submenu>
+				</p:menu>
+				<p:dialog id="dialogoGestionarColecciones"
+					header="Gestionar Colecciones" widgetVar="dlgGC" resizable="true">
+					<p:tabView>
+						<p:tab title="Modificar Coleccion">
+
+							<p:panelGrid columns="1">
+								<p:outputLabel id="txtSelectColeModifiy"
+									value="Seleccione La Coleccion Que Desea renombrar" />
+
+								<p:selectOneMenu id="somColeccionesLectorModify"
+									binding="#{coleccionesView.somColeccionesModify}">
+									<f:selectItem itemValue="-1"
+										itemLabel="Seleccione una Coleccion" />
+									<f:selectItems value="#{coleccionesView.lasColeccionesItems}" />
+								</p:selectOneMenu>
+
+								<p:outputLabel value="Cual es el nuevo nombre" />
+								<p:inputText id="txtModificarColeccion"
+									binding="#{coleccionesView.txtModificarNombre}" />
+
+								<p:commandButton id="btnModifyColeccion" value="Modificar"
+									binding="#{coleccionesView.btnModify}"
+									action="#{coleccionesView.action_modify}"
+									onclick="#{coleccionesView.consultarArbolColecciones()}" />
+							</p:panelGrid>
+
+
+						</p:tab>
+						<p:tab title="Eleminar Coleccion">
+
+							<p:panelGrid columns="1">
+								<p:outputLabel id="txtSelectColeDelete"
+									value="Seleccione La Coleccion Que Desea Eliminar" />
+
+								<p:selectOneMenu id="somColeccionesLectorDelete"
+									binding="#{coleccionesView.somColeccionesDelete}">
+									<f:selectItem itemValue="-1"
+										itemLabel="Seleccione una Coleccion" />
+									<f:selectItems value="#{coleccionesView.lasColeccionesItems}" />
+								</p:selectOneMenu>
+
+								<p:commandButton id="btnDeleteColeccion" value="Eliminar"
+									binding="#{coleccionesView.btnDelete}"
+									action="#{coleccionesView.action_delete}"
+									onclick="#{coleccionesView.consultarArbolColecciones()}" />
+							</p:panelGrid>
+
+
+						</p:tab>
+					</p:tabView>
+				</p:dialog>
+
+
+			</h:form>
+
+
+
+			<!-- end menu -->
+		</ui:composition>
+	</f:view>
+</body>
+	</html>
+</jsp:root>

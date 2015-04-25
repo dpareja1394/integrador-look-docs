@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<ui:composition template="/WEB-INF/facelets/templateLector.xhtml">
+		<ui:define name="body">
+<h:head>
+	<f:facet name="first">
+		<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
+		<title>Bievenido a LookDoocs</title>
+	</f:facet>
+</h:head>
+<f:metadata>
+	<f:viewAction action="#{categoriasView.consultarArbol()}" />
+	<f:viewAction action="#{coleccionesView.consultarArbolColecciones()}" />
+	<f:viewAction action="#{coleccionesView.cargar()}" />	
+	<f:viewAction id="perfilUsuario"
+		action="#{usuariosView.perfilLector()}" />
+		
+</f:metadata>
+<h:body>
+	
+			<f:view contentType="text/html">
+				<p:growl showDetail="false" />
+				<h:form id="idform">
+				
+					
+					
+					<p:panel id="panelRssColeccion" header="Lista de RSS"  >
+						<p:dataTable id="tablaRss" emptyMessage="No Hay Rss En Esta Coleccion"
+							value="#{coleccionesView.rssPorColeccionDto}" var="rss">
+							<p:column headerText="URL">
+								<p:outputLabel value="#{rss.url}" />
+							</p:column>
+							<p:column headerText="Favorito" style="width:140px;text-align: center" >
+								<p:outputLabel value="#{rss.favorito}" />
+							</p:column>
+							<p:column headerText="Leido / No Leido" style="width:140px;text-align: center" >
+								<p:outputLabel value="#{rss.leido}" />
+							</p:column>
+							<p:column style="width:140px;text-align: center">
+
+								<p:tooltip for="btnMostrarFeed" value="Mostrar"
+									showEffect="fade" hideEffect="fade" />
+
+								<p:commandButton id="btnMostrarFeed" ajax="false" binding="#{coleccionesView.btnMostrarFD}" 
+									actionListener="#{coleccionesView.actionMostrarFeedDTO}" action="#{coleccionesView.actionMostrarFeed}"
+									title="Mostrar Feed" icon="ui-icon-search"
+									update="@([id$=panelRssColeccion]), feedReader, @([id$=tablaRss])">
+									<f:attribute name="selectedUrl" value="#{rss}" />									
+								</p:commandButton>
+								
+								<p:commandButton id="btnFavorito" binding="#{rssView.btnFavorito}" actionListener="#{rssView.consultarRssFavorito}" 
+									action="#{rssView.favorito}" title="Te Gusta?" icon="ui-icon-check" update="@([id$=panelRssColeccion])" >
+									<f:attribute name="selectedUrl" value="#{rss}" />
+								</p:commandButton>	
+								
+								<p:commandButton  id="btnEleminar" binding="#{coleccionesView.btnEleminarUrl}" title="Eliminar" icon="ui-icon-trash" 
+								actionListener="#{rssView.consultarRss}" onclick="PF('dlgDeleteRSS').show();" action="#{rssView.consultarPanel()}" update="@([id$=panelPadre])"  >
+									<f:attribute name="selectedUrl" value="#{rss}" />
+								</p:commandButton> 
+									
+								
+
+							</p:column>
+						</p:dataTable>
+						
+						<p:dialog header="Eliminar RSS" widgetVar="dlgDeleteRSS" resizable="true" >
+						<p:panel id="panelPadre" >
+							<p:panel id="panelRssSolo" binding="#{rssView.panelSolo}" visible="false"  >
+								<p:panelGrid columns="1"  >
+									<h:outputLabel value="Se Eliminara El Siguiente Rss" />
+									<p:inputText binding="#{rssView.txtUrlEliminar}" disabled="true" style="width:300px;text-align: center" />
+									<p:commandButton id="btnEliminar" value="Eliminar" action="#{rssView.action_delete}" update="@([id$=panelRssColeccion]), @([id$=tablaRss])" />	
+								</p:panelGrid>								
+							</p:panel>
+							
+							<p:panel id="panelRssVarios" binding="#{rssView.panelVarios}" visible="false">
+								<p:panelGrid columns="1" >
+									<h:outputLabel value="Este Rss Se Encuentra En Las Siguientes Colecciones, Seleccione La Coleccion De La Cual Lo Desea Eliminar" />
+									<p:selectOneMenu id="somColeccionesPorUrl" binding="#{rssView.somColeccionesUrl}" >
+										<f:selectItem itemValue="-1"
+										itemLabel="Seleccione una Colección" />
+										<f:selectItems value="#{rssView.lasColeccionesUrl}" />
+									</p:selectOneMenu>
+									<p:commandButton id="btnEliminarVarios" value="Eliminar" action="#{rssView.action_delete}" update="@([id$=panelRssColeccion]), @([id$=tablaRss])" />
+								</p:panelGrid>								
+							</p:panel>
+						</p:panel>
+							
+						</p:dialog>			
+						
+						
+						<p:separator></p:separator>	
+						
+						<p:dataTable  id="tableNoticias" emptyMessage="No HaY Noticias Para Mostrar" value="#{coleccionesView.lasNoticias}" var="dtNoticias">
+							<p:column headerText="Titulo Noticia" >
+								<p:outputLabel value="#{dtNoticias.titulo}" />							
+							</p:column>
+							<p:column headerText="Descripcion Noticia" >
+								<p:outputLabel value="#{dtNoticias.descripcion}" />
+							</p:column>						
+							<p:column style="width:60px;text-align: center" >
+								<p:commandButton id="btnMostrarNoticia" actionListener="#{coleccionesView.actionMostrarNoticia}" icon="ui-icon-search" >
+									<f:attribute name="selectedNoticia" value="#{dtNoticias}" />	
+								</p:commandButton>								
+							</p:column>							 			
+							
+						</p:dataTable>								
+
+					</p:panel> 
+					
+				</h:form>
+			</f:view>
+		
+</h:body>
+</ui:define>
+	</ui:composition>
+</html>
