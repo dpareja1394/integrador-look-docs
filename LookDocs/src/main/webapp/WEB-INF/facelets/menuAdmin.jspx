@@ -86,12 +86,8 @@
 							<p:menu toggleable="true"
 								style="width:210px; height: 151px;border-style: none;border: none;">
 								<p:submenu label="Cuenta">
-									<p:menuitem value="Cambiar Contrasena" icon="ui-icon-disk"
-										onclick="PF('dlgEditPswAdmin').show();" update="messages" />
-									<p:menuitem value="Modificar Nombre de Usuario"
-										icon="ui-icon-disk"
-										onclick="PF('dlgEditNombreUsuarioAdmin').show();"
-										update="messages" />
+									<p:menuitem value="Editar Cuenta" icon="ui-icon-disk" update="messages" 
+									url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/PantallasAdministrador/EditarCuentasAdmin.xhtml" />
 								</p:submenu>
 								<p:submenu label="Sesion">
 									<p:menuitem value="Cerrar Sesion" icon="ui-icon-home"
@@ -107,45 +103,37 @@
 
 						
 
+			
+			 
+			
+			<p:dialog >
+				
+					
+					
+					<p:commandButton action="#{usuariosView.cambiarClaveAdministrador}"
+						 />
+				
+			</p:dialog>
+			
+			
+			 
+			
+			
+			<p:dialog >
+				
+					<p:commandButton action="#{usuariosView.cambiarNombreDeUsuarioAdministrador}"/>
+						
+					
+				
+			</p:dialog>
+			
+			 
+			
+			
+			
 				
 
-			<p:dialog header="Cambiar Contrasena" widgetVar="dlgEditPswAdmin"
-				style="font-size: 0.9em;height: 225px;width: 317px;"
-				resizable="true">
-				<h:panelGrid columns="2" cellpadding="10">
-					<p:outputLabel value="Contrasena Actual: *" />
-					<p:password id="pswClaveAdminActual"
-						binding="#{usuariosView.pswClaveAdmin}" />
-					<p:outputLabel value="Nueva Contrasena: *" />
-					<p:password id="pswClaveAdminNueva"
-						binding="#{usuariosView.pswClave}" />
-					<p:outputLabel value="Confirmar Nueva Contrasena: *" />
-					<p:password id="pswClaveAdminNuevaConfirmacion"
-						binding="#{usuariosView.pswClaveConfirmacion}" />
-					<p:commandButton id="btnCambiarClave" value="Cambiar Clave"
-						binding="#{usuariosView.btnCambiarClaveAdministrador}"
-						ajax="false" action="#{usuariosView.cambiarClaveAdministrador}"
-						update="messages" />
-				</h:panelGrid>
-			</p:dialog>
-
-			<p:dialog header="Cambiar Nombre de Usuario"
-				widgetVar="dlgEditNombreUsuarioAdmin"
-				style="font-size: 0.9em;height: 225px;width: 317px;"
-				resizable="true">
-				<h:panelGrid columns="2" cellpadding="10">
-					<p:outputLabel value="Nuevo Nombre de Usuario: " />
-					<p:inputText id="txtNombreUsuario"
-						binding="#{usuariosView.txtNombre}" />
-					<p:commandButton id="btnCambiarNombreUsuario"
-						value="Cambiar Nombre de Usuario"
-						binding="#{usuariosView.btnCambiarNombreUsuarioAdministrador}"
-						ajax="false"
-						action="#{usuariosView.cambiarNombreDeUsuarioAdministrador}"
-						update="messages,@([id$=perfil])" />
-				</h:panelGrid>
-			</p:dialog>
-
+			
 			<p:dialog header="Crear Categoria" widgetVar="dlgCrear" modal="true"
 				style="font-size: 0.9em;height: 225px;width: 317px;"
 				resizable="true">

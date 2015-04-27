@@ -77,6 +77,7 @@ public class UsuariosView implements Serializable {
 	private UsuariosDTO selectedUsuarios;
 	private Usuarios entity;
 	private boolean showDialog;
+	private Usuarios usuarioAdmin;
 
 	@ManagedProperty(value = "#{BusinessDelegatorView}")
 	private IBusinessDelegatorView businessDelegatorView;
@@ -930,7 +931,40 @@ public class UsuariosView implements Serializable {
 		return "cerrarLector";
 
 	}
+	
+	public void modificarClaveAdmin(){
+		try {
+			HttpSession httpSession = (HttpSession) FacesContext
+					.getCurrentInstance().getExternalContext().getSession(true);
+			Usuarios usuarios = (Usuarios) httpSession
+					.getAttribute("usuarioAdministrador");
 
+			if (pswClave.getValue().toString().trim().equals("") == true
+					|| pswClaveAdmin.getValue().toString().trim().equals("") == true
+					|| pswClaveConfirmacion.getValue().toString().trim()
+							.equals("") == true) {
+				FacesContext.getCurrentInstance().addMessage("",
+						new FacesMessage("Debe llenar todos los campos"));
+			} else {
+				String claveActual = pswClaveAdmin.getValue().toString();
+				String nuevaClave = pswClave.getValue().toString();
+				String confirmaClave = pswClaveConfirmacion.getValue()
+						.toString();
+				businessDelegatorView.modificarPasswordUsuarios(usuarios,
+						claveActual, nuevaClave, confirmaClave);
+				FacesContext.getCurrentInstance().addMessage("",
+						new FacesMessage("Su contrase�a ha sido modificada"));
+			}
+
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(
+					"",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e
+							.getMessage(), e.getMessage()));
+		}
+
+	}
+	/*
 	public void cambiarClaveAdministrador() {
 		try {
 			HttpSession httpSession = (HttpSession) FacesContext
@@ -963,7 +997,7 @@ public class UsuariosView implements Serializable {
 		}
 
 	}
-
+*/
 	public void cambiarClaveLector() {
 		try {
 			HttpSession httpSession = (HttpSession) FacesContext
@@ -996,8 +1030,8 @@ public class UsuariosView implements Serializable {
 		}
 
 	}
-
-	public void cambiarNombreDeUsuarioAdministrador() {
+	
+	public void modificarNombreUsuarioAdmin(){
 		try {
 			HttpSession httpSession = (HttpSession) FacesContext
 					.getCurrentInstance().getExternalContext().getSession(true);
@@ -1024,6 +1058,7 @@ public class UsuariosView implements Serializable {
 						"",
 						new FacesMessage(
 								"Se ha modificado el nombre de usuario"));
+				txtNombre.setValue("");
 				
 			}
 
@@ -1035,7 +1070,47 @@ public class UsuariosView implements Serializable {
 		}
 
 	}
+	/*
+	public void cambiarNombreDeUsuarioAdministrador() {
+		try {
+			//HttpSession httpSession = (HttpSession) FacesContext
+				//	.getCurrentInstance().getExternalContext().getSession(true);
+			//Usuarios usuarios = (Usuarios) httpSession
+				//	.getAttribute("usuarioAdministrador");
 
+			if (txtNombre.getValue().toString().trim().equals("") == true) {
+				FacesContext.getCurrentInstance().addMessage(
+						"",
+						new FacesMessage(
+								"Debe poner un nuevo nombre de usuario"));
+			} else {
+				String nombreDeUsuarioNuevo = txtNombre.getValue().toString();
+				businessDelegatorView.modificarNombreDeUsuario(usuarioAdmin,
+						nombreDeUsuarioNuevo);
+				//Lineas para actualizar nombre de usuario en la vista y en la sesion
+				String nuevoNombre = businessDelegatorView.getUsuarios(usuarioAdmin.getCodigoUsua()).getNombre();
+				setTxtNombreUsuario(nuevoNombre);
+				//httpSession.removeAttribute("usuarioAdministrador");
+				Usuarios nuevoUsua = businessDelegatorView.getUsuarios(usuarioAdmin.getCodigoUsua());
+				//httpSession.setAttribute("usuarioAdministrador", nuevoUsua);
+				//Lineas para actualizar nombre de usuario en la vista y en la sesion
+				FacesContext.getCurrentInstance().addMessage(
+						"",
+						new FacesMessage(
+								"Se ha modificado el nombre de usuario"));
+				txtNombre.setValue("");
+				
+			}
+
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(
+					"",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e
+							.getMessage(), e.getMessage()));
+		}
+
+	}
+	*/
 	public void cambiarNombreDeUsuarioLector() {
 		try {
 			HttpSession httpSession = (HttpSession) FacesContext
@@ -1121,11 +1196,14 @@ public class UsuariosView implements Serializable {
 
 	
 	public void perfil (){
-		try {
-			HttpSession httpSession = (HttpSession) FacesContext
-					.getCurrentInstance().getExternalContext().getSession(true);
-			Usuarios usuario = (Usuarios) httpSession.getAttribute("usuarioAdministrador");
-			setTxtNombreUsuario(usuario.getNombre());
+		try {			
+			
+			
+				HttpSession httpSession = (HttpSession) FacesContext
+						.getCurrentInstance().getExternalContext().getSession(true);
+				Usuarios usuarios = (Usuarios) httpSession.getAttribute("usuarioAdministrador");
+				setTxtNombreUsuario(usuarios.getNombre());
+			
 			
 			
 		} catch (Exception e) {
@@ -1153,5 +1231,15 @@ public class UsuariosView implements Serializable {
 	public String linkRegistroDeUsuarioLector(){
 		return "registrarLector";
 	}
+
+	public Usuarios getUsuarioAdmin() {
+		return usuarioAdmin;
+	}
+
+	public void setUsuarioAdmin(Usuarios usuarioAdmin) {
+		this.usuarioAdmin = usuarioAdmin;
+	}
+	
+	
 
 }

@@ -16,8 +16,8 @@
 </h:head>
 <f:metadata>
 	<f:viewAction id="metadata" action="#{categoriasView.consultarArbol()}" />
-	<f:viewAction action="#{coleccionesView.consultarArbolColecciones()}" />
-	<f:viewAction id="perfilUsuario" action="#{usuariosView.perfil()}" />
+	<!-- <f:viewAction action="#{coleccionesView.consultarArbolColecciones()}" /> -->
+	<f:viewAction id="perfilUsuario" action="#{usuariosView.perfil()}" /> 
 </f:metadata>
 <h:body>
 	<ui:composition template="/PantallasAdministrador/FeedPrincipalAdministrador.xhtml">
@@ -25,46 +25,39 @@
 			<f:view contentType="text/html">
 				<p:growl id="msgs" showDetail="false" autoUpdate="true" />
 				<h:form>
-					<p:panel id="panelEditarCuenta" header="Edición de la Cuenta"
-						style="font-size: 12px;position: absolute; top: 20%;left: 35%;width: auto">
-						<p:growl id="mensajesEditarCuentas" />
-
-						<h:panelGrid columns="2">
-							<p:outputLabel value="Correo (e-mail): " />
-							<p:inputText id="txtemailUsuarios" disabled="true" />
-					    </h:panelGrid>
-					    <h:panelGrid columns="3">
-							<p:outputLabel value="Nombre: " />
-							<p:inputText id="txtNombreUsuarios" disabled="true" />
-							<p:commandButton id="btnEditarNombre" icon="ui-icon-pencil"
-								value="Editar" onclick="PF('dlg2').show();" />
-							<p:outputLabel value="Contraseña: " />
-							<p:password id="txtPasswordUsuarios" disabled="true" />
-							<p:commandButton id="btnEditarPass" icon="ui-icon-pencil"
-								value="Editar" onclick="PF('dlg3').show();" />
-						</h:panelGrid>			
-				
-						<p:dialog header="Nombre" widgetVar="dlg2"
-							height="40">
-							<p:outputLabel value="Nombre: " />
-							<p:inputText id="txtNombreUsuariosEdit"/>
-							<p:commandButton id="btnEditarNombreEdit" icon="ui-icon-check"
-								value="Guardar" />
-						</p:dialog>
-						<p:dialog header="Contraseña" widgetVar="dlg3"
-							height="150">
-							<h:panelGrid columns="2">
-							<p:outputLabel value="Contraseña Actual: " />
-							<p:password id="txtPasswordUsuariosEdit1" />
-							<p:outputLabel value="Contraseña Nueva: " />
-							<p:password id="txtPasswordUsuariosEdit2" />
-							<p:outputLabel value="Verificar Contraseña: " />
-							<p:password id="txtPasswordUsuariosEdit3" />
-							</h:panelGrid>
-							<p:separator/>
-							<p:commandButton id="btnEditarPassEdit" icon="ui-icon-check"
-								value="Guardar" />
-						</p:dialog>
+					<p:panel id="panelEditarCuentaAdmin" header="Editar Cuenta">
+						<p:accordionPanel multiple="true"  >
+							<p:tab title="Cambiar Contrasena" closable="false"  >
+								<h:panelGrid columns="2" cellpadding="10" >
+									<p:outputLabel value="Contrasena Actual: *" />
+									<p:password id="pswClaveAdminActual"
+										binding="#{usuariosView.pswClaveAdmin}" />
+									<p:outputLabel value="Nueva Contrasena: *" />
+									<p:password id="pswClaveAdminNueva"
+										binding="#{usuariosView.pswClave}" />
+									<p:outputLabel value="Confirmar Nueva Contrasena: *" />
+									<p:password id="pswClaveAdminNuevaConfirmacion"
+										binding="#{usuariosView.pswClaveConfirmacion}" />
+									<p:commandButton id="btnCambiarClave" value="Cambiar Clave"
+										binding="#{usuariosView.btnCambiarClaveAdministrador}"
+										ajax="false" action="#{usuariosView.modificarClaveAdmin}"
+										update="msgs" />
+								</h:panelGrid>
+							</p:tab>
+							<p:tab title="Cambiar Nombre de Usuario" closable="false" >
+								<h:panelGrid columns="2" cellpadding="10" >
+									<p:outputLabel value="Nuevo Nombre de Usuario: " />
+									<p:inputText id="txtNombreUsuario"
+										binding="#{usuariosView.txtNombre}" />
+									<p:commandButton id="btnCambiarNombreUsuario"
+										value="Cambiar Nombre de Usuario"
+										binding="#{usuariosView.btnCambiarNombreUsuarioAdministrador}"
+										ajax="false"
+										action="#{usuariosView.modificarNombreUsuarioAdmin}"
+										update="msgs, @([id$=perfil])" />
+								</h:panelGrid>
+							</p:tab>
+						</p:accordionPanel>						
 					</p:panel>
 					
 

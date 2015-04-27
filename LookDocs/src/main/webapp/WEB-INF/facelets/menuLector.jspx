@@ -47,8 +47,7 @@
 							action="#{coleccionesView.action_save()}" />
 					</h:panelGrid>
 				</p:dialog>
-
-				<p:dialog id="dialogoModificar" header="Modificar Coleccion"
+				<!-- <p:dialog id="dialogoModificar" header="Modificar Coleccion"
 					widgetVar="dlg4" modal="true" height="100" resizable="true">
 					<p:panel id="panelM" style="border-style: none;border: none">
 						<h:panelGrid columns="2">
@@ -61,7 +60,8 @@
 								action="#{coleccionesView.action_modify()}" />
 						</h:panelGrid>
 					</p:panel>
-				</p:dialog>
+				</p:dialog> -->
+				
 				
 				<p:panel id="perfil"
 					style="size: 100;border-style: none;border: none">
