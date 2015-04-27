@@ -106,26 +106,6 @@
 			
 			 
 			
-			<p:dialog >
-				
-					
-					
-					<p:commandButton action="#{usuariosView.cambiarClaveAdministrador}"
-						 />
-				
-			</p:dialog>
-			
-			
-			 
-			
-			
-			<p:dialog >
-				
-					<p:commandButton action="#{usuariosView.cambiarNombreDeUsuarioAdministrador}"/>
-						
-					
-				
-			</p:dialog>
 			
 			 
 			
