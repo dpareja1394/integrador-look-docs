@@ -17,7 +17,7 @@
 				<f:viewAction id="perfilUsuario"
 					action="#{usuariosView.perfilLector()}" />
 			</f:metadata>
-			<!-- Beging Menu -->
+			
 
 			<h:head>
 				<f:facet name="first">
@@ -47,20 +47,7 @@
 							action="#{coleccionesView.action_save()}" />
 					</h:panelGrid>
 				</p:dialog>
-				<!-- <p:dialog id="dialogoModificar" header="Modificar Coleccion"
-					widgetVar="dlg4" modal="true" height="100" resizable="true">
-					<p:panel id="panelM" style="border-style: none;border: none">
-						<h:panelGrid columns="2">
-							<p:outputLabel value="Nuevo Nombre" />
-							<p:inputText id="txtModificarNombre"
-								binding="#{coleccionesView.txtModificarNombre}" />
-
-							<p:commandButton id="btnModificar" value="Modificar" ajax="false"
-								binding="#{coleccionesView.btnModify}"
-								action="#{coleccionesView.action_modify()}" />
-						</h:panelGrid>
-					</p:panel>
-				</p:dialog> -->
+				
 				
 				
 				<p:panel id="perfil"
@@ -87,7 +74,7 @@
 				
 				<p:accordionPanel
 					style="width:235px;border-style: none;border: none">
-					<!-- ARBOL CARGADO DINAMICAMENTE -->
+					
 					<p:tab title="Categorias">
 						<p:tree value="#{categoriasView.raiz}" var="categorias"
 							selectionMode="single"
@@ -101,7 +88,7 @@
 								listener="#{categoriasView.visualizarArticuloLector()}" />
 						</p:tree>
 					</p:tab>
-					<!-- FIN ARBOL CARGADO DINAMICAMENTE -->
+					
 				</p:accordionPanel>
 				<p:accordionPanel
 					style="width:235px;border-style: none;border: none">
@@ -121,12 +108,12 @@
 						</p:tree>
 						
 						
-						<!-- para buscar un componente  se utiliza @([id$=idDelComponente]) -->
+						
 
 					</p:tab>
 				</p:accordionPanel>
 				
-				<!-- onclick="location.href = '../j_spring_security_logout';" -->
+				
 				<p:menu toggleable="true"
 					style="width:235px;border-style: none;border: none">
 					<p:submenu label="Colecciones">
@@ -167,15 +154,14 @@
 								<p:inputText id="txtModificarColeccion"
 									binding="#{coleccionesView.txtModificarNombre}" />
 
-								<p:commandButton id="btnModifyColeccion" value="Modificar"
-									binding="#{coleccionesView.btnModify}"
-									action="#{coleccionesView.action_modify}"
-									onclick="#{coleccionesView.consultarArbolColecciones()}" />
+								<p:commandButton id="btnModifyColeccion" value="Modificar" onclick="#{coleccionesView.consultarArbolColecciones()}"
+									binding="#{coleccionesView.btnModify}" update="@form"
+									action="#{coleccionesView.action_modify}"/>
 							</p:panelGrid>
 
 
 						</p:tab>
-						<p:tab title="Eleminar Coleccion">
+						<p:tab title="Eliminar Coleccion">
 
 							<p:panelGrid columns="1">
 								<p:outputLabel id="txtSelectColeDelete"
@@ -188,10 +174,9 @@
 									<f:selectItems value="#{coleccionesView.lasColeccionesItems}" />
 								</p:selectOneMenu>
 
-								<p:commandButton id="btnDeleteColeccion" value="Eliminar"
+								<p:commandButton id="btnDeleteColeccion" value="Eliminar" onclick="#{coleccionesView.consultarArbolColecciones()}"
 									binding="#{coleccionesView.btnDelete}"
-									action="#{coleccionesView.action_delete}"
-									onclick="#{coleccionesView.consultarArbolColecciones()}" />
+									action="#{coleccionesView.action_delete}"/>
 							</p:panelGrid>
 
 
@@ -204,7 +189,7 @@
 
 
 
-			<!-- end menu -->
+			
 		</ui:composition>
 	</f:view>
 </body>

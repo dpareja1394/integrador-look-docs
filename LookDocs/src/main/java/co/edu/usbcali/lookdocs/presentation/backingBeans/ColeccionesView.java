@@ -469,14 +469,13 @@ public class ColeccionesView implements Serializable {
 					.consultarColeccionPorNombreYUsuario(usuarioSecurity,
 							coleccionAModificar);
 			coleccionSeleccionada.setNombre(newName);
-
 			businessDelegatorView.updateColecciones(coleccionSeleccionada);
 			coleccionRaices = null;
 			coleccionSeleccionada = null;
-			consultarArbolColecciones();
 			FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYMODIFIED);
 			txtModificarNombre.setValue(null);
 			txtModificarNombre.setValue("");
+			consultarArbolColecciones();
 		} catch (Exception e) {
 			data = null;
 			FacesUtils.addErrorMessage(e.getMessage());

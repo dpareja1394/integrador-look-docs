@@ -9,13 +9,13 @@
 	xmlns:pe="http://primefaces.org/ui/extensions">
 <ui:composition template="/WEB-INF/facelets/templateAdmin.xhtml">
 	<ui:define name="body">
-		<f:view id="viewAdmin" contentType="text/html">
+		<f:view id="viewAdmin">
 
 
 			<h:head>
 				<f:facet name="first">
 					<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
-					<title>Bievenido a LookDoocs</title>
+					<title>Bienvenido a LookDoocs</title>
 				</f:facet>
 
 			</h:head>
@@ -58,14 +58,26 @@
 										<f:selectItem itemLabel="Activa" itemValue="1" />
 										<f:selectItem itemLabel="Inactiva" itemValue="2" />
 									</p:selectOneMenu>
+									
+									<h:outputText value="Si desea puede escoger una categoria y el articulo sera publicado"/>
+									<br />
+									<h:outputText value="de lo contrario sera cargado en la categoria: Predeterminada" />
+									<br />
+									<h:outputText value="Seleccione la Categoria: " />
+									<br />
+									<p:selectOneMenu id="txt30" label="Categorias"
+										binding="#{articulosView.somCategorias}">
+										<f:selectItem itemLabel="Seleccione una categoria" itemValue="0"/>
+										<f:selectItems value="#{articulosView.lasCategoriasItems}" />
+									</p:selectOneMenu>
+									<br/>
 									<p:fileUpload value="#{articulosView.file}" mode="simple" />
 									<br />
-									<p:commandButton id="btnSubir" value="Subir Documento" binding="#{articulosView.btnSubirPredeterminado}"
+									<p:commandButton id="btnSubir" value="Subir/Publicar Documento"
+										binding="#{articulosView.btnSubirPredeterminado}"
 										action="#{articulosView.crearPredeterminado}" ajax="false"
 										onclick="#{categoriasView.consultarArbol()}"
 										update="@([id$=tabla]),@([id$=panelDataArticulos]),@([id$=prueba]),@([id$=estadoCate])" />
-									<p:commandButton id="btnPublicar" value="Publicar Documento"
-										onclick="PF('ht').show();"/>
 								</h:panelGrid>
 							</p:tab>
 							<p:tab title="Feed de Articulos">
@@ -230,50 +242,33 @@
 
 
 
-					<p:dialog header="Seleccionar categoria" widgetVar="ht"
-						minHeight="40" resizable="false">
+				</h:form>
+
+
+
+
+				<p:dialog header="Cambiar categoria" widgetVar="dlg1" minHeight="40"
+					resizable="false">
+					<h:form id="cambiarCateDialog" enctype="multipart/form-data">
 						<h:outputText value="Seleccione la Categoria: " />
 						<br />
-						<p:selectOneMenu id="txt30" label="Categorias"
-							binding="#{articulosView.somCategorias}">
-							<f:selectItems value="#{articulosView.lasCategoriasItems}" />
-						</p:selectOneMenu>
-						<br/>
-						<p:commandButton value="Publicar"
-							action="#{articulosView.action_create}"
-							onclick="#{categoriasView.consultarArbol()}" ajax="false"
-							update="@([id$=tabla]),@([id$=panelDataArticulos]),@([id$=prueba])" />
-					</p:dialog>
-
-
-					<!-- BARRA DE CARGA DE DESCARGA : PARA QUE FUNCIONE el growl debe ir afuera del form -->
-					<!--						      con el atributo => autoUpdate="true"      Y AL BOTON AGREGARLE LO SIGUIENTE: -->
-					<!-- 							  onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()"-->
-					<!-- <p:dialog widgetVar="statusDialog" header="Espere porfavor..."
-						draggable="false" closable="false" resizable="false">
-						<p:graphicImage
-							url="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/images/ajaxloadingbar.gif" />
-					</p:dialog> -->
-					<!-- BARRA DE CARGA DE DESCARGA -->
-
-					<p:dialog header="Cambiar categoría" widgetVar="dlg1"
-						minHeight="40">
-						<h:outputText value="Seleccione la Categoria: " />
 						<br />
 						<p:selectOneMenu id="somCambiarCategoriaTabladlg1"
 							binding="#{articulosView.somCategoriasTable}">
 							<f:selectItems value="#{articulosView.lasCategoriasItemsTabla}" />
 						</p:selectOneMenu>
-						<p:separator />
-						<p:commandButton id="btnCambiar" value="Cambiar" ajax="false"
-							onclick="#{categoriasView.consultarArbol()}"
-							action="#{articulosView.action_modifyCategoria()}"
-							update="@([id$=tabla]),@([id$=panelDataArticulos]),@([id$=prueba])">
-							<f:attribute name="selectedArticulos" value="#{articulos}" />
-						</p:commandButton>
-					</p:dialog>
-				</h:form>
-
+						<br />
+						<br />
+						<div align="center">
+							<p:commandButton id="btnCambiar" value="Cambiar"
+								onclick="#{categoriasView.consultarArbol()}"
+								action="#{articulosView.action_modifyCategoria()}"
+								update="@([id$=tabla]),@([id$=panelDataArticulos]),@([id$=prueba]),@([id$=cambiarCateDialog])">
+								<f:attribute name="selectedArticulos" value="#{articulos}" />
+							</p:commandButton>
+						</div>
+					</h:form>
+				</p:dialog>
 
 
 			</h:body>

@@ -28,7 +28,7 @@
 			</h:head>
 
 			
-			<!-- Beging Menu -->
+			
 
 			<h:form id="formMenu" enctype="multipart/form-data">
 			<p:growl id="messages" showDetail="false" />
@@ -66,7 +66,7 @@
 									style=";font-size: 0.9em" ajax="false" />
 							</p:contextMenu>
 
-							<!-- ARBOL CARGADO DINAMICAMENTE -->
+							
 							<p:panel id="panelCategorias" header="Categorias"
 								style="width:205px;border-style: none;border: none">
 								<p:tree id="arbolCategorias" value="#{categoriasView.raiz}"
@@ -80,7 +80,7 @@
 									<p:ajax event="select" listener="#{categoriasView.visualizarArticulo()}" update="@([id$=panelCategorias]), @([id$=arbolCategorias])" />
 								</p:tree>
 							</p:panel>
-							<!-- FIN ARBOL CARGADO DINAMICAMENTE -->
+							
 						
 						
 							<p:menu toggleable="true"
@@ -167,7 +167,7 @@
 
 		</h:form>
 	
-			<!-- end menu -->
+			
 		</ui:composition>
 	</f:view>
 </body>
