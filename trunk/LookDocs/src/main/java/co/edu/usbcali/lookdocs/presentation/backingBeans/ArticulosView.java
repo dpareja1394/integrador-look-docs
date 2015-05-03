@@ -484,6 +484,15 @@ public class ArticulosView implements Serializable {
 
 		}
 	}
+	
+	public void publicar() {
+		setShowDialog(true);
+		
+	}
+	
+	public void salir(){
+		setShowDialog(false);
+	}
 
 	public void action_create() {
 
@@ -491,9 +500,9 @@ public class ArticulosView implements Serializable {
 				.getCurrentInstance().getExternalContext().getSession(true);
 		Usuarios autor = (Usuarios) httpSession
 				.getAttribute("usuarioAdministrador");
-
+		
 		String extValidate;
-		pdfUrl = defaulturl + getFile().getFileName();
+		pdfUrl = defaulturl + file.getFileName();
 
 		if (getFile() != null && !file.getFileName().trim().equals("")) {
 			String ext = getFile().getFileName();
@@ -529,6 +538,10 @@ public class ArticulosView implements Serializable {
 					data = null;
 					getData();
 					FacesUtils.addInfoMessage("Archivo cargado correctamente");
+					ExternalContext context = FacesContext.getCurrentInstance()
+							.getExternalContext();
+					context.redirect(context.getRequestContextPath()
+							+ "/PantallasAdministrador/PrincipalAdministrador.xhtml");
 				} catch (Exception e) {
 					FacesUtils.addErrorMessage(e.getMessage());
 				}
@@ -556,7 +569,11 @@ public class ArticulosView implements Serializable {
 				.getCurrentInstance().getExternalContext().getSession(true);
 		Usuarios autor = (Usuarios) httpSession
 				.getAttribute("usuarioAdministrador");
-
+		String prueba = somCategorias.getValue().toString().trim();
+		if(!prueba.equals("0")){
+			action_create();
+		}else{
+		
 		String extValidate;
 		pdfUrl = defaulturl + file.getFileName();
 
@@ -597,6 +614,10 @@ public class ArticulosView implements Serializable {
 					getData();
 					
 					FacesUtils.addInfoMessage("Archivo cargado correctamente");
+					ExternalContext context = FacesContext.getCurrentInstance()
+							.getExternalContext();
+					context.redirect(context.getRequestContextPath()
+							+ "/PantallasAdministrador/PrincipalAdministrador.xhtml");
 					
 				} catch (Exception e) {
 					FacesUtils.addErrorMessage(e.getMessage());
@@ -615,6 +636,8 @@ public class ArticulosView implements Serializable {
 		} catch (Exception e) {
 			data = null;
 			FacesUtils.addErrorMessage(e.getMessage());
+		}
+		
 		}
 		
 	}
@@ -668,7 +691,7 @@ public class ArticulosView implements Serializable {
 		returnCodigoArti = selectedArticulos.getCodigoArti();
 	}
 
-	public String action_modifyCategoria() {
+	public void action_modifyCategoria() {
 		try {
 			Long codigoArti = new Long(returnCodigoArti);
 			CategoriasArticulos entity = businessDelegatorView
@@ -679,12 +702,15 @@ public class ArticulosView implements Serializable {
 			businessDelegatorView.updateCategoriasArticulos(entity);
 			data = null;
 			FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYMODIFIED);
+			ExternalContext context = FacesContext.getCurrentInstance()
+					.getExternalContext();
+			context.redirect(context.getRequestContextPath()
+					+ "/PantallasAdministrador/PrincipalAdministrador.xhtml");
 		} catch (Exception e) {
 			data = null;
 			FacesUtils.addErrorMessage(e.getMessage());
 		}
 
-		return "";
 	}
 
 	public String action_delete_datatable(ActionEvent evt) {
