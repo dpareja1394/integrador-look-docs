@@ -27,7 +27,7 @@ public class ServiciosRESTLookDocs {
 			retorno=businessDelegatorView.iniciarSesionLector(name, pass);
 			return retorno;
 		} catch (Exception e) {
-			return "falla";
+			return e.getMessage();
 		}
 		
 	}
