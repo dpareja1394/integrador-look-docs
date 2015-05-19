@@ -1,0 +1,14 @@
+@charset "utf-8";
+/* CSS Document */
+.divformato{
+	text-align:center;
+}
+.divfeed{
+	width:200px;
+	margin-right:201px;
+	text-align:center;
+}
+.itextClaves{
+	width:auto;
+	background-color:#09F
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Bienvenido a LookDocs</title>
+	<link rel="stylesheet" href="jquery-mobile/jquery.mobile-1.4.5.min.css">
+	<script src="jquery-mobile/jquery.js"></script>
+	<script src="jquery-mobile/jquery.mobile-1.4.5.min.js"></script>
+	<script>
+		$( document ).on( "pagecreate", function() {
+			$( "body > [data-role='panel']" ).panel();
+			$( "body > [data-role='panel'] [data-role='listview']" ).listview();
+		});
+		$( document ).one( "pageshow", function() {
+			$( "body > [data-role='header']" ).toolbar();
+			$( "body > [data-role='header'] [data-role='navbar']" ).navbar();
+		});
+		function toIndex(){
+  			window.location="Index.html";
+  		}
+	</script>
+</head>
+<body>
+
+	<div data-role="header" data-theme="b">
+	  <h1>LookDocs</h1>
+		<a href="#inside-a" data-icon="bars" data-iconpos="notext">Menu</a>
+	</div><!-- /header -->
+
+	<div data-role="page" id="a">
+		Bienvenido
+
+			
+	</div><!-- /content -->
+
+		<div data-role="panel" id="inside-a" data-position="left" data-display="overlay" data-theme="b">
+
+			<ul data-role="listview">
+				<li data-icon="bars"><a href="#" data-rel="close" data-iconpos="notext">Ocultar</a></li>
+                <li data-icon="plus"><a href="AgregarRSS.html" data-rel="external" data-transition="slide">Añadir RSS</a></li>
+                <li data-icon="grid"><a href="ListarCategorias.html" data-rel="close" data-transition="slide">Ver Categorías</a></li>
+                <li data-icon="grid"><a href="ListarColecciones.html" data-rel="close" data-transition="slide">Ver Colecciones</a></li>
+                <li data-icon="gear"><a href="EditarCuentaLector.html" data-rel="dialog" data-transition="fade">Cambiar Contraseña</a></li>
+	            <li data-icon="back"><a onclick="toIndex()" data-rel="close" data-transition="fade">Cerrar Sesion</a></li>
+			</ul>
+           
+		</div>
+
+		
+
+	</div><!-- /page -->
+
+
+</body>
+</html>
