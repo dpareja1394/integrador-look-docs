@@ -1,11 +1,8 @@
 package co.edu.usbcali.lookdocs.controller;
 
-import javax.faces.bean.ManagedProperty;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -52,5 +49,15 @@ public class ServiciosRESTLookDocs {
 		}
 		
 	}
-				
+		
+	@RequestMapping(value="/recuperarclave",method=RequestMethod.POST)
+	@ResponseBody
+	public String recuperarClave(String mail){
+		try {
+			businessDelegatorView.recuperarClave(mail);
+			return "exito";
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+	}
 }
