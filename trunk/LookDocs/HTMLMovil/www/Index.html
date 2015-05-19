@@ -26,6 +26,7 @@
   	<a onclick="ingresar()"  data-role="button" data-icon="check" data-transition="slidedown">Iniciar Sesion</a>
     <label>Los campos con (*) son obligatorios</label>
         <a name="btnRegistrarLector" id="btnRegistrarLector"  onclick="toRegistarLector()" data-role="button" data-transition="flip" data-rel="close">¿Aún no tienes cuenta? ¡Regístrate!</a>
+		<a name="btnRecuperarClave" id="btnRecuperarClave"  onclick="toRecuperarClave()" data-role="button" data-transition="flip" data-rel="close">¿Haz olvidado tu clave?</a>
   </div>
 
 
@@ -48,6 +49,10 @@
 
   function toRegistarLector(){
   	window.location="RegistrarLector.html";
+  }
+
+  function toRecuperarClave(){
+    window.location="RecuperarClave.html";
   }
 
 </script>
