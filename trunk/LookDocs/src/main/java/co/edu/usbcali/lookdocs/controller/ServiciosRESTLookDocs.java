@@ -1,12 +1,15 @@
 package co.edu.usbcali.lookdocs.controller;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import co.edu.usbcali.lookdocs.model.Colecciones;
 import co.edu.usbcali.lookdocs.model.Usuarios;
 import co.edu.usbcali.lookdocs.presentation.businessDelegate.IBusinessDelegatorView;
 
@@ -58,6 +61,18 @@ public class ServiciosRESTLookDocs {
 			return "exito";
 		} catch (Exception e) {
 			return e.getMessage();
+		}
+	}
+	
+	@RequestMapping(value="/obtenercolecciones",method=RequestMethod.GET)
+	@ResponseBody
+	public List<Colecciones> obtenerColeccionesDadoMail(String mail){
+		try {
+			List<Colecciones> lasColeccionesDelUsuario = 
+			businessDelegatorView.obtenerColeccionesDadoMailDeUsuario(mail);
+			return lasColeccionesDelUsuario;
+		} catch (Exception e) {
+			return null;
 		}
 	}
 }
