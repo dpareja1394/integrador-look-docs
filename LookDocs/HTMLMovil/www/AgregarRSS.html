@@ -1,0 +1,34 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<meta charset="utf-8">
+<title>Look Docs</title>
+<link rel="stylesheet" href="jquery-mobile/jquery.mobile-1.4.5.min.css">
+	<script src="jquery-mobile/jquery.js"></script>
+	<script src="jquery-mobile/jquery.mobile-1.4.5.min.js"></script>
+    <script>
+		function guardaRSS(){
+			alert("Se ha guardado el RSS");
+		}
+	</script>
+</head> 
+<body>
+<div data-role="page" id="page">
+  <div data-role="header" data-theme="b">
+    <h1>Añadir RSS</h1>
+     <a href="FeedPrincipalLector.html" data-icon="arrow-l"  data-rel="close" data-iconpos="notext">Regresar</a>
+  </div>
+  <div data-role="content">
+  	<div data-role="fieldcontain">
+  	  <label for="txtUrlRss">URL</label>
+  	  <input type="url" name="txtUrlRss" id="txtUrlRss" value="" />
+    </div>
+  	<a data-role="button" data-transition="slide" data-icon="search" data-corners="true" onClick="guardaRSS()">Buscar</a>
+  </div>
+
+
+  
+</div>
+
+</body>
+</html>
