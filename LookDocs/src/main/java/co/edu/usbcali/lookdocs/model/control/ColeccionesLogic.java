@@ -460,4 +460,18 @@ public class ColeccionesLogic implements IColeccionesLogic {
 	public String findColeccionPorId(Long idColeccion){
 		return coleccionesDAO.findColeccionPorId(idColeccion);
 	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Colecciones> obtenerColeccionesDadoMailDeUsuario(String email) throws Exception{
+		if(email.trim().equals("")==true){
+			throw new Exception("No ha llegado el usuario para consultar las colecciones");
+		}
+		
+		Usuarios usuarios = logicUsuarios1.obtenerPorMail(email);
+		List<Colecciones> lasColeccionesDelUsuario = coleccionesDAO.consultarColeccionPorUsuario(usuarios);
+		
+		// TODO Auto-generated method stub
+		return lasColeccionesDelUsuario;
+	}
 }

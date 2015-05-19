@@ -735,7 +735,11 @@ public class UsuariosLogic implements IUsuariosLogic {
     		throw new Exception("Email supera el límite de caracteres");
     	}
 		// TODO Auto-generated method stub
-		return usuariosDAO.obtenerPorMail(email);
+		Usuarios usuarios = usuariosDAO.obtenerPorMail(email); 
+		if(usuarios==null){
+			throw new Exception("El usuario no está registrado");
+		}
+		return usuarios;
 	}
 
 	@Override

@@ -64,4 +64,6 @@ public interface IColeccionesLogic {
     public String nombreColeccionPorCodigoRss(Rss rss);
     
     public String findColeccionPorId(Long idColeccion);
+    
+    public List<Colecciones> obtenerColeccionesDadoMailDeUsuario(String email) throws Exception;
 }
