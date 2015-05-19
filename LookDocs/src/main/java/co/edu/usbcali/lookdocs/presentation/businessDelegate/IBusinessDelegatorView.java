@@ -403,4 +403,5 @@ public interface IBusinessDelegatorView {
     public EventosArticulos consultareEventosPorArticulos(Long codigoArti, Long codigoUsua)
     		throws Exception;
     
+    public List<Colecciones> obtenerColeccionesDadoMailDeUsuario(String email) throws Exception;
 }

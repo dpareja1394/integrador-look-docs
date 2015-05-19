@@ -899,4 +899,10 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
 			throws Exception{
 		return eventosArticulosLogic.consultareEventosPorArticulos(codigoArti, codigoUsua);
 	}
+
+	@Override
+	public List<Colecciones> obtenerColeccionesDadoMailDeUsuario(String email)
+			throws Exception {
+		return coleccionesLogic.obtenerColeccionesDadoMailDeUsuario(email);
+	}
 }
