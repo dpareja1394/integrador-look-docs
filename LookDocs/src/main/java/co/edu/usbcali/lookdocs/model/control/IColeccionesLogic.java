@@ -65,5 +65,5 @@ public interface IColeccionesLogic {
     
     public String findColeccionPorId(Long idColeccion);
     
-    public List<Colecciones> obtenerColeccionesDadoMailDeUsuario(String email) throws Exception;
+    public List<ColeccionesDTO> obtenerColeccionesDadoMailDeUsuario(String email) throws Exception;
 }

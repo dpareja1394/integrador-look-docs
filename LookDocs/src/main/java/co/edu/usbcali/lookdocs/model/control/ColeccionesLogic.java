@@ -6,6 +6,7 @@ import co.edu.usbcali.lookdocs.model.*;
 import co.edu.usbcali.lookdocs.model.dto.ColeccionesDTO;
 import co.edu.usbcali.lookdocs.utilities.Utilities;
 
+import org.apache.jasper.tagplugins.jstl.core.ForEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -463,15 +465,23 @@ public class ColeccionesLogic implements IColeccionesLogic {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Colecciones> obtenerColeccionesDadoMailDeUsuario(String email) throws Exception{
+	public List<ColeccionesDTO> obtenerColeccionesDadoMailDeUsuario(String email) throws Exception{
 		if(email.trim().equals("")==true){
 			throw new Exception("No ha llegado el usuario para consultar las colecciones");
 		}
 		
 		Usuarios usuarios = logicUsuarios1.obtenerPorMail(email);
 		List<Colecciones> lasColeccionesDelUsuario = coleccionesDAO.consultarColeccionPorUsuario(usuarios);
+		List<ColeccionesDTO> lasColeccionesDTO = new ArrayList<ColeccionesDTO>();
+		for (Colecciones colecciones : lasColeccionesDelUsuario) {
+			ColeccionesDTO coleccionesDTO = new ColeccionesDTO();
+			coleccionesDTO.setCodigoCole(colecciones.getCodigoCole());
+			coleccionesDTO.setCodigoUsua_Usuarios(colecciones.getUsuarios().getCodigoUsua());
+			coleccionesDTO.setNombre(colecciones.getNombre());
+			lasColeccionesDTO.add(coleccionesDTO);
+		}
 		
 		// TODO Auto-generated method stub
-		return lasColeccionesDelUsuario;
+		return lasColeccionesDTO;
 	}
 }
