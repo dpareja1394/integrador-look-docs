@@ -15,8 +15,8 @@
   <div data-role="content">Inicio de Sesion</div>
   <div data-role="content">
     <div data-role="fieldcontain">
-      <label for="textinput">Correo (e-mail): *</label>
-      <input id="correo" type="text" name="textinput"  value=""  />
+      <label for="correo">Correo (e-mail): *</label>
+      <input id="correo" type="text" name="correo"  value=""  />
     </div>
   	
   	<div data-role="fieldcontain">
@@ -32,13 +32,15 @@
 
   
 </div>
-<script type="text/javascript">
+<script  type="text/javascript" charset="utf-8">
+	
   function ingresar(){
     var username = $('#correo').val();
     var password = $('#passwordinput').val();
 
     $.post('http://127.0.0.1:8080/LookDocs/controller/lookDocs/login',{name:username,pass:password},function(retorno){
       if (retorno=="exito") {
+		window.localStorage.setItem("nombreUsuario",username);
         window.location="FeedPrincipalLector.html";
       }else{
         alert(retorno);
