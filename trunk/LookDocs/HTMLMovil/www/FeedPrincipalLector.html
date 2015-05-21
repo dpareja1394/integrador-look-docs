@@ -6,7 +6,7 @@
 	<link rel="stylesheet" href="jquery-mobile/jquery.mobile-1.4.5.min.css">
 	<script src="jquery-mobile/jquery.js"></script>
 	<script src="jquery-mobile/jquery.mobile-1.4.5.min.js"></script>
-	<script>
+	<script type="text/javascript" charset="utf-8">
 		$( document ).on( "pagecreate", function() {
 			$( "body > [data-role='panel']" ).panel();
 			$( "body > [data-role='panel'] [data-role='listview']" ).listview();
@@ -15,9 +15,23 @@
 			$( "body > [data-role='header']" ).toolbar();
 			$( "body > [data-role='header'] [data-role='navbar']" ).navbar();
 		});
+		
+		var usuario = window.localStorage.getItem("nombreUsuario");
+		//alert(usuario);
+		
+		function traerNombre(){
+			
+		}
+		
 		function toIndex(){
+			window.localStorage.removeItem("nombreUsuario");
   			window.location="Index.html";
   		}
+		
+		function toGestionColecciones(){
+			window.location="GestionarColecciones.html";
+		}
+		
 	</script>
 </head>
 <body>
@@ -27,8 +41,8 @@
 		<a href="#inside-a" data-icon="bars" data-iconpos="notext">Menu</a>
 	</div><!-- /header -->
 
-	<div data-role="page" id="a">
-		Bienvenido
+	<div data-role="page" id="bienvenidaUsuario" name="bienvenidaUsuario">
+		 
 
 			
 	</div><!-- /content -->
@@ -39,7 +53,8 @@
 				<li data-icon="bars"><a href="#" data-rel="close" data-iconpos="notext">Ocultar</a></li>
                 <li data-icon="plus"><a href="AgregarRSS.html" data-rel="external" data-transition="slide">Añadir RSS</a></li>
                 <li data-icon="grid"><a href="ListarCategorias.html" data-rel="close" data-transition="slide">Ver Categorías</a></li>
-                <li data-icon="grid"><a href="ListarColecciones.html" data-rel="close" data-transition="slide">Ver Colecciones</a></li>
+                <li data-icon="grid"><a href="ListarColecciones.html" data-rel="close" data-transition="slide">Tus Colecciones</a></li>
+				<li data-icon="grid"><a onclick="toGestionColecciones()" data-rel="close" data-transition="slide">Gestión de Colecciones</a></li>
                 <li data-icon="gear"><a href="EditarCuentaLector.html" data-rel="dialog" data-transition="fade">Cambiar Contraseña</a></li>
 	            <li data-icon="back"><a onclick="toIndex()" data-rel="close" data-transition="fade">Cerrar Sesion</a></li>
 			</ul>
