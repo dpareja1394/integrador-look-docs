@@ -901,7 +901,7 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
 	}
 
 	@Override
-	public List<Colecciones> obtenerColeccionesDadoMailDeUsuario(String email)
+	public List<ColeccionesDTO> obtenerColeccionesDadoMailDeUsuario(String email)
 			throws Exception {
 		return coleccionesLogic.obtenerColeccionesDadoMailDeUsuario(email);
 	}
