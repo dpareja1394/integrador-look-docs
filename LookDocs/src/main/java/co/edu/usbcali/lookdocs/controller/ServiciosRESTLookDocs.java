@@ -9,11 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import co.edu.usbcali.lookdocs.model.Categorias;
 import co.edu.usbcali.lookdocs.model.Colecciones;
 import co.edu.usbcali.lookdocs.model.Rss;
 import co.edu.usbcali.lookdocs.model.Usuarios;
+import co.edu.usbcali.lookdocs.model.dto.CategoriasDTO;
 import co.edu.usbcali.lookdocs.model.dto.ColeccionesDTO;
 import co.edu.usbcali.lookdocs.model.dto.NoticiasDTO;
+import co.edu.usbcali.lookdocs.model.dto.RssDTO;
 import co.edu.usbcali.lookdocs.presentation.businessDelegate.IBusinessDelegatorView;
 
 @Controller
@@ -80,7 +83,18 @@ public class ServiciosRESTLookDocs {
 		}
 	}
 	
+	@RequestMapping(value = "/obtenercategorias", method = RequestMethod.GET)
+	@ResponseBody
+	public List<CategoriasDTO> obtenerCategorias() {
+		try {
+			List<CategoriasDTO> lasCategorias = businessDelegatorView.getDataCategorias(); 
+			return lasCategorias;
+		} catch (Exception e) {
+			return null;
+		}
+	}
 	
+		
 	@RequestMapping(value="/crearColeccion",method=RequestMethod.POST)
 	@ResponseBody
 	public String crearColeccion(String correo, String nombreColeccion){
@@ -217,6 +231,18 @@ public class ServiciosRESTLookDocs {
 			return e.getMessage();
 		}
 	}
+	
+	@RequestMapping(value="/obtenerRssDadoColeccion",method=RequestMethod.GET)
+	@ResponseBody
+	public List<RssDTO> obtenerRssDadoColeccion(Long idColeccion){
+		try {
+			List<RssDTO> losRss = businessDelegatorView.getRssDTODadoIdColeccion(idColeccion);
+			return losRss;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
 
 
 }

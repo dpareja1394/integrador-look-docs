@@ -19,10 +19,10 @@
 			
 			$.post('http://127.0.0.1:8080/LookDocs/controller/lookDocs/crearColeccion',{correo:usuario,nombreColeccion:coleccionName},function(retorno){
 			if (retorno=="exito") {
-				alert("Se ha guardado la colección " +coleccionName);
+				window.alert('Se ha guardado la colección ' +coleccionName);
 				$('#nombreColeccion').val("");
 			}else{
-				alert(retorno);
+				window.alert(retorno);
 			};
 			});
 		}
@@ -30,7 +30,7 @@
 		function traerColeccionesModificar(){
 			$.get('http://127.0.0.1:8080/LookDocs/controller/lookDocs/obtenercolecciones',{mail:usuario},function(data){
 			if (data==null) {
-				alert("El usuario no tiene colecciones");
+				window.alert('El usuario no tiene colecciones');
 			}else{
 				$('#listaColeccionesModificar').empty().append('<option onclick="modificarColeccion()" value="0">Seleccione una Colección</option>').find('option:first').attr("selected","selected");
 				if(data!=null){
@@ -47,7 +47,7 @@
 		function traerColeccionesEliminar(){
 			$.get('http://127.0.0.1:8080/LookDocs/controller/lookDocs/obtenercolecciones',{mail:usuario},function(data){
 			if (data==null) {
-				alert("El usuario no tiene colecciones");
+				window.alert('El usuario no tiene colecciones');
 			}else{
 				$('#listaColeccionesEliminar').empty().append('<option value="0">Seleccione una Colección</option>').find('option:first').attr("selected","selected");
 				if(data!=null){
@@ -64,7 +64,7 @@
 		function traerColeccionDadoId(){
 			var idCol = document.getElementById("listaColeccionesModificar").value;
 			if(idCol ==0){
-				alert("Debe seleccionar una colección");
+				window.alert('Debe seleccionar una colección');
 			}else{
 				$.get('http://127.0.0.1:8080/LookDocs/controller/lookDocs/obtenerColeccionDadoId',{idColeccion:idCol},function(data){
 				$('#nuevoNombreColeccion').val(""+data);
@@ -78,16 +78,16 @@
 			var idCole = document.getElementById("listaColeccionesModificar").value;
 			var nuevoNombreColeccion = $('#nuevoNombreColeccion').val();
 			if(idCole ==0){
-				alert("Debe seleccionar una colección");
+				window.alert('Debe seleccionar una colección');
 			}else{
 				$.post('http://127.0.0.1:8080/LookDocs/controller/lookDocs/modificarColeccion',{nuevoNombreCole:nuevoNombreColeccion,idColeccion:idCole,correo:usuario},function(retorno){
 				if (retorno=="coleccionModificada") {
-					alert("Se ha modificado la colección a "+nuevoNombreColeccion);
+					window.alert('Se ha modificado la colección a '+nuevoNombreColeccion);
 					$('#nuevoNombreColeccion').val("");
 					traerColeccionesModificar();
 					traerColeccionesEliminar();
 				}else{
-					alert(retorno);
+					window.alert(retorno);
 				};
 			});
 			}	
@@ -96,15 +96,15 @@
 		function eliminarColeccion(){
 			var idCole = document.getElementById("listaColeccionesEliminar").value;
 			if(idCole ==0){
-				alert("Debe seleccionar una colección");
+				window.alert('Debe seleccionar una colección');
 			}else{
 				$.post('http://127.0.0.1:8080/LookDocs/controller/lookDocs/eliminarColeccion',{idColeccion:idCole,correo:usuario},function(retorno){
 				if (retorno=="coleccionEliminada") {
-					alert("Se ha eliminado la colección");
+					window.alert('Se ha eliminado la colección');
 					traerColeccionesModificar();
 					traerColeccionesEliminar();
 				}else{
-					alert(retorno);
+					window.alert(retorno);
 				};
 			});
 			}	

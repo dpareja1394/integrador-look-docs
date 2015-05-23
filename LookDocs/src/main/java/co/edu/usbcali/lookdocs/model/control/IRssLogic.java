@@ -67,4 +67,6 @@ public interface IRssLogic {
     public List<Colecciones> consultarColePorURL(String url);
     
     public List<Rss> consultarRssPorURlList(String url);
+
+    public List<RssDTO> getRssDTODadoIdColeccion(Long codigoCole) throws Exception;
 }

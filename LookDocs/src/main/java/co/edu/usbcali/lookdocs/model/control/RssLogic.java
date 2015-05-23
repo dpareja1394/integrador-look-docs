@@ -3,6 +3,7 @@ package co.edu.usbcali.lookdocs.model.control;
 import co.edu.usbcali.lookdocs.dataaccess.dao.*;
 import co.edu.usbcali.lookdocs.exceptions.*;
 import co.edu.usbcali.lookdocs.model.*;
+import co.edu.usbcali.lookdocs.model.dto.ColeccionesDTO;
 import co.edu.usbcali.lookdocs.model.dto.RssDTO;
 import co.edu.usbcali.lookdocs.utilities.Utilities;
 
@@ -518,5 +519,27 @@ public class RssLogic implements IRssLogic {
 	@Transactional(readOnly = true)
 	public List<Rss> consultarRssPorURlList(String url){
 		return rssDAO.consultarRssPorURlList(url);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<RssDTO> getRssDTODadoIdColeccion(Long codigoCole)
+			throws Exception {
+		if(codigoCole==0){
+			throw new Exception("Debe seleccionar una colección para ver los RSS");
+		}
+		
+		List<Rss> losRssPorColeccion = rssDAO.getRssDadoIdColeccion(codigoCole);
+		
+		List<RssDTO> losRssDTO = new ArrayList<RssDTO>();
+		
+		for (Rss rss : losRssPorColeccion) {
+			RssDTO rssDTO = new RssDTO();
+			rssDTO.setCodigoRss(rss.getCodigoRss());
+			rssDTO.setUrl(rss.getUrl());
+			losRssDTO.add(rssDTO);
+		}
+		
+		return losRssDTO;
 	}
 }

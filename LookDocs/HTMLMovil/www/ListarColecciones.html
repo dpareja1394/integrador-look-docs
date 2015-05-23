@@ -12,7 +12,7 @@
 		function traerColecciones(){
 			$.get('http://127.0.0.1:8080/LookDocs/controller/lookDocs/obtenercolecciones',{mail:usuario},function(data){
 			if (data==null) {
-				alert("El usuario no tiene colecciones");
+				window.alert('El usuario no tiene colecciones');
 			}else{
 				$('#listaColecciones').empty()
 				if(data!=null){
@@ -31,7 +31,9 @@
 		}
 
 		function abrirColeccion(codigo){
-			alert("Ha seleccionado la colección "+codigo);
+			window.localStorage.setItem("idColeccion",codigo);
+			window.alert('Ha seleccionado la colección '+codigo);
+			window.location="ListarRSS.html";
 		}
 	
 	</script>
