@@ -32,6 +32,10 @@
 			window.location="GestionarColecciones.html";
 		}
 		
+		function toListarColecciones(){
+			window.location="ListarColecciones.html";
+		}
+		
 	</script>
 </head>
 <body>
@@ -53,7 +57,7 @@
 				<li data-icon="bars"><a href="#" data-rel="close" data-iconpos="notext">Ocultar</a></li>
                 <li data-icon="plus"><a href="AgregarRSS.html" data-rel="external" data-transition="slide">Añadir RSS</a></li>
                 <li data-icon="grid"><a href="ListarCategorias.html" data-rel="close" data-transition="slide">Ver Categorías</a></li>
-                <li data-icon="grid"><a href="ListarColecciones.html" data-rel="close" data-transition="slide">Tus Colecciones</a></li>
+                <li data-icon="grid"><a onclick="toListarColecciones()" data-rel="close" data-transition="slide">Tus Colecciones</a></li>
 				<li data-icon="grid"><a onclick="toGestionColecciones()" data-rel="close" data-transition="slide">Gestión de Colecciones</a></li>
                 <li data-icon="gear"><a href="EditarCuentaLector.html" data-rel="dialog" data-transition="fade">Cambiar Contraseña</a></li>
 	            <li data-icon="back"><a onclick="toIndex()" data-rel="close" data-transition="fade">Cerrar Sesion</a></li>
