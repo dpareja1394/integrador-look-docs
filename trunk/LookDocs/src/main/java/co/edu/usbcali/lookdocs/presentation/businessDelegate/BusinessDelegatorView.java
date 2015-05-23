@@ -905,4 +905,10 @@ public class BusinessDelegatorView implements IBusinessDelegatorView {
 			throws Exception {
 		return coleccionesLogic.obtenerColeccionesDadoMailDeUsuario(email);
 	}
+
+	@Override
+	public List<RssDTO> getRssDTODadoIdColeccion(Long codigoCole)
+			throws Exception {
+		return rssLogic.getRssDTODadoIdColeccion(codigoCole);
+	}
 }
