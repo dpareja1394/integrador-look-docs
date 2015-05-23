@@ -1,5 +1,6 @@
 package co.edu.usbcali.lookdocs.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import co.edu.usbcali.lookdocs.model.Colecciones;
+import co.edu.usbcali.lookdocs.model.Rss;
 import co.edu.usbcali.lookdocs.model.Usuarios;
 import co.edu.usbcali.lookdocs.model.dto.ColeccionesDTO;
+import co.edu.usbcali.lookdocs.model.dto.NoticiasDTO;
 import co.edu.usbcali.lookdocs.presentation.businessDelegate.IBusinessDelegatorView;
 
 @Controller
@@ -95,4 +98,125 @@ public class ServiciosRESTLookDocs {
 		}		
 		
 	}
+	
+	@RequestMapping(value="/modificarColeccion",method=RequestMethod.POST)
+	@ResponseBody
+	public String modificarColeccion(String nuevoNombreCole, Long idColeccion, String correo){
+		
+		Colecciones coleccionSeleccionada = new Colecciones();
+		Usuarios usuarios = new Usuarios();
+		try {
+			usuarios = businessDelegatorView.obtenerPorMail(correo);
+			Long codigoCole = idColeccion;
+			String coleccionAModificar = businessDelegatorView.findColeccionPorId(codigoCole);
+			String newName = nuevoNombreCole;
+			coleccionSeleccionada = businessDelegatorView.consultarColeccionPorNombreYUsuario(usuarios,
+					coleccionAModificar);
+			coleccionSeleccionada.setNombre(newName);
+			businessDelegatorView.updateColecciones(coleccionSeleccionada);
+			coleccionSeleccionada = null;
+			return "coleccionModificada";
+		} catch (Exception e) {
+			return e.getMessage();
+		}	
+		
+	}
+	
+	@RequestMapping(value="/eliminarColeccion",method=RequestMethod.POST)
+	@ResponseBody
+	public String eliminarColeccion(Long idColeccion, String correo){
+		
+		Colecciones coleccionSeleccionada = new Colecciones();
+		Usuarios usuarios = new Usuarios();
+		try {
+			usuarios = businessDelegatorView.obtenerPorMail(correo);
+			Long codigoCole = idColeccion;
+			String coleccionAEliminar = businessDelegatorView
+					.findColeccionPorId(codigoCole);
+			coleccionSeleccionada = businessDelegatorView
+					.consultarColeccionPorNombreYUsuario(usuarios,
+							coleccionAEliminar);
+			List<Rss> rssPorColeccion = new ArrayList<Rss>();
+			rssPorColeccion = businessDelegatorView
+					.getRssDadoIdColeccion(coleccionSeleccionada
+							.getCodigoCole());
+			if (rssPorColeccion.size() > 0) {
+				return "No se puede eliminar esta Coleccion Porq Tiene 1 o mas RSS";
+			}else{
+				businessDelegatorView.deleteColecciones(coleccionSeleccionada);
+				coleccionSeleccionada = null;
+				
+				return "coleccionEliminada";
+			}			
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+	}
+	
+	
+	@RequestMapping(value="/guardarRss",method=RequestMethod.POST)
+	@ResponseBody
+	public String guardarRss(String url, Long idColeccion){
+		
+		try {
+			String urlRss = url;
+			Long codigoCole = idColeccion;
+			if(urlRss.trim().equals("") == true){
+				return "Debe ingresar una URL de Rss para agregar";
+			}else{
+				businessDelegatorView.guardarRSS(urlRss, codigoCole);
+				
+				return "rssGuardado";
+			}
+			
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+	}
+	
+	/*@RequestMapping(value="/buscarRss",method=RequestMethod.GET)
+	@ResponseBody
+	public String buscarRss(String url){
+		
+		try {
+			List<NoticiasDTO> lasNoticias;
+			String urlRss = url;
+			if(urlRss.trim().equals("") == true){
+				return "Debe ingresar una URL de Rss para agregar";
+			}else{
+				URL feedUrl = new URL(urlRss) ;
+				SyndFeedInput input = new SyndFeedInput();
+				SyndFeed feed = input.build(new XmlReader(feedUrl));
+				
+				List<SyndEntry> losFeed = feed.getEntries();
+				lasNoticias = new ArrayList<NoticiasDTO>();
+				for (SyndEntry syndEntry : losFeed) {
+					NoticiasDTO noticiasDto = new NoticiasDTO();
+					noticiasDto.setTitulo((String) syndEntry.getTitle());
+					noticiasDto.setDescripcion((String) syndEntry.getDescription().getValue());
+					noticiasDto.setLink((String) syndEntry.getLink());
+					lasNoticias.add(noticiasDto);
+				}
+				return "rssBuscado";
+			}
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+	}*/
+	
+	@RequestMapping(value="/obtenerColeccionDadoId",method=RequestMethod.GET)
+	@ResponseBody
+	public String obtenerColeccionDadoId(Long idColeccion){
+		
+		try {
+			Colecciones colecciones = businessDelegatorView.getColecciones(idColeccion);
+				return colecciones.getNombre();
+			
+			
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+	}
+
+
 }

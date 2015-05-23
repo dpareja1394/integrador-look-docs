@@ -15,7 +15,6 @@
 		}
 		
 		function guardarColeccion(){
-			alert("Prueba con usuario en session: "+usuario);
 			var coleccionName = $('#nombreColeccion').val();
 			
 			$.post('http://127.0.0.1:8080/LookDocs/controller/lookDocs/crearColeccion',{correo:usuario,nombreColeccion:coleccionName},function(retorno){
@@ -28,23 +27,87 @@
 			});
 		}
 		
-		function traerColecciones(){
+		function traerColeccionesModificar(){
 			$.get('http://127.0.0.1:8080/LookDocs/controller/lookDocs/obtenercolecciones',{mail:usuario},function(data){
 			if (data==null) {
 				alert("El usuario no tiene colecciones");
 			}else{
-				$('#listaColecciones').empty().append('<option value="0">Seleccione una Colección</option>').find('option:first').attr("selected","selected");
-				alert(data.items);
-				if(data.items!=null){
-				alert("entró");
+				$('#listaColeccionesModificar').empty().append('<option onclick="modificarColeccion()" value="0">Seleccione una Colección</option>').find('option:first').attr("selected","selected");
+				if(data!=null){
 				//Inserta los valores recuperados en la lista desplegable
-				$.each(data.items, function(i, value) {
-				$('#listaColecciones').append('<option value='+value.codigoCole+'>'+value.nombre+'</option>');
-				});}else{alert("no entró");}
+				$.each(data, function(i, value) {
+				$('#listaColeccionesModificar').append('<option value='+value.codigoCole+'>'+value.nombre+'</option>');
+				});}
 				//Actualiza la lista desplegable
-				$('#listaColecciones').selectmenu("refresh", true);
+				$('#listaColeccionesModificar').selectmenu("refresh", true);
 			};
 			});
+		}
+		
+		function traerColeccionesEliminar(){
+			$.get('http://127.0.0.1:8080/LookDocs/controller/lookDocs/obtenercolecciones',{mail:usuario},function(data){
+			if (data==null) {
+				alert("El usuario no tiene colecciones");
+			}else{
+				$('#listaColeccionesEliminar').empty().append('<option value="0">Seleccione una Colección</option>').find('option:first').attr("selected","selected");
+				if(data!=null){
+				//Inserta los valores recuperados en la lista desplegable
+				$.each(data, function(i, value) {
+				$('#listaColeccionesEliminar').append('<option value='+value.codigoCole+'>'+value.nombre+'</option>');
+				});}
+				//Actualiza la lista desplegable
+				$('#listaColeccionesEliminar').selectmenu("refresh", true);
+			};
+			});
+		}
+		
+		function traerColeccionDadoId(){
+			var idCol = document.getElementById("listaColeccionesModificar").value;
+			if(idCol ==0){
+				alert("Debe seleccionar una colección");
+			}else{
+				$.get('http://127.0.0.1:8080/LookDocs/controller/lookDocs/obtenerColeccionDadoId',{idColeccion:idCol},function(data){
+				$('#nuevoNombreColeccion').val(""+data);
+				});
+		
+			}
+
+		}
+		
+		function modificarColeccion(){
+			var idCole = document.getElementById("listaColeccionesModificar").value;
+			var nuevoNombreColeccion = $('#nuevoNombreColeccion').val();
+			if(idCole ==0){
+				alert("Debe seleccionar una colección");
+			}else{
+				$.post('http://127.0.0.1:8080/LookDocs/controller/lookDocs/modificarColeccion',{nuevoNombreCole:nuevoNombreColeccion,idColeccion:idCole,correo:usuario},function(retorno){
+				if (retorno=="coleccionModificada") {
+					alert("Se ha modificado la colección a "+nuevoNombreColeccion);
+					$('#nuevoNombreColeccion').val("");
+					traerColeccionesModificar();
+					traerColeccionesEliminar();
+				}else{
+					alert(retorno);
+				};
+			});
+			}	
+		}
+		
+		function eliminarColeccion(){
+			var idCole = document.getElementById("listaColeccionesEliminar").value;
+			if(idCole ==0){
+				alert("Debe seleccionar una colección");
+			}else{
+				$.post('http://127.0.0.1:8080/LookDocs/controller/lookDocs/eliminarColeccion',{idColeccion:idCole,correo:usuario},function(retorno){
+				if (retorno=="coleccionEliminada") {
+					alert("Se ha eliminado la colección");
+					traerColeccionesModificar();
+					traerColeccionesEliminar();
+				}else{
+					alert(retorno);
+				};
+			});
+			}	
 		}
 	</script>
 </head> 
@@ -61,13 +124,18 @@
 			<a onclick="guardarColeccion()"  data-role="button">Guardar Colección</a>
 	</div>
 	<div data-role="collapsible" data-theme="b">
-		<h4 onclick="traerColecciones()">Modificar Colección</h4>
-			<select name="listaColecciones" id="listaColecciones">
+		<h4 onclick="traerColeccionesModificar()">Modificar Colección</h4>
+			<select onchange="traerColeccionDadoId()" name="listaColeccionesModificar" id="listaColeccionesModificar">
 			</select>
+			<label for="nombreColeccion">Ingresa un nuevo nombre para la colección: *</label>
+			<input  id="nuevoNombreColeccion" type="text" name="nuevoNombreColeccion" value=""  />
+			<a onclick="modificarColeccion()"  data-role="button">Modificar Colección</a>
 	</div>
 	<div data-role="collapsible" data-theme="b">
-		<h4>Eliminar Colección</h4>
-			Lista Coleccion...
+		<h4 onclick="traerColeccionesEliminar()">Eliminar Colección</h4>
+			<select name="listaColeccionesEliminar" id="listaColeccionesEliminar">
+			</select>
+			<a onclick="eliminarColeccion()"  data-role="button">Eliminar Colección</a>
 	</div>
 	  
 	  
