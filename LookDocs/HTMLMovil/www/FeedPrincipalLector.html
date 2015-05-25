@@ -35,6 +35,10 @@
 			window.location="ListarCategorias.html";
 		}
 		
+		function toAgregarRSS(){
+			window.location="AgregarRSS.html";
+		}
+		
 	</script>
 </head>
 <body>
@@ -54,7 +58,7 @@
 
 			<ul data-role="listview">
 				<li data-icon="bars"><a href="#" data-rel="close" data-iconpos="notext">Ocultar</a></li>
-                <li data-icon="plus"><a href="AgregarRSS.html" data-rel="external" data-transition="slide">Añadir RSS</a></li>
+                <li data-icon="plus"><a onclick="toAgregarRSS()" data-rel="close" data-transition="slide">Añadir RSS</a></li>
                 <li data-icon="grid"><a onclick="toListarCategorias()" data-rel="close" data-transition="slide">Ver Categorías</a></li>
                 <li data-icon="grid"><a onclick="toListarColecciones()" data-rel="close" data-transition="slide">Tus Colecciones</a></li>
 				<li data-icon="grid"><a onclick="toGestionColecciones()" data-rel="close" data-transition="slide">Gestión de Colecciones</a></li>
