@@ -6,9 +6,68 @@
 <link rel="stylesheet" href="jquery-mobile/jquery.mobile-1.4.5.min.css">
 	<script src="jquery-mobile/jquery.js"></script>
 	<script src="jquery-mobile/jquery.mobile-1.4.5.min.js"></script>
-    <script>
-		function guardaRSS(){
-			alert("Se ha guardado el RSS");
+    <script type="text/javascript" charset="utf-8">
+		var usuario = window.localStorage.getItem("nombreUsuario");
+		
+		function traerColecciones(){
+			$.get('http://127.0.0.1:8080/LookDocs/controller/lookDocs/obtenercolecciones',{mail:usuario},function(data){
+			if (data==null) {
+				window.alert('El usuario no tiene colecciones');
+			}else{
+				$('#listaColecciones').empty().append('<option onclick="modificarColeccion()" value="0">Seleccione una Colección para guardar</option>').find('option:first').attr("selected","selected");
+				if(data!=null){
+				//Inserta los valores recuperados en la lista desplegable
+				$.each(data, function(i, value) {
+				$('#listaColecciones').append('<option value='+value.codigoCole+'>'+value.nombre+'</option>');
+				});}
+				//Actualiza la lista desplegable
+				$('#listaColecciones').selectmenu("refresh", true);
+			};
+			});
+		}
+	
+		function buscarRSS(){
+			var laUrl = $('#txtUrlRss').val();
+		
+			$.get('http://127.0.0.1:8080/LookDocs/controller/lookDocs/buscarRss',{url:laUrl},function(data){
+			if (data==null) {
+				window.alert('No se ha encontrado el rss');
+			}else{
+				$('#listaNoticias').empty()
+				if(data!=null){
+				//Inserta los valores recuperados en la lista desplegable
+				$.each(data, function(i, value) {
+				$('#listaNoticias').append('<li><a data-icon="none">'+value.titulo+'</a></li>');
+				});}
+				//Actualiza la lista desplegable
+				$('#listaNoticias').listview("refresh", true);
+				traerColecciones();
+			};
+			});
+		}
+		
+		function guardarRSS(){
+			var laUrl = $('#txtUrlRss').val();
+			var idCol = document.getElementById("listaColecciones").value;
+			if(idCol==0){
+				window.alert('Debe seleccionar una colección');
+			}else{
+				$.post('http://127.0.0.1:8080/LookDocs/controller/lookDocs/guardarRss',{url:laUrl,idColeccion:idCol},function(retorno){
+				if (retorno=="rssGuardado") {
+					window.alert('Se ha guardado el RSS ');
+					$('#txtUrlRss').val("");
+					$('#listaNoticias').empty();
+					$('#listaColecciones').empty();
+				}else{
+					window.alert(retorno);
+				};
+			});
+			}
+		
+		}
+		
+		function toFeedPrincipal(){
+			window.location="FeedPrincipalLector.html";
 		}
 	</script>
 </head> 
@@ -16,16 +75,24 @@
 <div data-role="page" id="page">
   <div data-role="header" data-theme="b">
     <h1>Añadir RSS</h1>
-     <a href="FeedPrincipalLector.html" data-icon="arrow-l"  data-rel="close" data-iconpos="notext">Regresar</a>
+    <a onclick="toFeedPrincipal()" data-icon="arrow-l"  data-rel="close" data-iconpos="notext">Regresar</a>
   </div>
   <div data-role="content">
   	<div data-role="fieldcontain">
   	  <label for="txtUrlRss">URL</label>
   	  <input type="url" name="txtUrlRss" id="txtUrlRss" value="" />
     </div>
-  	<a data-role="button" data-transition="slide" data-icon="search" data-corners="true" onClick="guardaRSS()">Buscar</a>
+  	<a data-role="button" data-icon="search" onclick="buscarRSS()">Buscar</a>
+	<select name="listaColecciones" id="listaColecciones">
+	</select>
+	<a data-role="button" data-icon="plus" onclick="guardarRSS()">Guardar RSS</a>  
+	
   </div>
-
+  <div data-role="fieldcontain">
+    <ul data-role="listview" id="listaNoticias" name="listaNoticias"></ul> 
+	  
+    </div>
+	
 
   
 </div>

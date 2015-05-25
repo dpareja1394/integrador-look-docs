@@ -27,11 +27,15 @@
 		}
 		
 		function toColecciones(){
+			window.localStorage.removeItem("idColeccion");
 			window.location="ListarColecciones.html";
 		}
 
 		function abrirRss(codigo){
-			window.alert('Ha seleccionado el Rss '+codigo);
+			//window.alert('Ha seleccionado el Rss '+codigo);
+			window.localStorage.setItem("codigoRss",codigo);
+			window.location="MostrarNoticias.html";
+			
 		}
 	
 	</script>

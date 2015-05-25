@@ -1,5 +1,6 @@
 package co.edu.usbcali.lookdocs.controller;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import co.edu.usbcali.lookdocs.model.Categorias;
+import com.sun.syndication.feed.synd.SyndEntry;
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.io.SyndFeedInput;
+import com.sun.syndication.io.XmlReader;
+
 import co.edu.usbcali.lookdocs.model.Colecciones;
 import co.edu.usbcali.lookdocs.model.Rss;
 import co.edu.usbcali.lookdocs.model.Usuarios;
@@ -188,15 +193,15 @@ public class ServiciosRESTLookDocs {
 		}
 	}
 	
-	/*@RequestMapping(value="/buscarRss",method=RequestMethod.GET)
+	@RequestMapping(value="/buscarRss",method=RequestMethod.GET)
 	@ResponseBody
-	public String buscarRss(String url){
+	public List<NoticiasDTO> buscarRss(String url){
 		
 		try {
 			List<NoticiasDTO> lasNoticias;
 			String urlRss = url;
 			if(urlRss.trim().equals("") == true){
-				return "Debe ingresar una URL de Rss para agregar";
+				return null;
 			}else{
 				URL feedUrl = new URL(urlRss) ;
 				SyndFeedInput input = new SyndFeedInput();
@@ -208,15 +213,16 @@ public class ServiciosRESTLookDocs {
 					NoticiasDTO noticiasDto = new NoticiasDTO();
 					noticiasDto.setTitulo((String) syndEntry.getTitle());
 					noticiasDto.setDescripcion((String) syndEntry.getDescription().getValue());
-					noticiasDto.setLink((String) syndEntry.getLink());
+					//noticiasDto.setLink((String) syndEntry.getLink());
 					lasNoticias.add(noticiasDto);
 				}
-				return "rssBuscado";
+				return lasNoticias;
 			}
 		} catch (Exception e) {
-			return e.getMessage();
+			return null;
 		}
-	}*/
+	}
+	
 	
 	@RequestMapping(value="/obtenerColeccionDadoId",method=RequestMethod.GET)
 	@ResponseBody
@@ -240,6 +246,22 @@ public class ServiciosRESTLookDocs {
 			return losRss;
 		} catch (Exception e) {
 			return null;
+		}
+	}
+	
+	@RequestMapping(value="/consultarUrlRss",method=RequestMethod.GET)
+	@ResponseBody
+	public String consultarRssPorId(Long idRss){
+		try {
+			Rss rss = new Rss();
+			Long rssID = idRss;
+			rss = businessDelegatorView.getRss(rssID);
+			String urlRss;
+			urlRss= rss.getUrl();
+			
+			return urlRss;
+		} catch (Exception e) {
+			return e.getMessage();
 		}
 	}
 	
