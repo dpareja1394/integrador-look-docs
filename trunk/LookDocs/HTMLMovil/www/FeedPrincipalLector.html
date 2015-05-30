@@ -6,6 +6,7 @@
 	<link rel="stylesheet" href="jquery-mobile/jquery.mobile-1.4.5.min.css">
 	<script src="jquery-mobile/jquery.js"></script>
 	<script src="jquery-mobile/jquery.mobile-1.4.5.min.js"></script>
+    <script src="js/funcionesLookDocs.js"></script>
 	<script type="text/javascript" charset="utf-8">
 		$( document ).on( "pagecreate", function() {
 			$( "body > [data-role='panel']" ).panel();
@@ -15,29 +16,6 @@
 			$( "body > [data-role='header']" ).toolbar();
 			$( "body > [data-role='header'] [data-role='navbar']" ).navbar();
 		});
-		
-		var usuario = window.localStorage.getItem("nombreUsuario");
-		
-		function toIndex(){
-			window.localStorage.removeItem("nombreUsuario");
-  			window.location="Index.html";
-  		}
-		
-		function toGestionColecciones(){
-			window.location="GestionarColecciones.html";
-		}
-		
-		function toListarColecciones(){
-			window.location="ListarColecciones.html";
-		}
-		
-		function toListarCategorias(){
-			window.location="ListarCategorias.html";
-		}
-		
-		function toAgregarRSS(){
-			window.location="AgregarRSS.html";
-		}
 		
 	</script>
 </head>
@@ -62,7 +40,7 @@
                 <li data-icon="grid"><a onclick="toListarCategorias()" data-rel="close" data-transition="slide">Ver Categorías</a></li>
                 <li data-icon="grid"><a onclick="toListarColecciones()" data-rel="close" data-transition="slide">Tus Colecciones</a></li>
 				<li data-icon="grid"><a onclick="toGestionColecciones()" data-rel="close" data-transition="slide">Gestión de Colecciones</a></li>
-	            <li data-icon="back"><a onclick="toIndex()" data-rel="close" data-transition="fade">Cerrar Sesion</a></li>
+	            <li data-icon="back"><a onclick="toIndexFromFeedPrincipal()" data-rel="close" data-transition="fade">Cerrar Sesion</a></li>
 			</ul>
            
 		</div>

@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="jquery-mobile/jquery.mobile-1.4.5.min.css">
 <script src="jquery-mobile/jquery.js"></script>
 <script src="jquery-mobile/jquery.mobile-1.4.5.min.js"></script>
+<script src="js/funcionesLookDocs.js"></script>
 </head> 
 <body>
 <div data-role="page" id="page">
@@ -23,7 +24,8 @@
   	  <label for="passwordinput">Contraseña: *</label>
   	  <input  id="passwordinput" type="password" name="passwordinput" value=""  />
     </div>
-  	<a onclick="ingresar()"  data-role="button" data-icon="check" data-transition="slidedown">Iniciar Sesion</a>
+  	<!--<a onclick="ingresar()"  data-role="button" data-icon="check" data-transition="slidedown">Iniciar Sesion</a>-->
+	<button onclick="ingresar()" type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check">Iniciar Sesion</button>
     <label>Los campos con (*) son obligatorios</label>
         <a name="btnRegistrarLector" id="btnRegistrarLector"  onclick="toRegistarLector()" data-role="button" data-transition="flip" data-rel="close">¿Aún no tienes cuenta? ¡Regístrate!</a>
 		<a name="btnRecuperarClave" id="btnRecuperarClave"  onclick="toRecuperarClave()" data-role="button" data-transition="flip" data-rel="close">¿Haz olvidado tu clave?</a>
@@ -32,31 +34,5 @@
 
   
 </div>
-<script  type="text/javascript" charset="utf-8">
-	
-  function ingresar(){
-    var username = $('#correo').val();
-    var password = $('#passwordinput').val();
-
-    $.post('http://127.0.0.1:8080/LookDocs/controller/lookDocs/login',{name:username,pass:password},function(retorno){
-      if (retorno=="exito") {
-		window.localStorage.setItem("nombreUsuario",username);
-        window.location="FeedPrincipalLector.html";
-      }else{
-        window.alert(retorno);
-      };
-
-    });
-  }
-
-  function toRegistarLector(){
-  	window.location="RegistrarLector.html";
-  }
-
-  function toRecuperarClave(){
-    window.location="RecuperarClave.html";
-  }
-
-</script>
 </body>
 </html>

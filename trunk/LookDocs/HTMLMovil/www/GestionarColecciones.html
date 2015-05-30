@@ -6,116 +6,13 @@
 <link rel="stylesheet" href="jquery-mobile/jquery.mobile-1.4.5.min.css">
 	<script src="jquery-mobile/jquery.js"></script>
 	<script src="jquery-mobile/jquery.mobile-1.4.5.min.js"></script>
-	<script type="text/javascript" charset="utf-8">
-		var usuario = window.localStorage.getItem("nombreUsuario");
-		//traerColecciones();
-		
-		function toFeedPrincipal(){
-			window.location="FeedPrincipalLector.html";
-		}
-		
-		function guardarColeccion(){
-			var coleccionName = $('#nombreColeccion').val();
-			
-			$.post('http://127.0.0.1:8080/LookDocs/controller/lookDocs/crearColeccion',{correo:usuario,nombreColeccion:coleccionName},function(retorno){
-			if (retorno=="exito") {
-				window.alert('Se ha guardado la colección ' +coleccionName);
-				$('#nombreColeccion').val("");
-			}else{
-				window.alert(retorno);
-			};
-			});
-		}
-		
-		function traerColeccionesModificar(){
-			$.get('http://127.0.0.1:8080/LookDocs/controller/lookDocs/obtenercolecciones',{mail:usuario},function(data){
-			if (data==null) {
-				window.alert('El usuario no tiene colecciones');
-			}else{
-				$('#listaColeccionesModificar').empty().append('<option onclick="modificarColeccion()" value="0">Seleccione una Colección</option>').find('option:first').attr("selected","selected");
-				if(data!=null){
-				//Inserta los valores recuperados en la lista desplegable
-				$.each(data, function(i, value) {
-				$('#listaColeccionesModificar').append('<option value='+value.codigoCole+'>'+value.nombre+'</option>');
-				});}
-				//Actualiza la lista desplegable
-				$('#listaColeccionesModificar').selectmenu("refresh", true);
-			};
-			});
-		}
-		
-		function traerColeccionesEliminar(){
-			$.get('http://127.0.0.1:8080/LookDocs/controller/lookDocs/obtenercolecciones',{mail:usuario},function(data){
-			if (data==null) {
-				window.alert('El usuario no tiene colecciones');
-			}else{
-				$('#listaColeccionesEliminar').empty().append('<option value="0">Seleccione una Colección</option>').find('option:first').attr("selected","selected");
-				if(data!=null){
-				//Inserta los valores recuperados en la lista desplegable
-				$.each(data, function(i, value) {
-				$('#listaColeccionesEliminar').append('<option value='+value.codigoCole+'>'+value.nombre+'</option>');
-				});}
-				//Actualiza la lista desplegable
-				$('#listaColeccionesEliminar').selectmenu("refresh", true);
-			};
-			});
-		}
-		
-		function traerColeccionDadoId(){
-			var idCol = document.getElementById("listaColeccionesModificar").value;
-			if(idCol ==0){
-				window.alert('Debe seleccionar una colección');
-			}else{
-				$.get('http://127.0.0.1:8080/LookDocs/controller/lookDocs/obtenerColeccionDadoId',{idColeccion:idCol},function(data){
-				$('#nuevoNombreColeccion').val(""+data);
-				});
-		
-			}
-
-		}
-		
-		function modificarColeccion(){
-			var idCole = document.getElementById("listaColeccionesModificar").value;
-			var nuevoNombreColeccion = $('#nuevoNombreColeccion').val();
-			if(idCole ==0){
-				window.alert('Debe seleccionar una colección');
-			}else{
-				$.post('http://127.0.0.1:8080/LookDocs/controller/lookDocs/modificarColeccion',{nuevoNombreCole:nuevoNombreColeccion,idColeccion:idCole,correo:usuario},function(retorno){
-				if (retorno=="coleccionModificada") {
-					window.alert('Se ha modificado la colección a '+nuevoNombreColeccion);
-					$('#nuevoNombreColeccion').val("");
-					traerColeccionesModificar();
-					traerColeccionesEliminar();
-				}else{
-					window.alert(retorno);
-				};
-			});
-			}	
-		}
-		
-		function eliminarColeccion(){
-			var idCole = document.getElementById("listaColeccionesEliminar").value;
-			if(idCole ==0){
-				window.alert('Debe seleccionar una colección');
-			}else{
-				$.post('http://127.0.0.1:8080/LookDocs/controller/lookDocs/eliminarColeccion',{idColeccion:idCole,correo:usuario},function(retorno){
-				if (retorno=="coleccionEliminada") {
-					window.alert('Se ha eliminado la colección');
-					traerColeccionesModificar();
-					traerColeccionesEliminar();
-				}else{
-					window.alert(retorno);
-				};
-			});
-			}	
-		}
-	</script>
+    <script src="js/funcionesLookDocs.js"></script>	
 </head> 
 <body>
 <div data-role="page" id="page">
   <div data-role="header" data-theme="b">
     <h1>Colecciones</h1>
-     <a onclick="toFeedPrincipal()" data-icon="arrow-l"  data-rel="close" data-iconpos="notext">Regresar</a>
+     <a onclick="toFeedPrincipalLector()" data-icon="arrow-l"  data-rel="close" data-iconpos="notext">Regresar</a>
   </div>
 	<div data-role="collapsible" data-theme="b">
 		<h4>Crear Colección</h4>

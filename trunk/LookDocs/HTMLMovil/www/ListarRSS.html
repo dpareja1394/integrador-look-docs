@@ -6,39 +6,7 @@
 <link rel="stylesheet" href="jquery-mobile/jquery.mobile-1.4.5.min.css">
 	<script src="jquery-mobile/jquery.js"></script>
 	<script src="jquery-mobile/jquery.mobile-1.4.5.min.js"></script>
-	<script type="text/javascript" charset="utf-8">
-		var usuario = window.localStorage.getItem("nombreUsuario");
-		var coleccion = window.localStorage.getItem("idColeccion");
-		function traerRss(){
-			$.get('http://127.0.0.1:8080/LookDocs/controller/lookDocs/obtenerRssDadoColeccion',{idColeccion:coleccion},function(data){
-			if (data==null) {
-				window.alert('La colección no tiene Rss');
-			}else{
-				$('#listaRss').empty()
-				if(data!=null){
-				//Inserta los valores recuperados en la lista desplegable
-				$.each(data, function(i, value) {
-				$('#listaRss').append('<li><a onclick="abrirRss('+value.codigoRss+')" value='+value.codigoRss+'>'+value.url+'</a></li>');
-				});}
-				//Actualiza la lista desplegable
-				$('#listaRss').listview("refresh", true);
-			};
-			});
-		}
-		
-		function toColecciones(){
-			window.localStorage.removeItem("idColeccion");
-			window.location="ListarColecciones.html";
-		}
-
-		function abrirRss(codigo){
-			//window.alert('Ha seleccionado el Rss '+codigo);
-			window.localStorage.setItem("codigoRss",codigo);
-			window.location="MostrarNoticias.html";
-			
-		}
-	
-	</script>
+    <script src="js/funcionesLookDocs.js"></script>
 </head> 
 <body>
 <div data-role="page" id="page">
