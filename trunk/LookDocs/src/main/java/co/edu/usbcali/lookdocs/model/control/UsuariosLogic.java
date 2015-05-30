@@ -599,16 +599,18 @@ public class UsuariosLogic implements IUsuariosLogic {
 			throw new Exception("Debe llenar todos los campos");
 		}		
 		
-		boolean mailCorrecto = validateEmailAddress(email);
+		String emailSinEspacios = email.trim();
+		
+		boolean mailCorrecto = validateEmailAddress(emailSinEspacios);
 		if (mailCorrecto == false) {
 			throw new Exception("Direcci�n de Email es incorrecta");
 		}
 		
-		if(email.length()>150 || password.length()>150){
+		if(emailSinEspacios.length()>150 || password.length()>150){
     		throw new Exception("Email o contrase�a incorrectos");
     	}
 		
-		Usuarios usuarios = usuariosDAO.obtenerPorMail(email);
+		Usuarios usuarios = usuariosDAO.obtenerPorMail(emailSinEspacios);
 		if (usuarios == null) {
 			throw new Exception("Email o contrase�a incorrectos");
 		}
@@ -664,22 +666,25 @@ public class UsuariosLogic implements IUsuariosLogic {
 		if (usuarios.getEmail().trim().equals("") == true) {
 			throw new Exception("Debe ingresar el Mail para registrar");
 		}
+		
+		String emailSinEspacios = usuarios.getEmail().trim();
+		
 		if (usuarios.getClave().trim().equals("") == true) {
 			throw new Exception("Debe ingresar la contrase�a");
 		}
 		if (usuarios.getNombre().trim().equals("") == true) {
 			throw new Exception("Debe ingresar su nombre");
 		}
-		boolean mailCorrecto = validateEmailAddress(usuarios.getEmail());
+		boolean mailCorrecto = validateEmailAddress(emailSinEspacios);
 		if (mailCorrecto == false) {
 			throw new Exception("Direcci�n de Email es incorrecta");
 		}
 		
-		if(usuarios.getEmail().length()>150 || usuarios.getClave().length()>150){
+		if(emailSinEspacios.length()>150 || usuarios.getClave().length()>150){
     		throw new Exception("Email o Password han superado límite de caracteres");
     	}
 		
-		Usuarios entidad = usuariosDAO.obtenerPorMail(usuarios.getEmail());
+		Usuarios entidad = usuariosDAO.obtenerPorMail(emailSinEspacios);
 		if (entidad != null) {
 			throw new Exception(
 					"La direcci�n de correo ya est� asociada a otra cuenta");
@@ -690,7 +695,7 @@ public class UsuariosLogic implements IUsuariosLogic {
 		usuarios.setCodigoUsua(codigoUsuario);
 		usuarios.setRoles(roles);
 		usuarios.setFechaCreacion(new Date());
-		usuarios.setUsuCrea(usuarios.getEmail());
+		usuarios.setUsuCrea(emailSinEspacios);
 		usuarios.setEstadoRegistro("A");
 
 		usuariosDAO.registrarUsuarioLector(usuarios);
@@ -731,11 +736,12 @@ public class UsuariosLogic implements IUsuariosLogic {
 
 	@Override
 	public Usuarios obtenerPorMail(String email) throws Exception {
-		if(email.length()>150){
+		String emailSinEspacios = email.trim();
+		if(emailSinEspacios.length()>150){
     		throw new Exception("Email supera el límite de caracteres");
     	}
 		// TODO Auto-generated method stub
-		Usuarios usuarios = usuariosDAO.obtenerPorMail(email); 
+		Usuarios usuarios = usuariosDAO.obtenerPorMail(emailSinEspacios); 
 		if(usuarios==null){
 			throw new Exception("El usuario no está registrado");
 		}
@@ -798,16 +804,17 @@ public class UsuariosLogic implements IUsuariosLogic {
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 	public void recuperarClave(String email) throws Exception {
-		boolean mailCorrecto = validateEmailAddress(email);
+		String emailSinEspacios = email.trim();
+		boolean mailCorrecto = validateEmailAddress(emailSinEspacios);
 		if (mailCorrecto == false) {
 			throw new Exception("Direcci�n de Email es incorrecta");
 		}
 		
-		if(email.length()>150 ){
+		if(emailSinEspacios.length()>150 ){
 			throw new Exception("El email ingresado supera el límite de caracteres permitido");
 		}
 		
-		Usuarios usuarios = usuariosDAO.obtenerPorMail(email);
+		Usuarios usuarios = usuariosDAO.obtenerPorMail(emailSinEspacios);
 		if(usuarios==null){
 			throw new Exception("El usuario no est� registrado en la base de datos");
 		}
