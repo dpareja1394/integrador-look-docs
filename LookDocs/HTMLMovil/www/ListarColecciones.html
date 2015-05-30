@@ -6,47 +6,16 @@
 <link rel="stylesheet" href="jquery-mobile/jquery.mobile-1.4.5.min.css">
 	<script src="jquery-mobile/jquery.js"></script>
 	<script src="jquery-mobile/jquery.mobile-1.4.5.min.js"></script>
-	<script type="text/javascript" charset="utf-8">
-		var usuario = window.localStorage.getItem("nombreUsuario");
-	
-		function traerColecciones(){
-			$.get('http://127.0.0.1:8080/LookDocs/controller/lookDocs/obtenercolecciones',{mail:usuario},function(data){
-			if (data==null) {
-				window.alert('El usuario no tiene colecciones');
-			}else{
-				$('#listaColecciones').empty()
-				if(data!=null){
-				//Inserta los valores recuperados en la lista desplegable
-				$.each(data, function(i, value) {
-				$('#listaColecciones').append('<li><a onclick="abrirColeccion('+value.codigoCole+')" value='+value.codigoCole+'>'+value.nombre+'</a></li>');
-				});}
-				//Actualiza la lista desplegable
-				$('#listaColecciones').listview("refresh", true);
-			};
-			});
-		}
-		
-		function toFeedPrincipal(){
-			window.location="FeedPrincipalLector.html";
-		}
-
-		function abrirColeccion(codigo){
-			window.localStorage.setItem("idColeccion",codigo);
-			//window.alert('Ha seleccionado la colección '+codigo);
-			window.location="ListarRSS.html";
-		}
-	
-	</script>
+    <script src="js/funcionesLookDocs.js"></script>
 </head> 
 <body>
 <div data-role="page" id="page">
   <div data-role="header" data-theme="b">
     <h1>Colecciones</h1>
-     <a onclick="toFeedPrincipal()" data-icon="arrow-l"  data-rel="close" data-iconpos="notext">Regresar</a>
+     <a onclick="toFeedPrincipalLector()" data-icon="arrow-l"  data-rel="close" data-iconpos="notext">Regresar</a>
   </div>
   <a onclick="traerColecciones()" id="btnCargarColeccion" name="btnCargarColeccion" data-role="button" data-icon="refresh">Toca aquí para cargar tus colecciones</a>
   <div data-role="content">
-	<!--<a onclick="traerColecciones()"  data-role="button">Listar Colecciones</a>-->
   	<div data-role="fieldcontain">
   	  <ul data-role="listview" id="listaColecciones" name="listaColecciones">
   	    <!--<li><a href="ListarRSS.html" data-rel="close" data-transition="slide">Android</a></li>

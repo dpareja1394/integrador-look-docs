@@ -6,11 +6,13 @@
 <link rel="stylesheet" href="jquery-mobile/jquery.mobile-1.4.5.min.css">
 <script src="jquery-mobile/jquery.js"></script>
 <script src="jquery-mobile/jquery.mobile-1.4.5.min.js"></script>
+<script src="js/funcionesLookDocs.js"></script>
 </head> 
 <body>
 <div data-role="page" id="page">
   <div data-role="header" data-theme="b">
     <h1>Look Docs</h1>
+    <a onclick="toIndex()" data-icon="arrow-l"  data-rel="close" data-iconpos="notext">Regresar</a>
   </div>
   <div data-role="content">Registrar</div>
   <div data-role="content">
@@ -42,24 +44,5 @@
 
   
 </div>
-<script type="text/javascript">
-  function registrar(){
-    var nombreLector = $('#nombreLector').val();
-    var correoLector = $('#correoLector').val();
-    var passwordLector = $('#passwordLector').val();
-    var passwordConfirma = $('#passwordConfirma').val();
-
-    $.post('http://127.0.0.1:8080/LookDocs/controller/lookDocs/registrar',{nombre:nombreLector,correo:correoLector,pass:passwordLector,passConfirma:passwordConfirma},function(retorno){
-      if (retorno=="exito") {
-        alert("Se ha registrado exitosamente");
-        window.location="Index.html";
-      }else{
-        alert(retorno);
-      };
-
-    });
-  }
-
-</script>
 </body>
 </html>

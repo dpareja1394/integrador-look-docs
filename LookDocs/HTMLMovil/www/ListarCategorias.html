@@ -6,41 +6,13 @@
 <link rel="stylesheet" href="jquery-mobile/jquery.mobile-1.4.5.min.css">
 	<script src="jquery-mobile/jquery.js"></script>
 	<script src="jquery-mobile/jquery.mobile-1.4.5.min.js"></script>
-	<script type="text/javascript" charset="utf-8">
-		var usuario = window.localStorage.getItem("nombreUsuario");
-	
-		function traerCategorias(){
-			$.get('http://127.0.0.1:8080/LookDocs/controller/lookDocs/obtenercategorias',{},function(data){
-			if (data==null) {
-				window.alert('No hay categorías');
-			}else{
-				$('#listaCategorias').empty()
-				if(data!=null){
-				//Inserta los valores recuperados en la lista desplegable
-				$.each(data, function(i, value) {
-				$('#listaCategorias').append('<li><a onclick="abrirCategoria('+value.codigoCate+')" value='+value.codigoCate+'>'+value.nombre+'</a></li>');
-				});}
-				//Actualiza la lista desplegable
-				$('#listaCategorias').listview("refresh", true);
-			};
-			});
-		}
-		
-		function toFeedPrincipal(){
-			window.location="FeedPrincipalLector.html";
-		}
-
-		function abrirCategoria(codigo){
-			window.alert('Ha seleccionado la categoria '+codigo);
-		}
-	
-	</script>
+	<script src="js/funcionesLookDocs.js"></script>
 </head> 
 <body>
 <div data-role="page" id="page">
   <div data-role="header" data-theme="b">
     <h1>Categorias</h1>
-     <a onclick="toFeedPrincipal()" data-icon="arrow-l"  data-rel="close" data-iconpos="notext">Regresar</a>
+     <a onclick="toFeedPrincipalLector()" data-icon="arrow-l"  data-rel="close" data-iconpos="notext">Regresar</a>
   </div>
   <a onclick="traerCategorias()" id="btnCargarCategorias" name="btnCargarCategorias" data-role="button" data-icon="refresh">Toca aquí para cargar las categorías</a>
   <div data-role="content">
