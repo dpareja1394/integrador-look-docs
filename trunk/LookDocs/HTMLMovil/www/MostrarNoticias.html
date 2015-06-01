@@ -15,6 +15,11 @@
 	 <a onclick="toListarRss()" data-icon="arrow-l"  data-rel="close" data-iconpos="notext">Regresar</a>
   </div>
   <div data-role="content">
+	<div data-role="fieldcontain" id="fav" name="fav">
+		<a data-role="button" data-icon="check" id="btnFavorito" onclick="cargarFavorito()"></a>
+    </div>
+    <div data-role="fieldcontain" id="isRead" name="isRead">
+    </div>  	
 	<a onclick="buscarRSSNoticias()" id="btnCargarNoticias" name="btnCargarNoticias" data-role="button" data-icon="refresh">Toca aquí para cargar las noticias</a>
   
   	<div data-role="fieldcontain" id="mostrarFeeds" name="mostrarFeeds">

@@ -2,24 +2,25 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Categorias</title>
+<title>Articulos</title>
 <link rel="stylesheet" href="jquery-mobile/jquery.mobile-1.4.5.min.css">
 	<script src="jquery-mobile/jquery.js"></script>
 	<script src="jquery-mobile/jquery.mobile-1.4.5.min.js"></script>
+	<script src="js/funcionesLookDocs.js"></script>
 </head> 
 <body>
 <div data-role="page" id="page">
   <div data-role="header" data-theme="b">
     <h1>Articulos</h1>
-    <a href="ListarCategorias.html" data-icon="arrow-l"  data-rel="close" data-iconpos="notext">Regresar</a>
+     <a onclick="toListarCategorias()" data-icon="arrow-l"  data-rel="close" data-iconpos="notext">Regresar</a>
   </div>
+  <a onclick="traerArticulos()" id="btnCargarArticulos" name="btnCargarArticulos" data-role="button" data-icon="refresh">Toca aquí para cargar los Artículos</a>
   <div data-role="content">
+	<!--<a onclick="traerColecciones()"  data-role="button">Listar Colecciones</a>-->
   	<div data-role="fieldcontain">
-  	  <ul data-role="listview">
-  	    <li><a href="MostrarArticuloPDF.html" data-rel="close">El Tiempo</a></li>
-  	    <li><a href="MostrarArticuloPDF.html" data-rel="close">Portafolio</a></li>
+  	  <ul data-role="listview" id="listaArticulos" name="listaArticulos">
+  	  
       </ul>
-  	 
     </div>
   	
   </div>
