@@ -6,7 +6,7 @@ import co.edu.usbcali.lookdocs.model.*;
 import co.edu.usbcali.lookdocs.model.dto.ColeccionesDTO;
 import co.edu.usbcali.lookdocs.utilities.Utilities;
 
-import org.apache.jasper.tagplugins.jstl.core.ForEach;
+//import org.apache.jasper.tagplugins.jstl.core.ForEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;

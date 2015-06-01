@@ -1,9 +1,11 @@
 // JavaScript Document
 
-var ip = '127.0.0.1';
+var ip = '192.168.0.15';
 var path = 'http://'+ip+':8080/LookDocs/controller/lookDocs'
 var usuario = window.localStorage.getItem("nombreUsuario");
 var coleccion = window.localStorage.getItem("idColeccion");
+var categoria = window.localStorage.getItem("idCategoria");
+var laUrlDelRss = window.localStorage.getItem("urlRss");;
 
 
 function toRegistarLector(){
@@ -15,7 +17,7 @@ function toRecuperarClave(){
 }
 
 function toIndex(){
-	window.location="Index.html";
+	window.location="index.html";
 }
 
 function toFeedPrincipalLector(){
@@ -24,7 +26,7 @@ function toFeedPrincipalLector(){
 
 function toIndexFromFeedPrincipal(){
  	window.localStorage.removeItem("nombreUsuario");
-	window.location="Index.html";
+	window.location="index.html";
 }
 
 function toGestionColecciones(){
@@ -85,20 +87,20 @@ function registrar(){
 	});
 }
 
-function traerColecciones(){
+function traerColeccionesGuardarRSS(){
 	$.get(path+'/obtenercolecciones',{mail:usuario},function(data){
 		if (data==null) {
 			window.alert('El usuario no tiene colecciones');
 		}else{
-			$('#listaColecciones').empty().append('<option onclick="modificarColeccion()" value="0">Seleccione una Colección para guardar</option>').find('option:first').attr("selected","selected");
+			$('#listaColeccionesAgregar').empty().append('<option value="0">Seleccione una Colección para guardar</option>').find('option:first').attr("selected","selected");
 				if(data!=null){
 					//Inserta los valores recuperados en la lista desplegable
 					$.each(data, function(i, value) {
-						$('#listaColecciones').append('<option value='+value.codigoCole+'>'+value.nombre+'</option>');
+						$('#listaColeccionesAgregar').append('<option value='+value.codigoCole+'>'+value.nombre+'</option>');
 					});
 				}
 				//Actualiza la lista desplegable
-				$('#listaColecciones').selectmenu("refresh", true);
+				$('#listaColeccionesAgregar').selectmenu("refresh", true);
 		};
 	});
 }
@@ -119,14 +121,14 @@ function buscarRSS(){
 			}
 			//Actualiza la lista desplegable
 			$('#listaNoticias').listview("refresh", true);
-			traerColecciones();
+			traerColeccionesGuardarRSS();
 		};
 	});
 }
 
 function guardarRSS(){
 	var laUrl = $('#txtUrlRss').val();
-	var idCol = document.getElementById("listaColecciones").value;
+	var idCol = document.getElementById("listaColeccionesAgregar").value;
 	if(idCol==0){
 		window.alert('Debe seleccionar una colección');
 	}else{
@@ -135,7 +137,7 @@ function guardarRSS(){
 				window.alert('Se ha guardado el RSS ');
 				$('#txtUrlRss').val("");
 				$('#listaNoticias').empty();
-				$('#listaColecciones').empty();
+				$('#listaColeccionesAgregar').empty();
 				toFeedPrincipalLector();
 			}else{
 				window.alert(retorno);
@@ -163,8 +165,39 @@ function traerCategorias(){
 	});
 }
 
+function traerArticulos(){
+	$.get(path+'/obtenerArticuloDadoCategoria',{idCategoria:categoria},function(data){
+		if (data==null) {
+			window.alert('No hay artículos');
+		}else{
+			$('#listaArticulos').empty()
+			if(data!=null){
+				//Inserta los valores recuperados en la lista desplegable
+				$.each(data, function(i, value) {
+				$('#listaArticulos').append('<li><a onclick="descargarArticulo('+value.codigoArti+')">'+value.nombre+' - '+value.autor+'</a></li>');
+				});
+			}
+			//Actualiza la lista desplegable
+			$('#listaArticulos').listview("refresh", true);
+		};
+	});
+}
+
+function descargarArticulo(codigo){
+	$.get(path+'/descargarArticulo',{idArticulo:codigo},function(data){
+		if(data=="descargado"){
+			window.alert('Se ha descargado el artículo');
+		}else{
+			window.alert(data);
+		}
+		
+	});
+}
+
 function abrirCategoria(codigo){
-	window.alert('Ha seleccionado la categoria '+codigo);
+//	window.alert('Ha seleccionado la categoria '+codigo);
+	window.localStorage.setItem("idCategoria",codigo);
+	window.location="ListarArticulos.html";
 }
 
 function traerColecciones(){
@@ -219,7 +252,10 @@ function buscarRSSNoticias(){
 			var codRss = window.localStorage.getItem("codigoRss");
 			$.get(path+'/consultarUrlRss',{idRss:codRss},function(data){
 				laUrl = data;
+				window.localStorage.setItem("urlRss",laUrl);
 				cargarUrl(laUrl);
+				cargarLeido(laUrl);
+				cargarFavorito();
 			});
 		
 }
@@ -233,7 +269,7 @@ function cargarUrl(elLink){
 				if(data!=null){
 				//Inserta los valores recuperados en la lista desplegable
 				$.each(data, function(i, value) {
-				$('#mostrarFeeds').append('<div data-role="collapsible" data-theme="a"><h4>'+
+				$('#mostrarFeeds').append('<div><h4>'+
 				value.titulo+'</h4><p>'+value.descripcion+'</p></div>');
 				});}
 				//Actualiza la lista desplegable
@@ -241,6 +277,44 @@ function cargarUrl(elLink){
 			};
 			});
 }
+function cargarLeido(elLink){
+			
+			$.get(path+'/feedLeido',{url:elLink,idColeccion:coleccion},function(data){
+
+
+				$('#isRead').empty()
+				if(data!=null){
+				$('#isRead').append('<h4>'+data+'</h4>');
+				}
+				//Actualiza la lista desplegable
+				$('#isRead').fieldcontain("refresh", true);
+
+			});
+}
+
+function cargarFavorito(){
+	
+	$.get(path+'/favorito',{url:laUrlDelRss},function(data){
+
+	// <a onclick="toListarRss()" data-icon="arrow-l"  data-rel="close" data-iconpos="notext">Regresar</a>
+				$('#btnFavorito').empty()
+				if(data!=null){
+					var esFavorito;
+//					var stringUrl = elLink;
+					if(data=="N"){
+						esFavorito = "No te gusta";
+					}else{
+						esFavorito = "Te gusta";
+					}
+					$('#btnFavorito').append(esFavorito);
+				}
+				//Actualiza la lista desplegable
+				//$('#btnFavorito').button("refresh", true);
+
+			});
+}
+
+
 
 function guardarColeccion(){
 			var coleccionName = $('#nombreColeccion').val();
@@ -345,7 +419,7 @@ function recuperar(){
     $.post(path+'/recuperarclave',{mail:username},function(retorno){
       if (retorno=="exito") {
 		alert("Se ha enviado un email al correo "+username+" con la nueva clave");
-        window.location="Index.html";
+        window.location="index.html";
       }else{
         alert(retorno);
       };
