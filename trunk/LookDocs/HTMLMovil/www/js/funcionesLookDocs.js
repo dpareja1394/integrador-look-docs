@@ -1,6 +1,4 @@
-// JavaScript Document
-
-var ip = '127.0.0.1';
+var ip = '192.168.0.11';
 var path = 'http://'+ip+':8080/LookDocs/controller/lookDocs'
 var usuario = window.localStorage.getItem("nombreUsuario");
 var coleccion = window.localStorage.getItem("idColeccion");
@@ -210,7 +208,9 @@ function abrirCategoria(codigo){
 function mostrarPDF(){
 		$.get(path+'/getUrlArticulo',{codArticulo:articulo},function(data){
 
-				downloadAndOpenPDF(data, 'Articulo', 'Downloads'); 
+				window.open('http://docs.google.com/viewer?url='+data, '_system', 'location=yes');
+
+				/*downloadAndOpenPDF(data, 'Articulo', 'Downloads');*/ 
 		
 				/*$('#mostrarPDFArticulos').empty()
 				if(data!=null){						//< manual.pdf” width=”500″ height=”375″>
@@ -220,31 +220,16 @@ function mostrarPDF(){
 				//Actualiza la lista desplegable
 				$('#mostrarPDFArticulos').fieldcontain("refresh", true);*/
 
+
+
 			});
 	
 }
 
-function downloadAndOpenPDF(url, fileName, folder){
-	var fileTransfer = new FileTransfer();
-    var filePath = folder + fileName;
 
-     fileTransfer.download(
-        url,
-        filePath,
-        function(entry) {
-            console.log('********OK!', filePath);
-            window.plugins.pdfViewer.showPdf(filePath);
-        },
-        function (error) {
-            console.log('Failed, do something');
-            console.log(error.code);
-            console.log(error.source);
-            console.log(error.target);
-            console.log(error.http_status);
-            window.alert('No se ha descargado el archivo');
-        }
-    );
-}
+ 
+
+
 
 
 function traerColecciones(){
@@ -487,6 +472,60 @@ function recuperar(){
 
     });
   }
+
+
+
+  function downloadAndOpenPDF(){
+	
+	$.get(path+'/getUrlArticulo',{codArticulo:articulo},function(data){
+				var remoteFile= encodeURI(data);
+
+				var localFileName = remoteFile.substring(remoteFile.lastIndexOf('/') + 1);
+
+          window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
+              fileSystem.root.getFile(localFileName, { create: true, exclusive: false }, function (fileEntry) {
+                  var localPath = fileEntry.fullPath;
+                  console.log("localPath1:" + localPath);
+                  if (device.platform === "Android" && localPath.indexOf("file://") === 0) {
+                      localPath = localPath.substring(7);
+                  }
+                  console.log("localPath2 save:" + localPath);
+                  
+                  fileTransfer.download(
+					remoteFile,
+					localPath,
+					function(entry) {
+					    console.log("download complete: " + entry.fullPath);
+					    window.alert('Se descargo el articulo exitosamente');
+					},
+					function(error) {
+					    console.log("download error source " + error.source);
+					    console.log("download error target " + error.target);
+					    console.log("upload error code" + error.code);
+					    window.alert('Error en la descarga');
+					},
+					false,
+					{
+					    headers: {
+					        "Authorization": "Basic dGVzdHVzZXJuYW1lOnRlc3RwYXNzd29yZA=="
+					    }
+					}
+    
+);
+                  
+              }, fail);
+          }, fail);
+
+	});
+
+
+	////
+          
+	////
+
+
+
+}
   
 
 	
