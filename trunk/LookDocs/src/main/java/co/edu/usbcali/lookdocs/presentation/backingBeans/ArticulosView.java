@@ -391,7 +391,6 @@ public class ArticulosView implements Serializable {
 		try {
 			Anexos download = businessDelegatorView
 					.getAnexosbyArtiuclo(codigoArti);
-
 			setViewURL(HOME + download.getUrl().split("/")[2]);
 			httpSession.setAttribute("url", download);
 			ExternalContext context = FacesContext.getCurrentInstance()

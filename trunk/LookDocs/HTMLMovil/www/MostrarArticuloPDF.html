@@ -6,19 +6,17 @@
 <link rel="stylesheet" href="jquery-mobile/jquery.mobile-1.4.5.min.css">
 	<script src="jquery-mobile/jquery.js"></script>
 	<script src="jquery-mobile/jquery.mobile-1.4.5.min.js"></script>
+	<script src="js/funcionesLookDocs.js"></script>
 </head> 
 <body>
 <div data-role="page" id="page">
   <div data-role="header" data-theme="b">
     <h1>Articulo</h1>
-    <a href="ListarArticulos.html" data-icon="arrow-l"  data-rel="close" data-iconpos="notext">Regresar</a>
+	<a onclick="toListarCategorias()" data-icon="arrow-l"  data-rel="close" data-iconpos="notext">Regresar</a>
   </div>
-  <div data-role="content">
-  	<div data-role="fieldcontain">
-  	  
-  	 
-    </div>
-  	
+  <a onclick="mostrarPDF()" id="btnCargarPDF" name="btnCargarPDF" data-role="button" data-icon="refresh">Toca aquí para cargar el artículo</a>
+  <div data-role="fieldcontain" id="mostrarPDFArticulos" height="100%">
+		
   </div>
 
 

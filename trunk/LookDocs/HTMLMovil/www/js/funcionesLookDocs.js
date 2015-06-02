@@ -1,15 +1,21 @@
 // JavaScript Document
 
-var ip = '192.168.0.15';
+var ip = '127.0.0.1';
 var path = 'http://'+ip+':8080/LookDocs/controller/lookDocs'
 var usuario = window.localStorage.getItem("nombreUsuario");
 var coleccion = window.localStorage.getItem("idColeccion");
 var categoria = window.localStorage.getItem("idCategoria");
-var laUrlDelRss = window.localStorage.getItem("urlRss");;
-
+var laUrlDelRss = window.localStorage.getItem("urlRss");
+var rss = window.localStorage.getItem("codigoRss");
+var articulo = window.localStorage.getItem("idArticulo");
 
 function toRegistarLector(){
 	window.location="RegistrarLector.html";
+}
+
+function toMostrarPDF(codigoArticulo){
+	window.localStorage.setItem("idArticulo",codigoArticulo);
+	window.location="MostrarArticuloPDF.html";
 }
 
 function toRecuperarClave(){
@@ -174,7 +180,8 @@ function traerArticulos(){
 			if(data!=null){
 				//Inserta los valores recuperados en la lista desplegable
 				$.each(data, function(i, value) {
-				$('#listaArticulos').append('<li><a onclick="descargarArticulo('+value.codigoArti+')">'+value.nombre+' - '+value.autor+'</a></li>');
+				//$('#listaArticulos').append('<li><a onclick="descargarArticulo('+value.codigoArti+')">'+value.nombre+' - '+value.autor+'</a></li>');
+				$('#listaArticulos').append('<li><a onclick="toMostrarPDF('+value.codigoArti+')">'+value.nombre+' - '+value.autor+'</a></li>');
 				});
 			}
 			//Actualiza la lista desplegable
@@ -199,6 +206,46 @@ function abrirCategoria(codigo){
 	window.localStorage.setItem("idCategoria",codigo);
 	window.location="ListarArticulos.html";
 }
+
+function mostrarPDF(){
+		$.get(path+'/getUrlArticulo',{codArticulo:articulo},function(data){
+
+				downloadAndOpenPDF(data, 'Articulo', 'Downloads'); 
+		
+				/*$('#mostrarPDFArticulos').empty()
+				if(data!=null){						//< manual.pdf” width=”500″ height=”375″>
+				$('#mostrarPDFArticulos').append('<embed src="'+data+'" type="application/pdf" height="450px" width="100%">');
+				//$('#mostrarPDFArticulos').append('<object data="'+data+'" type="application/pdf" height="450px" width="100%"/>');
+				}
+				//Actualiza la lista desplegable
+				$('#mostrarPDFArticulos').fieldcontain("refresh", true);*/
+
+			});
+	
+}
+
+function downloadAndOpenPDF(url, fileName, folder){
+	var fileTransfer = new FileTransfer();
+    var filePath = folder + fileName;
+
+     fileTransfer.download(
+        url,
+        filePath,
+        function(entry) {
+            console.log('********OK!', filePath);
+            window.plugins.pdfViewer.showPdf(filePath);
+        },
+        function (error) {
+            console.log('Failed, do something');
+            console.log(error.code);
+            console.log(error.source);
+            console.log(error.target);
+            console.log(error.http_status);
+            window.alert('No se ha descargado el archivo');
+        }
+    );
+}
+
 
 function traerColecciones(){
 			$.get(path+'/obtenercolecciones',{mail:usuario},function(data){
@@ -255,7 +302,7 @@ function buscarRSSNoticias(){
 				window.localStorage.setItem("urlRss",laUrl);
 				cargarUrl(laUrl);
 				cargarLeido(laUrl);
-				cargarFavorito();
+				cargarFavorito(codRss);
 			});
 		
 }
@@ -292,8 +339,17 @@ function cargarLeido(elLink){
 			});
 }
 
-function cargarFavorito(){
+function cargarFavorito(codRss){
 	
+	$.get(path+'/consultarFavorito',{idRss:codRss},function(data){
+				$('#btnFavorito').empty()
+				if(data!=null){
+					$('#btnFavorito').append(data);
+				}
+			});
+}
+
+function likeDisLike(){
 	$.get(path+'/favorito',{url:laUrlDelRss},function(data){
 
 	// <a onclick="toListarRss()" data-icon="arrow-l"  data-rel="close" data-iconpos="notext">Regresar</a>
@@ -302,9 +358,9 @@ function cargarFavorito(){
 					var esFavorito;
 //					var stringUrl = elLink;
 					if(data=="N"){
-						esFavorito = "No te gusta";
+						esFavorito = "No Es Favorito";
 					}else{
-						esFavorito = "Te gusta";
+						esFavorito = "Es Favorito";
 					}
 					$('#btnFavorito').append(esFavorito);
 				}
@@ -314,7 +370,12 @@ function cargarFavorito(){
 			});
 }
 
-
+function eliminarRss(){
+	$.post(path+'/eliminarRss',{idRss:rss,idColeccion:coleccion},function(response){
+		window.alert(response);
+		toListarRss();
+	});
+}
 
 function guardarColeccion(){
 			var coleccionName = $('#nombreColeccion').val();

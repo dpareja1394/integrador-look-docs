@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +22,7 @@ import com.sun.syndication.io.XmlReader;
 
 import co.edu.usbcali.lookdocs.model.Anexos;
 import co.edu.usbcali.lookdocs.model.Colecciones;
+import co.edu.usbcali.lookdocs.model.ColeccionesRss;
 import co.edu.usbcali.lookdocs.model.Entradas;
 import co.edu.usbcali.lookdocs.model.Rss;
 import co.edu.usbcali.lookdocs.model.Usuarios;
@@ -437,6 +442,78 @@ public class ServiciosRESTLookDocs {
 			rssPorColeccionDto = businessDelegatorView.getDataRssPorColeccion(unicaColeccion);
 			
 			return entrada.getFavorito();
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+	}
+	
+	@RequestMapping(value="/consultarFavorito",method=RequestMethod.GET)
+	@ResponseBody
+	public String consultarFavorito(Long idRss){
+		try {
+			Rss rss = new Rss();
+			Entradas entrada = new Entradas();
+			
+			Long codigoRss = idRss;
+			rss = businessDelegatorView.getRss(codigoRss);
+			
+			entrada = businessDelegatorView.consultarEntradaPorRss(rss);
+			
+			if(entrada.getFavorito().equals("S")){
+				return "Es Favorito";
+			}else{
+				return "No Es Favorito";
+			}			
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+	}
+	
+	@RequestMapping(value="/getUrlArticulo",method=RequestMethod.GET)
+	@ResponseBody
+	public String getUrlArticulo(Long codArticulo){
+		String home = "http://integrador.comli.com/";
+		String viewUrl;
+		try {
+			
+			Anexos download = businessDelegatorView
+					.getAnexosbyArtiuclo(codArticulo);
+			viewUrl = home + download.getUrl().split("/")[2];
+
+			return viewUrl;
+		
+		} catch (Exception e) {
+			return e.getMessage();
+		}
+	}
+	
+	@RequestMapping(value="/eliminarRss",method=RequestMethod.POST)
+	@ResponseBody
+	public String eliminarRss(Long idRss, Long idColeccion){
+		try {
+			Rss rss = new Rss();
+			Colecciones laColeccion = new Colecciones();
+			ColeccionesRss colrss = new ColeccionesRss();
+			Entradas entrada = new Entradas();
+			
+			Long codigoRss = idRss;
+			Long codigoColeccion = idColeccion;
+			
+			rss = businessDelegatorView.getRss(codigoRss);
+			laColeccion = businessDelegatorView.getColecciones(codigoColeccion);
+			colrss = businessDelegatorView.consultarColeccionesRss(rss, laColeccion);
+			
+			businessDelegatorView.deleteColeccionesRss(colrss);
+			
+			entrada = businessDelegatorView.consultarEntradas(rss);
+			if(entrada != null){
+				businessDelegatorView.deleteEntradas(entrada);
+				businessDelegatorView.deleteRss(rss);
+				return "Rss Eliminado";
+			}else{
+				return "Rss No Eliminado";
+			}					
+			
 		} catch (Exception e) {
 			return e.getMessage();
 		}
