@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 <h:head>
 	<f:facet name="first">
 		<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
@@ -16,6 +17,16 @@
 
 	<link rel="stylesheet" type="text/css"
 		href="#{facesContext.externalContext.request.scheme}://#{facesContext.externalContext.request.serverName}:#{facesContext.externalContext.request.serverPort}#{facesContext.externalContext.request.contextPath}/css/bootstrap.min.css" />
+	<style>
+.errorblock {
+  color: #c85305;
+  font-size: 100%;
+  line-height: 178%;
+  margin-top: 18px;
+  margin-bottom: 14px;
+  white-space: normal;
+}
+</style>
 </h:head>
 <f:view contentType="text/html">
 
@@ -28,7 +39,11 @@
 			<p:panel id="panelLoginLector" header="Bienvenido a LookDocs"
 				style="font-size: 12px;position: absolute; top: 20%;left: 35%;width: auto">
 				<p:growl id="mensajesLoginLector" />
-
+				<c:if test="${param.authfailed == 'true'}">
+				<div class="errorblock">
+					Email o Contraseña incorrectos
+				</div>
+				</c:if>
 				<h:panelGrid columns="2">
 					<p:outputLabel value="Correo (e-mail): *" />
 					<input id="txtemailUsuarios" type="text"

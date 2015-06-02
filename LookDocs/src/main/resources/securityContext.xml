@@ -18,7 +18,7 @@
 		<intercept-url pattern="/PantallasAdministrador/*" access="ADMIN" />
 		
 		<form-login login-page="/InicioSesionLector.xhtml" authentication-success-handler-ref="urlAuthenticationSuccessHandler"
-		  always-use-default-target="false" authentication-failure-url="/InicioSesionLector.xhtml?authfailed=true" /> 		
+		  always-use-default-target="false" authentication-failure-url="/InicioSesionLector.xhtml?authfailed=true"  /> 		
 		
 		<logout invalidate-session="true" logout-success-url="/InicioSesionLector.xhtml?loggedout=true" />
 		

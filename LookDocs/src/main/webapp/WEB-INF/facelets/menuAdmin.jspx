@@ -53,9 +53,6 @@
 							</p:menu>
 							
 							<p:contextMenu for="arbolCategorias">
-								<p:menuitem value="Crear Categoria"
-									onclick="PF('dlgCrear').show();" update="messages"
-									icon="ui-icon-disk" style="font-size: 0.9em" />
 								<p:menuitem value="Actualizar Categoria"
 									update="messages, panelModificar"
 									onclick="PF('dlgModificar').show();"
@@ -66,9 +63,11 @@
 									style=";font-size: 0.9em" ajax="false" />
 							</p:contextMenu>
 
-							
 							<p:panel id="panelCategorias" header="Categorias"
 								style="width:205px;border-style: none;border: none">
+								<p:commandLink value="Crear Categoria" type="button"
+									onclick="PF('dlgCrear').show();" update="messages"
+									icon="ui-icon-disk" style="font-size: 0.9em" />
 								<p:tree id="arbolCategorias" value="#{categoriasView.raiz}"
 									var="categorias" selectionMode="single"
 									style="width:190px;border-style: none;border: none"
@@ -143,7 +142,7 @@
 				<p:panel id="panelModificar" style="border-style: none;border: none">
 					<h:panelGrid columns="2" cellpadding="10">
 						<p:outputLabel value="Nombre" />
-						<p:inputText id="txtNombreModify"
+						<p:inputText id="txtNombreModify" 
 							binding="#{categoriasView.txtNombreModify}">
 						</p:inputText>
 						<h:outputText value="Estado: " />

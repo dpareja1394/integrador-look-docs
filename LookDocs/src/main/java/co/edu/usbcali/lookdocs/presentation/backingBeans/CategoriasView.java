@@ -356,6 +356,9 @@ public class CategoriasView implements Serializable {
 					.equals("2") ? "i" : null));
 			entity.setNombre(FacesUtils.checkString(txtNombre));
 			entity.setUsuCrea(autor.getNombre());
+			if(entity.getNombre().trim().equals("")){
+				throw new Exception("El nombre no debe ser nulo");
+			}
 			businessDelegatorView.saveCategorias(entity);
 			txtNombre.setValue("");
 			categoriasRaices = null;
@@ -366,8 +369,11 @@ public class CategoriasView implements Serializable {
 		} catch (Exception e) {
 			if (e.toString().equals("java.lang.NullPointerException")) {
 				FacesUtils
-						.addErrorMessage("Lo sentimos, no se pudo crear la categoria deseada");
+						.addErrorMessage("Debe escribir un nombre");
 			} else {
+				txtNombreModify.setValue("");
+				categoriasRaices = null;
+				consultarArbol();
 				entity = null;
 				FacesUtils.addErrorMessage(e.getMessage());
 			}
@@ -388,6 +394,9 @@ public class CategoriasView implements Serializable {
 			entity.setUsuModifica(autor.getNombre());
 			entity.setNombre(txtNombreModify.getValue().toString());
 			// entity.setUsuCrea(FacesUtils.getfromSession(name));
+			if(entity.getNombre().trim().equals("")){
+				throw new Exception("El nombre no debe ser nulo");
+			}
 			businessDelegatorView.updateCategorias(entity);
 			txtNombreModify.setValue("");
 			categoriasRaices = null;
@@ -398,8 +407,11 @@ public class CategoriasView implements Serializable {
 		} catch (Exception e) {
 			if (e.toString().equals("java.lang.NullPointerException")) {
 				FacesUtils
-						.addErrorMessage("Lo sentimos, no se pudo modificar la categoria deseada");
+						.addErrorMessage("Debe escribir un nombre");
 			} else {
+				txtNombreModify.setValue("");
+				categoriasRaices = null;
+				consultarArbol();
 				entity = null;
 				FacesUtils.addErrorMessage(e.getMessage());
 			}
