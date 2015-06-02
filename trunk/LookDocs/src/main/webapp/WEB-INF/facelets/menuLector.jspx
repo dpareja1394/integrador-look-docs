@@ -40,7 +40,7 @@
 					height="100" resizable="true">
 					<h:panelGrid columns="2" cellpadding="10">
 						<p:outputLabel value="Nombre" />
-						<p:inputText id="txtNombre" binding="#{coleccionesView.txtNombre}" />
+						<p:inputText id="txtNombre" binding="#{coleccionesView.txtNombre}" maxlength="150" />
 
 						<p:commandButton id="btnCrear" value="Aceptar" ajax="false"
 							binding="#{coleccionesView.btnSave}"
@@ -152,7 +152,7 @@
 
 								<p:outputLabel value="Cual es el nuevo nombre" />
 								<p:inputText id="txtModificarColeccion"
-									binding="#{coleccionesView.txtModificarNombre}" />
+									binding="#{coleccionesView.txtModificarNombre}" maxlength="150" />
 
 								<p:commandButton id="btnModifyColeccion" value="Modificar" onclick="#{coleccionesView.consultarArbolColecciones()}"
 									binding="#{coleccionesView.btnModify}" update="@form"

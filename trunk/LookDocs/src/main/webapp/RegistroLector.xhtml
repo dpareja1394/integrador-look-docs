@@ -24,13 +24,13 @@
 
 				<h:panelGrid columns="2">
 					<p:outputLabel value="Correo (e-mail): *" />
-					<p:inputText id="txtEmail" binding="#{usuariosView.txtEmail}" />
+					<p:inputText id="txtEmail" binding="#{usuariosView.txtEmail}" maxlength="150" />
 					<p:outputLabel value="Nombre: *" />
-					<p:inputText id="txtNombre" binding="#{usuariosView.txtNombre}" />
+					<p:inputText id="txtNombre" binding="#{usuariosView.txtNombre}" maxlength="150" />
 					<p:outputLabel value="Contraseña: *" />
-					<p:password id="pswClave" binding="#{usuariosView.pswClave}" />
+					<p:password id="pswClave" binding="#{usuariosView.pswClave}" maxlength="150" />
 					<p:outputLabel value="Confirmar Contraseña: *" />
-					<p:password id="pswClaveConfirmacion"
+					<p:password id="pswClaveConfirmacion" maxlength="150"
 						binding="#{usuariosView.pswClaveConfirmacion}"/>
 				</h:panelGrid>
 				<h:panelGrid columns="2">

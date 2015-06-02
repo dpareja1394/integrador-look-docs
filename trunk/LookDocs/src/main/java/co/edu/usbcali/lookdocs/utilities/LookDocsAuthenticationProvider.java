@@ -12,6 +12,10 @@ import java.util.List;
 
 
 
+
+
+import java.util.concurrent.ConcurrentHashMap;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
@@ -43,7 +47,10 @@ public class LookDocsAuthenticationProvider implements AuthenticationProvider {
 	@Autowired
 	private IBusinessDelegatorView businessDelegatorView;
 	private Usuarios usu;
-     
+	final ThreadLocal<FacesContext> instance = new ThreadLocal<FacesContext>() {
+        protected FacesContext initialValue() { return (null); }
+    };
+    private static ConcurrentHashMap threadInitContext = new ConcurrentHashMap(2);
     /**
      * Implementacion de la seguridad propia
      */
@@ -56,11 +63,11 @@ public class LookDocsAuthenticationProvider implements AuthenticationProvider {
         String lectorVerifi;
         
         
+        
 		try {
 			adminVerifi = businessDelegatorView.iniciarSesionAdministrador(email, password);
 			usu = businessDelegatorView.obtenerPorMail(email);
-		} catch (Exception e) {
-			
+		} catch (Exception e) {			
 			adminVerifi="";
 		}
 		try {			
@@ -108,5 +115,5 @@ public class LookDocsAuthenticationProvider implements AuthenticationProvider {
     public boolean supports(Class<?> authentication) {
          return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
- 
+     
 }

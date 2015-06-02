@@ -48,7 +48,7 @@
 									<p:inputText id="txtnombre"
 										binding="#{articulosView.txtNombre}" />
 									<p:outputLabel value="Descripcion" />
-									<p:inputTextarea rows="10" cols="50"
+									<p:inputTextarea rows="10" cols="50" autoResize="false" 
 										binding="#{articulosView.txtAreaDes}" queryDelay="750"
 										minQueryLength="4" />
 									<p:outputLabel value="Estado: " />
@@ -85,7 +85,7 @@
 
 
 									<p:panel id="panelDataArticulos" header="Articulos">
-										<p:dataTable id="tabla" value="#{articulosView.data}"
+										<p:dataTable id="tabla" value="#{articulosView.data}" emptyMessage="No hay articulos para mostrar"
 											var="articulos" paginator="true" rows="5" editable="true">
 
 											<p:ajax event="rowEdit" update="tabla"

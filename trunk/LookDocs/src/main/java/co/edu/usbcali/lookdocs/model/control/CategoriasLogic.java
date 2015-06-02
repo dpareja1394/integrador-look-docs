@@ -83,7 +83,7 @@ public class CategoriasLogic implements ICategoriasLogic {
 					"nombre", entity.getNombre());
 
 			if (entityCompare != null) {
-				throw new Exception("Ya existe una categor�a con ese nombre");
+				throw new Exception("Ya existe una categoria con ese nombre");
 			}
 
 			entity.setCodigoCate(categoriasDAO
@@ -114,6 +114,10 @@ public class CategoriasLogic implements ICategoriasLogic {
 			if (entity.getNombre() == null) {
 				throw new ZMessManager().new EmptyFieldException("Nombre");
 			}
+			
+			if (entity.getNombre().trim().equals("")) {
+				throw new ZMessManager().new EmptyFieldException("Nombre");
+			}
 
 			if ((entity.getNombre() != null)
 					&& (Utilities.checkWordAndCheckWithlength(
@@ -140,6 +144,12 @@ public class CategoriasLogic implements ICategoriasLogic {
 
 			if (getCategorias(entity.getCodigoCate()) != null) {
 				throw new ZMessManager(ZMessManager.ENTITY_WITHSAMEKEY);
+			}
+			
+			Object[] variables = {"nombre",true,entity.getNombre().trim(),"="};
+			List<Categorias> validacion = findByCriteria(variables, null, null);
+			if(validacion.size()>0){
+				throw new ZMessManager("Ya existe una categoria con ese nombre");
 			}
 
 			categoriasDAO.save(entity);
@@ -268,6 +278,11 @@ public class CategoriasLogic implements ICategoriasLogic {
 				//throw new ZMessManager().new EmptyFieldException("estadoRegistro");
 				entity.setNombre(entityByName.getNombre());
 			}
+			
+			if (entity.getNombre().trim().equals("")) {
+				//throw new ZMessManager().new EmptyFieldException("estadoRegistro");
+				entity.setNombre(entityByName.getNombre());
+			}
 
 			if ((entity.getNombre() != null)
 					&& (Utilities.checkWordAndCheckWithlength(
@@ -280,6 +295,12 @@ public class CategoriasLogic implements ICategoriasLogic {
 							entity.getUsuModifica(), 150) == false)) {
 				throw new ZMessManager().new NotValidFormatException(
 						"Usuario");
+			}
+			
+			Object[] variables = {"nombre",true,entity.getNombre().trim(),"="};
+			List<Categorias> validacion = findByCriteria(variables, null, null);
+			if(validacion.size()>0){
+				throw new ZMessManager("Ya existe una categoria con ese nombre");
 			}
 
 			entity.setFechaModifcacion(new Date());
