@@ -2,6 +2,7 @@ package co.edu.usbcali.lookdocs.model.control;
 
 import co.edu.usbcali.lookdocs.dataaccess.dao.*;
 import co.edu.usbcali.lookdocs.exceptions.*;
+import co.edu.usbcali.lookdocs.exceptions.ZMessManager.NotValidFormatException;
 import co.edu.usbcali.lookdocs.model.*;
 import co.edu.usbcali.lookdocs.model.dto.ColeccionesDTO;
 import co.edu.usbcali.lookdocs.utilities.Utilities;
@@ -75,10 +76,21 @@ public class ColeccionesLogic implements IColeccionesLogic {
         	if(entity.getNombre().length()>150){
         		throw new Exception("El nombre de la colección tiene mas de 150 caracteres");
         	}
+        	
+        	if(entity.getNombre().trim().equals("")){
+        		throw new Exception("El nombre de la colección no puede ser nulo");
+        	}
+        	
+        	if ((entity.getNombre() != null)
+					&& (Utilities.checkWordAndCheckWithlength(
+							entity.getNombre(), 150) == false)) {
+				throw new ZMessManager().new NotValidFormatException("Nombre");
+			}
+        	
         	Colecciones compararNombre = coleccionesDAO.consultarColeccionPorNombreYUsuario(entity.getUsuarios(), entity.getNombre());
         	
         	if (compararNombre != null){
-        		throw new Exception("Ya existe este nombre de colecci�n");
+        		throw new Exception("Ya existe este nombre de coleccion");
         	}
         	
             if (entity.getUsuarios() == null) {
@@ -106,7 +118,7 @@ public class ColeccionesLogic implements IColeccionesLogic {
 
             if (getColecciones(entity.getCodigoCole()) != null) {
                 throw new ZMessManager(ZMessManager.ENTITY_WITHSAMEKEY);
-            }
+            }          
 
             coleccionesDAO.save(entity);
         } catch (Exception e) {
@@ -165,6 +177,22 @@ public class ColeccionesLogic implements IColeccionesLogic {
         	if(entity.getNombre().length()>150){
         		throw new Exception("El nombre de la colección tiene mas de 150 caracteres");
         	}
+        	
+        	if(entity.getNombre().trim().equals("")){
+        		throw new Exception("El nombre de la colección no puede ser nulo");
+        	}
+        	
+        	if ((entity.getNombre() != null)
+					&& (Utilities.checkWordAndCheckWithlength(
+							entity.getNombre(), 150) == false)) {
+				throw new ZMessManager().new NotValidFormatException("Nombre");
+			}
+        	
+        	Colecciones compararNombre = coleccionesDAO.consultarColeccionPorNombreYUsuario(entity.getUsuarios(), entity.getNombre());
+        	
+        	if (compararNombre != null){
+        		throw new Exception("Ya existe este nombre de coleccion");
+        	}
 
             if ((entity.getNombre() != null) &&
                     (Utilities.checkWordAndCheckWithlength(entity.getNombre(),
@@ -177,8 +205,6 @@ public class ColeccionesLogic implements IColeccionesLogic {
                     "codigoUsua_Usuarios");
             }
         	
-        	
-
             coleccionesDAO.update(entity);
         } catch (Exception e) {
             throw e;
