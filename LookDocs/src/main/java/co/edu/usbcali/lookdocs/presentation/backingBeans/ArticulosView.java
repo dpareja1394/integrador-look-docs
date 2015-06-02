@@ -391,6 +391,7 @@ public class ArticulosView implements Serializable {
 		try {
 			Anexos download = businessDelegatorView
 					.getAnexosbyArtiuclo(codigoArti);
+
 			setViewURL(HOME + download.getUrl().split("/")[2]);
 			httpSession.setAttribute("url", download);
 			ExternalContext context = FacesContext.getCurrentInstance()
@@ -766,7 +767,6 @@ public class ArticulosView implements Serializable {
 			Long codigoArti = new Long(selectedArticulos.getCodigoArti());
 			entity = businessDelegatorView.getArticulos(codigoArti);
 			businessDelegatorView.deleteArticulos(entity);
-			data.remove(selectedArticulos);
 			FacesUtils.addInfoMessage(ZMessManager.ENTITY_SUCCESFULLYDELETED);
 			selectedArticulos = null;
 			data = null;
