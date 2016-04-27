@@ -1,0 +1,1 @@
+Lookdocs es un proyecto de aula (IntegradorII) bajo la direccion de Diego A. Gomez
